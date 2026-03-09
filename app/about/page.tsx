@@ -124,8 +124,8 @@ export default function AboutPage() {
               <div className="md:col-span-1">
                 <div className="sticky top-24 space-y-3">
                   <p className="text-xs font-medium text-primary uppercase tracking-wider">Founder</p>
-                  <h2 className="text-xl md:text-2xl font-bold">DP Sir</h2>
-                  <p className="text-xs text-muted-foreground">Dharampal Chaudhary</p>
+                  <h2 className="text-xl md:text-2xl font-bold">DP Chaudhary</h2>
+                  <p className="text-xs text-muted-foreground">Chairman Dharampal Chaudhary</p>
                 </div>
               </div>
               <div className="md:col-span-2 space-y-4">
@@ -151,7 +151,7 @@ export default function AboutPage() {
               <div className="md:col-span-1">
                 <div className="sticky top-24 space-y-3">
                   <p className="text-xs font-medium text-primary uppercase tracking-wider">CEO</p>
-                  <h2 className="text-xl md:text-2xl font-bold">Vinod Sir</h2>
+                  <h2 className="text-xl md:text-2xl font-bold">Vinod Kumar</h2>
                   <p className="text-xs text-muted-foreground">Chief Executive Officer</p>
                 </div>
               </div>
@@ -179,7 +179,7 @@ export default function AboutPage() {
                 Choosing the right real estate partner makes all the difference. At Countryroof, we stand apart because of our commitment to your success.
               </p>
             </div>
-            
+
             <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-4">
               {whyChooseUs.map((item, idx) => (
                 <div key={idx} className="flex items-start gap-3 p-4 bg-card border border-border rounded-lg hover:border-primary/30 transition-colors">
@@ -214,7 +214,7 @@ export default function AboutPage() {
               <h2 className="text-2xl md:text-3xl font-bold">What Does Countryroof Offer?</h2>
               <p className="text-sm text-muted-foreground">Comprehensive real estate guidance across multiple segments</p>
             </div>
-            
+
             <div className="grid md:grid-cols-3 gap-6">
               {/* Residential */}
               <div className="p-5 bg-card border border-border rounded-lg space-y-4">
@@ -286,7 +286,7 @@ export default function AboutPage() {
                 We believe real estate is not just about transactions — it is about trust, security, and building a stronger future.
               </p>
             </div>
-            
+
             <div className="flex flex-wrap justify-center gap-3">
               {commitments.map((item, idx) => (
                 <div key={idx} className="flex items-center gap-2 px-4 py-2 bg-card border border-border rounded-full hover:border-primary/30 transition-colors">

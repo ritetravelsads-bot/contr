@@ -220,45 +220,6 @@ export default function TermsPage() {
                   "I voluntarily provide my personal information and consent to being contacted by Countryroof via phone, SMS, WhatsApp, and email regarding property consultation and offers. I agree to the Privacy Policy and Terms & Conditions."
                 </p>
               </div>
-
-                <div>
-                  <h3 className="font-semibold text-foreground">b) Cookie Functionality</h3>
-                  <p className="text-muted-foreground leading-relaxed">
-                    The User is further aware that the Website uses data collection devices such as cookies on certain
-                    pages of the Website to help analyze web page flow, measure promotional effectiveness, and promotes
-                    trust and safety, and that certain features of the Website are only available through the use of
-                    such cookies. While the User is free to decline the Website's cookies if the User's browser permits,
-                    the User may consequently be unable to use certain features on the Website.
-                  </p>
-                </div>
-              </div>
-            </section>
-
-            <section className="space-y-4">
-              <h2 className="text-2xl font-bold text-foreground">D. SHARING OF PERSONAL INFORMATION</h2>
-
-              <div className="space-y-3">
-                <div>
-                  <h3 className="font-semibold text-foreground">a) Information Sharing with Affiliates</h3>
-                  <p className="text-muted-foreground leading-relaxed">
-                    The User is aware that the Website/Company may share the User's personal information with other
-                    corporate entities and affiliates to help detect and prevent identity theft, fraud and other
-                    potentially illegal acts; correlate related or multiple accounts to prevent abuse of the Website's
-                    services; and to facilitate joint or co-branded services, where such services are provided by more
-                    than one corporate entity.
-                  </p>
-                </div>
-
-                <div>
-                  <h3 className="font-semibold text-foreground">b) Legal Disclosure</h3>
-                  <p className="text-muted-foreground leading-relaxed">
-                    The User is aware that the Website/Company may disclose personal information if required to do so by
-                    law or if the Website/Company in good faith believes that such disclosure is necessary to comply
-                    with legal obligations, enforce agreements, or protect the rights, property, or safety of the
-                    Company, its users, or the public.
-                  </p>
-                </div>
-              </div>
             </section>
           </div>
 

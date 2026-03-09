@@ -41,7 +41,7 @@ export default function PrivacyPolicyPage() {
 
             <section className="space-y-4">
               <h3 className="text-lg font-semibold text-foreground">2. Information We Collect</h3>
-              
+
               <div className="space-y-3">
                 <h4 className="font-semibold text-foreground">A. Voluntarily Provided Information</h4>
                 <ul className="list-disc pl-6 space-y-1 text-muted-foreground">
@@ -170,6 +170,7 @@ export default function PrivacyPolicyPage() {
                 <p className="text-muted-foreground"><strong>Grievance Officer</strong></p>
                 <p className="text-muted-foreground">Countryroof</p>
                 <p className="text-muted-foreground"><strong>Email:</strong> info@countryroof.com</p>
+                <p className="text-muted-foreground"><strong>Phone:</strong> +91-98737-02365</p>
                 <p className="text-muted-foreground mt-3">Response within 30 days.</p>
               </div>
             </section>
@@ -187,7 +188,7 @@ export default function PrivacyPolicyPage() {
                   <strong>By email:</strong> info@countryroof.in
                 </li>
                 <li>
-                  <strong>By phone:</strong> +91-9355500043
+                  <strong>By phone:</strong> +91-98737-02365
                 </li>
               </ul>
             </section>
