@@ -1,52 +1,63 @@
 import type { Metadata } from "next"
-import { Building2, Users, Shield, Award, Search, Eye, Scale, FileCheck, Handshake, CheckCircle2 } from "lucide-react"
+import { Building2, Users, Shield, Award, CheckCircle2, Home, Briefcase, MapPin, FileText, Phone, TrendingUp, Heart, Target, Landmark, Building } from "lucide-react"
 import Header from "@/components/layout/header"
 import Footer from "@/components/layout/footer"
 
 export const metadata: Metadata = {
-  title: "About CountryRoof | Premium Real Estate Company",
+  title: "About Countryroof | Real Estate Advisory & Development",
   description:
-    "Country Roof - Where Quality Meets Durability. Established in 2021, we specialize in bringing together buyers and sellers in the residential real estate market.",
+    "Countryroof - Building Trust. Building Communities. Building the Future. A Gurugram-based real estate advisory committed to delivering clarity, credibility, and long-term value.",
   openGraph: {
-    title: "About CountryRoof | Premium Real Estate Company",
-    description: "Protecting Your Property, Enhancing Your Investment. Trust Country Roof for your next home purchase.",
+    title: "About Countryroof | Real Estate Advisory & Development",
+    description: "Building Trust. Building Communities. Building the Future. Connect with thoughtfully selected residential and commercial opportunities.",
     url: "https://countryroof.com/about",
   },
 }
 
-const services = [
-  {
-    icon: Search,
-    title: "Property Search",
-    description: "Assisting clients in finding houses that meet their needs and budgets with access to exclusive listings not available on open portals."
-  },
-  {
-    icon: Eye,
-    title: "Property Viewing",
-    description: "Setting up property viewings with detailed information about neighborhoods, amenities, and local schools."
-  },
-  {
-    icon: Scale,
-    title: "Negotiation Support",
-    description: "Serving as a mediator between buyers and sellers to negotiate the best terms for our clients."
-  },
-  {
-    icon: FileCheck,
-    title: "Legal & Financial Support",
-    description: "Connecting clients with attorneys, mortgage brokers, and accountants while providing guidance throughout the process."
-  },
-  {
-    icon: Handshake,
-    title: "Closing the Deal",
-    description: "Ensuring all legal requirements are satisfied and assisting with completing required documentation for property ownership transfer."
-  }
+const residentialServices = [
+  "Luxury apartments and premium penthouses",
+  "Budget-friendly homes",
+  "Independent floors and plotted developments",
+  "Gated community projects"
+]
+
+const commercialServices = [
+  "SCO plots in prime sectors",
+  "Commercial retail spaces",
+  "Office spaces in business hubs",
+  "High-growth investment corridors"
+]
+
+const advisoryServices = [
+  "Project comparison and evaluation",
+  "Location growth analysis",
+  "Site visit assistance",
+  "Transparent consultation",
+  "Post-selection guidance"
+]
+
+const whyChooseUs = [
+  "Customer-first advisory approach",
+  "Carefully curated and verified property listings",
+  "Focus on high-growth micro-markets in Gurugram",
+  "Transparent communication and clear documentation",
+  "Professional site visit coordination and guidance",
+  "Long-term relationship mindset"
+]
+
+const commitments = [
+  "Ethical business practices",
+  "Clear and honest communication",
+  "Responsible advisory",
+  "Sustainable growth-focused projects",
+  "Delivering value beyond expectations"
 ]
 
 const values = [
-  { icon: Shield, label: "Honesty" },
+  { icon: Shield, label: "Trust" },
   { icon: Award, label: "Integrity" },
   { icon: CheckCircle2, label: "Transparency" },
-  { icon: Users, label: "Professionalism" },
+  { icon: Heart, label: "Long-term Value" },
 ]
 
 export default function AboutPage() {
@@ -59,10 +70,10 @@ export default function AboutPage() {
           <div className="absolute inset-0 bg-[url('/grid-pattern.svg')] opacity-5" />
           <div className="max-w-5xl mx-auto relative z-10">
             <div className="space-y-4 text-center">
-              <p className="text-primary font-semibold text-sm tracking-wider uppercase">We are</p>
-              <h1 className="text-3xl md:text-5xl font-bold text-foreground">CountryRoof</h1>
+              <p className="text-primary font-semibold text-sm tracking-wider uppercase">About</p>
+              <h1 className="text-3xl md:text-5xl font-bold text-foreground">Countryroof</h1>
               <p className="text-muted-foreground text-base md:text-lg max-w-2xl mx-auto">
-                Secure your property's future with Country Roof - Where Quality Meets Durability
+                Building Trust. Building Communities. Building the Future.
               </p>
             </div>
           </div>
@@ -74,23 +85,26 @@ export default function AboutPage() {
             <div className="grid md:grid-cols-2 gap-8 items-center">
               <div className="space-y-4">
                 <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-primary/10 text-primary text-xs font-medium">
-                  <Building2 className="h-3.5 w-3.5" />
-                  Established 2021
+                  <MapPin className="h-3.5 w-3.5" />
+                  Gurugram & Delhi NCR
                 </div>
-                <h2 className="text-2xl md:text-3xl font-bold">Protecting Your Property, Enhancing Your Investment</h2>
+                <h2 className="text-2xl md:text-3xl font-bold">Real Estate Advisory & Development</h2>
                 <p className="text-sm text-muted-foreground leading-relaxed">
-                  At Country Roof, we take great pride in assisting customers in finding the homes of their dreams. As a top real estate company, we specialize in bringing together buyers and sellers in the residential real estate market.
+                  Countryroof is a Gurugram-based real estate advisory and development-focused brand committed to delivering clarity, credibility, and long-term value in property decisions. We work across Gurugram and Delhi NCR, connecting individuals, families, and investors with thoughtfully selected residential and commercial opportunities.
                 </p>
                 <p className="text-sm text-muted-foreground leading-relaxed">
-                  Country Roof has grown to be one of the most reputable brands in the real estate sector. We prioritize meeting or exceeding client expectations and fostering enduring connections with them.
+                  In a market where information can often feel overwhelming, we focus on transparency, research-backed guidance, and responsible advisory practices. Every property we recommend is evaluated on key factors such as location growth, structure development, developer reputation, and long-term appreciation potential.
+                </p>
+                <p className="text-sm text-muted-foreground leading-relaxed font-medium">
+                  Our goal is simple — to make real estate decisions informed, secure, and rewarding.
                 </p>
               </div>
               <div className="grid grid-cols-2 gap-3">
                 {[
-                  { stat: "2021", label: "Established" },
-                  { stat: "500+", label: "Happy Clients" },
-                  { stat: "100+", label: "Properties" },
-                  { stat: "50+", label: "Projects" },
+                  { stat: "15+", label: "Years Experience" },
+                  { stat: "2008", label: "Since" },
+                  { stat: "100%", label: "Transparency" },
+                  { stat: "NCR", label: "Coverage" },
                 ].map((item, idx) => (
                   <div key={idx} className="p-4 bg-card border border-border rounded-lg text-center hover:border-primary/30 transition-colors">
                     <p className="text-2xl md:text-3xl font-bold text-primary">{item.stat}</p>
@@ -102,63 +116,83 @@ export default function AboutPage() {
           </div>
         </section>
 
-        {/* Founder Section */}
+        {/* Leadership Section */}
         <section className="w-full py-12 md:py-16 px-4 bg-muted/30 border-b border-border">
-          <div className="max-w-5xl mx-auto">
+          <div className="max-w-5xl mx-auto space-y-12">
+            {/* Founder */}
             <div className="grid md:grid-cols-3 gap-8">
               <div className="md:col-span-1">
                 <div className="sticky top-24 space-y-3">
-                  <p className="text-xs font-medium text-primary uppercase tracking-wider">Our Founder</p>
-                  <h2 className="text-xl md:text-2xl font-bold">Mr. Dharampal Chaudhary</h2>
-                  <p className="text-xs text-muted-foreground">Founder - Country Roof | Chairman - Rite Group</p>
+                  <p className="text-xs font-medium text-primary uppercase tracking-wider">Founder</p>
+                  <h2 className="text-xl md:text-2xl font-bold">DP Sir</h2>
+                  <p className="text-xs text-muted-foreground">Dharampal Chaudhary</p>
                 </div>
               </div>
               <div className="md:col-span-2 space-y-4">
                 <p className="text-sm text-muted-foreground leading-relaxed">
-                  Mr. Dharampal Chaudhary is a renowned entrepreneur who has excelled in various fields, including real estate development, politics, education, and social work. He is the founder of Country Roof and the chairman of Rite Group, which has established itself as a leading real estate company under his visionary leadership.
+                  With over 15 years of experience in the real estate sector, Dharampal Chaudhary (DP Sir) has been the guiding force behind Countryroof's growth and vision.
                 </p>
                 <p className="text-sm text-muted-foreground leading-relaxed">
-                  Through Rite Group, Mr. Chaudhary has developed high-quality residential and commercial spaces catering to clients' diverse needs. He has also established Rite Real Estate Pvt. Ltd. to provide value-based solutions to clients in various fields.
+                  Since 2008, he has been actively involved in land development, plotted projects, and residential planning. His deep understanding of market cycles, location potential, and ethical business practices has shaped multiple successful real estate ventures.
                 </p>
-                <p className="text-sm text-muted-foreground leading-relaxed">
-                  Mr. Chaudhary's passion for preserving and promoting Indian culture is evident through establishing Rite Hospitality Pvt. Ltd., an e-commerce food delivery company that offers authentic Indian delicacies. This venture showcases his willingness to explore new opportunities while promoting Indian culture.
-                </p>
-                <p className="text-sm text-muted-foreground leading-relaxed">
-                  In addition to his successful real estate and hospitality ventures, Mr. Chaudhary is dedicated to social reform through education and empowerment. As the founder trustee of Rite Group, he has facilitated the creation of innovative educational programs and services that have positively impacted individuals and organizations.
-                </p>
-                <div className="pt-4 border-t border-border">
-                  <p className="text-xs text-muted-foreground italic">
-                    "Together, they sowed the seed of the Country Roof. Combining both expertise, the team country roof comprehends the process of buying or selling a house simple and stress-free experience."
+                <div className="p-4 bg-card border border-border rounded-lg">
+                  <p className="text-sm text-muted-foreground italic">
+                    "A home is more than four walls — it represents security, pride, and a future for generations."
                   </p>
                 </div>
+                <p className="text-sm text-muted-foreground leading-relaxed">
+                  Under his leadership, Countryroof continues to prioritize integrity, transparency, and long-term value creation.
+                </p>
+              </div>
+            </div>
+
+            {/* CEO */}
+            <div className="grid md:grid-cols-3 gap-8">
+              <div className="md:col-span-1">
+                <div className="sticky top-24 space-y-3">
+                  <p className="text-xs font-medium text-primary uppercase tracking-wider">CEO</p>
+                  <h2 className="text-xl md:text-2xl font-bold">Vinod Sir</h2>
+                  <p className="text-xs text-muted-foreground">Chief Executive Officer</p>
+                </div>
+              </div>
+              <div className="md:col-span-2 space-y-4">
+                <p className="text-sm text-muted-foreground leading-relaxed">
+                  As the CEO of Countryroof, Vinod Sir leads operations with a strong focus on customer satisfaction, strategic growth, and professional excellence.
+                </p>
+                <p className="text-sm text-muted-foreground leading-relaxed">
+                  He plays a vital role in building partnerships, streamlining advisory processes, and ensuring every client interaction reflects the company's commitment to clarity and trust. His leadership approach combines market insight with practical decision-making, helping clients navigate both residential and commercial real estate confidently.
+                </p>
+                <p className="text-sm text-muted-foreground leading-relaxed">
+                  Together, the leadership team brings experience, discipline, and a forward-thinking mindset to every project and client relationship.
+                </p>
               </div>
             </div>
           </div>
         </section>
 
-        {/* Why Country Roof */}
+        {/* Why Choose Countryroof */}
         <section className="w-full py-12 md:py-16 px-4 border-b border-border">
           <div className="max-w-5xl mx-auto space-y-8">
             <div className="text-center space-y-2">
-              <h2 className="text-2xl md:text-3xl font-bold">Why Country Roof?</h2>
+              <h2 className="text-2xl md:text-3xl font-bold">Why Choose Countryroof</h2>
               <p className="text-sm text-muted-foreground max-w-2xl mx-auto">
-                With a team of experienced professionals who provide exceptional services to enhance your investment.
+                Choosing the right real estate partner makes all the difference. At Countryroof, we stand apart because of our commitment to your success.
               </p>
             </div>
             
-            <div className="grid md:grid-cols-2 gap-6">
-              <div className="p-5 bg-card border border-border rounded-lg space-y-3">
-                <h3 className="text-base font-semibold">What Sets Us Apart</h3>
-                <p className="text-sm text-muted-foreground leading-relaxed">
-                  Our commitment to customer satisfaction, competitive pricing, and expertise in the Real Estate makes Country Roof the clear choice for all your Real Estate needs.
-                </p>
-              </div>
-              <div className="p-5 bg-card border border-border rounded-lg space-y-3">
-                <h3 className="text-base font-semibold">Our Commitment</h3>
-                <p className="text-sm text-muted-foreground leading-relaxed">
-                  We are here to support you in achieving your real estate objectives, whether you're a first-time buyer or a seasoned investor. Our team is always growing and learning to keep up with the ever-changing market.
-                </p>
-              </div>
+            <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-4">
+              {whyChooseUs.map((item, idx) => (
+                <div key={idx} className="flex items-start gap-3 p-4 bg-card border border-border rounded-lg hover:border-primary/30 transition-colors">
+                  <CheckCircle2 className="h-5 w-5 text-primary shrink-0 mt-0.5" />
+                  <p className="text-sm text-muted-foreground">{item}</p>
+                </div>
+              ))}
+            </div>
+
+            <div className="p-5 bg-muted/50 border border-border rounded-lg text-center">
+              <p className="text-sm text-muted-foreground">
+                We do not believe in high-pressure sales. Instead, we believe in providing accurate information and allowing clients to make confident decisions.
+              </p>
             </div>
 
             {/* Values */}
@@ -177,22 +211,87 @@ export default function AboutPage() {
         <section className="w-full py-12 md:py-16 px-4 bg-muted/30 border-b border-border">
           <div className="max-w-5xl mx-auto space-y-8">
             <div className="text-center space-y-2">
-              <h2 className="text-2xl md:text-3xl font-bold">What Does Country Roof Offer?</h2>
-              <p className="text-sm text-muted-foreground">Comprehensive real estate services for all your needs</p>
+              <h2 className="text-2xl md:text-3xl font-bold">What Does Countryroof Offer?</h2>
+              <p className="text-sm text-muted-foreground">Comprehensive real estate guidance across multiple segments</p>
             </div>
             
-            <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-4">
-              {services.map((service, idx) => (
-                <div key={idx} className="group p-4 bg-card border border-border rounded-lg hover:border-primary/30 hover:shadow-md transition-all">
-                  <div className="flex items-start gap-3">
-                    <div className="p-2 rounded-lg bg-primary/10 text-primary group-hover:bg-primary group-hover:text-primary-foreground transition-colors">
-                      <service.icon className="h-4 w-4" />
-                    </div>
-                    <div className="flex-1 space-y-1">
-                      <h3 className="text-sm font-semibold">{service.title}</h3>
-                      <p className="text-xs text-muted-foreground leading-relaxed">{service.description}</p>
-                    </div>
+            <div className="grid md:grid-cols-3 gap-6">
+              {/* Residential */}
+              <div className="p-5 bg-card border border-border rounded-lg space-y-4">
+                <div className="flex items-center gap-3">
+                  <div className="p-2 rounded-lg bg-primary/10 text-primary">
+                    <Home className="h-5 w-5" />
                   </div>
+                  <h3 className="text-base font-semibold">Residential Properties</h3>
+                </div>
+                <ul className="space-y-2">
+                  {residentialServices.map((item, idx) => (
+                    <li key={idx} className="flex items-start gap-2 text-sm text-muted-foreground">
+                      <span className="text-primary mt-1">•</span>
+                      {item}
+                    </li>
+                  ))}
+                </ul>
+              </div>
+
+              {/* Commercial */}
+              <div className="p-5 bg-card border border-border rounded-lg space-y-4">
+                <div className="flex items-center gap-3">
+                  <div className="p-2 rounded-lg bg-primary/10 text-primary">
+                    <Building className="h-5 w-5" />
+                  </div>
+                  <h3 className="text-base font-semibold">Commercial & Investment</h3>
+                </div>
+                <ul className="space-y-2">
+                  {commercialServices.map((item, idx) => (
+                    <li key={idx} className="flex items-start gap-2 text-sm text-muted-foreground">
+                      <span className="text-primary mt-1">•</span>
+                      {item}
+                    </li>
+                  ))}
+                </ul>
+              </div>
+
+              {/* Advisory */}
+              <div className="p-5 bg-card border border-border rounded-lg space-y-4">
+                <div className="flex items-center gap-3">
+                  <div className="p-2 rounded-lg bg-primary/10 text-primary">
+                    <Target className="h-5 w-5" />
+                  </div>
+                  <h3 className="text-base font-semibold">End-to-End Advisory</h3>
+                </div>
+                <ul className="space-y-2">
+                  {advisoryServices.map((item, idx) => (
+                    <li key={idx} className="flex items-start gap-2 text-sm text-muted-foreground">
+                      <span className="text-primary mt-1">•</span>
+                      {item}
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            </div>
+
+            <p className="text-sm text-muted-foreground text-center max-w-2xl mx-auto">
+              Every recommendation is aligned with lifestyle goals, investment objectives, and long-term growth potential.
+            </p>
+          </div>
+        </section>
+
+        {/* Our Commitment Section */}
+        <section className="w-full py-12 md:py-16 px-4 border-b border-border">
+          <div className="max-w-5xl mx-auto space-y-8">
+            <div className="text-center space-y-2">
+              <h2 className="text-2xl md:text-3xl font-bold">Our Commitment</h2>
+              <p className="text-sm text-muted-foreground max-w-2xl mx-auto">
+                We believe real estate is not just about transactions — it is about trust, security, and building a stronger future.
+              </p>
+            </div>
+            
+            <div className="flex flex-wrap justify-center gap-3">
+              {commitments.map((item, idx) => (
+                <div key={idx} className="flex items-center gap-2 px-4 py-2 bg-card border border-border rounded-full hover:border-primary/30 transition-colors">
+                  <CheckCircle2 className="h-4 w-4 text-primary" />
+                  <span className="text-sm">{item}</span>
                 </div>
               ))}
             </div>
@@ -202,9 +301,12 @@ export default function AboutPage() {
         {/* CTA Section */}
         <section className="w-full py-12 md:py-16 px-4">
           <div className="max-w-3xl mx-auto text-center space-y-4">
-            <h2 className="text-xl md:text-2xl font-bold">Trust Country Roof for Your Next Home Purchase</h2>
+            <h2 className="text-xl md:text-2xl font-bold">Building Trust, Not Just Portfolios</h2>
             <p className="text-sm text-muted-foreground">
-              Ready to find your dream property? Let our experienced team guide you through every step of the journey.
+              As Gurugram continues to grow as one of India's most dynamic real estate destinations, Countryroof aims to contribute responsibly to its development by connecting people with properties that truly match their aspirations.
+            </p>
+            <p className="text-xs text-muted-foreground italic">
+              With experience, transparency, and a commitment to long-term relationships, we continue to build not just portfolios — but trust.
             </p>
             <div className="flex flex-wrap justify-center gap-3 pt-2">
               <a href="/properties" className="inline-flex items-center justify-center px-5 py-2.5 bg-primary text-primary-foreground text-sm font-medium rounded-lg hover:bg-primary/90 transition-colors">
