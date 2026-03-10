@@ -41,84 +41,99 @@ export function HeroBanner({ property }: HeroBannerProps) {
   const fullAddress = [property.address, property.city, property.state].filter(Boolean).join(", ")
 
   return (
-    <section className="relative min-h-[60vh] lg:min-h-[70vh] flex items-center justify-center overflow-hidden">
-      {/* Background Image */}
+    <section className="relative min-h-[65vh] lg:min-h-[75vh] flex items-center justify-center overflow-hidden">
+      {/* Background Image with parallax-like effect */}
       {bgImage ? (
         <>
           <img
             src={bgImage}
             alt={property.property_name}
-            className="absolute inset-0 w-full h-full object-cover"
+            className="absolute inset-0 w-full h-full object-cover scale-105"
           />
-          <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/50 to-black/30" />
+          <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/50 to-black/20" />
+          <div className="absolute inset-0 bg-gradient-to-r from-black/30 to-transparent" />
         </>
       ) : (
-        <div className="absolute inset-0 bg-gradient-to-br from-primary/20 via-background to-background" />
+        <div className="absolute inset-0 bg-gradient-to-br from-primary/30 via-primary/10 to-background" />
       )}
 
+      {/* Decorative elements */}
+      <div className="absolute inset-0 bg-[url('/grid-pattern.svg')] opacity-5" />
+
       {/* Content */}
-      <div className="relative z-10 max-w-5xl mx-auto px-4 py-12 text-center">
+      <div className="relative z-10 max-w-5xl mx-auto px-4 py-16 text-center">
         {/* Property Title */}
-        <h1 className="text-3xl md:text-4xl lg:text-5xl font-bold text-white mb-4 text-balance">
+        <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold text-white mb-5 text-balance leading-tight drop-shadow-lg">
           {property.property_name}
         </h1>
 
         {/* Address */}
         {fullAddress && (
-          <p className="flex items-center justify-center gap-2 text-white/90 text-sm md:text-base mb-8">
-            <MapPin className="h-4 w-4 flex-shrink-0" />
+          <p className="flex items-center justify-center gap-2 text-white/90 text-base md:text-lg mb-10 drop-shadow-md">
+            <MapPin className="h-5 w-5 flex-shrink-0" />
             <span>{fullAddress}</span>
           </p>
         )}
 
         {/* Key Details Grid */}
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-3 md:gap-4 max-w-3xl mx-auto">
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-4 md:gap-5 max-w-4xl mx-auto">
           {/* Price */}
-          <div className="bg-white/10 backdrop-blur-sm border border-white/20 rounded-xl p-4 text-white">
-            <IndianRupee className="h-5 w-5 mx-auto mb-2 text-primary" />
-            <p className="text-xs text-white/70 mb-1">Price</p>
-            <p className="font-bold text-sm md:text-base">
+          <div className="group bg-white/10 backdrop-blur-md border border-white/20 rounded-2xl p-5 text-white hover:bg-white/20 hover:border-white/40 transition-all duration-300 hover:-translate-y-1 hover:shadow-xl">
+            <div className="w-12 h-12 rounded-xl bg-primary/20 flex items-center justify-center mx-auto mb-3 group-hover:bg-primary/30 transition-colors">
+              <IndianRupee className="h-6 w-6 text-primary" />
+            </div>
+            <p className="text-sm text-white/70 mb-1.5 font-medium">Starting Price</p>
+            <p className="font-bold text-lg md:text-xl">
               {property.lowest_price ? (
                 <>
                   {formatPrice(property.lowest_price)}
                   {property.max_price && property.max_price !== property.lowest_price && (
-                    <span className="text-xs text-white/70"> - {formatPrice(property.max_price)}</span>
+                    <span className="text-sm text-white/60 font-normal block mt-0.5">onwards</span>
                   )}
                 </>
               ) : (
-                "On Request"
+                "Price on Request"
               )}
             </p>
           </div>
 
           {/* Possession */}
-          <div className="bg-white/10 backdrop-blur-sm border border-white/20 rounded-xl p-4 text-white">
-            <Calendar className="h-5 w-5 mx-auto mb-2 text-primary" />
-            <p className="text-xs text-white/70 mb-1">Possession</p>
-            <p className="font-bold text-sm md:text-base">
+          <div className="group bg-white/10 backdrop-blur-md border border-white/20 rounded-2xl p-5 text-white hover:bg-white/20 hover:border-white/40 transition-all duration-300 hover:-translate-y-1 hover:shadow-xl">
+            <div className="w-12 h-12 rounded-xl bg-primary/20 flex items-center justify-center mx-auto mb-3 group-hover:bg-primary/30 transition-colors">
+              <Calendar className="h-6 w-6 text-primary" />
+            </div>
+            <p className="text-sm text-white/70 mb-1.5 font-medium">Possession</p>
+            <p className="font-bold text-lg md:text-xl">
               {property.possession || property.possession_date || "Contact Us"}
             </p>
           </div>
 
           {/* Unit Types */}
-          <div className="bg-white/10 backdrop-blur-sm border border-white/20 rounded-xl p-4 text-white">
-            <Home className="h-5 w-5 mx-auto mb-2 text-primary" />
-            <p className="text-xs text-white/70 mb-1">Unit Types</p>
-            <p className="font-bold text-sm md:text-base">
+          <div className="group bg-white/10 backdrop-blur-md border border-white/20 rounded-2xl p-5 text-white hover:bg-white/20 hover:border-white/40 transition-all duration-300 hover:-translate-y-1 hover:shadow-xl">
+            <div className="w-12 h-12 rounded-xl bg-primary/20 flex items-center justify-center mx-auto mb-3 group-hover:bg-primary/30 transition-colors">
+              <Home className="h-6 w-6 text-primary" />
+            </div>
+            <p className="text-sm text-white/70 mb-1.5 font-medium">Unit Types</p>
+            <p className="font-bold text-lg md:text-xl">
               {unitTypes.length > 0 ? unitTypes.slice(0, 3).join(", ") : "Multiple Options"}
             </p>
           </div>
 
           {/* Payment Plan */}
-          <div className="bg-white/10 backdrop-blur-sm border border-white/20 rounded-xl p-4 text-white">
-            <Building2 className="h-5 w-5 mx-auto mb-2 text-primary" />
-            <p className="text-xs text-white/70 mb-1">Payment Plan</p>
-            <p className="font-bold text-sm md:text-base">
+          <div className="group bg-white/10 backdrop-blur-md border border-white/20 rounded-2xl p-5 text-white hover:bg-white/20 hover:border-white/40 transition-all duration-300 hover:-translate-y-1 hover:shadow-xl">
+            <div className="w-12 h-12 rounded-xl bg-primary/20 flex items-center justify-center mx-auto mb-3 group-hover:bg-primary/30 transition-colors">
+              <Building2 className="h-6 w-6 text-primary" />
+            </div>
+            <p className="text-sm text-white/70 mb-1.5 font-medium">Payment Plan</p>
+            <p className="font-bold text-lg md:text-xl">
               {paymentPlan || "Flexible Plans"}
             </p>
           </div>
         </div>
       </div>
+
+      {/* Bottom fade for smooth transition */}
+      <div className="absolute bottom-0 left-0 right-0 h-24 bg-gradient-to-t from-background to-transparent" />
     </section>
   )
 }

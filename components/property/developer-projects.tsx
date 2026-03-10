@@ -2,9 +2,10 @@
 
 import { useEffect, useState } from "react"
 import Link from "next/link"
-import { Building2, MapPin, ArrowRight } from "lucide-react"
+import { Building2, MapPin, ArrowRight, BadgeCheck, ExternalLink } from "lucide-react"
 import { formatPriceToIndian } from "@/lib/utils"
 import { Button } from "@/components/ui/button"
+import { cn } from "@/lib/utils"
 
 interface Project {
   _id: string
@@ -75,12 +76,12 @@ export function DeveloperProjects({
 
   if (loading) {
     return (
-      <section className="py-8 md:py-12">
+      <section className="py-12 md:py-16">
         <div className="max-w-6xl mx-auto px-4">
-          <div className="h-8 bg-muted rounded w-64 mb-6 animate-pulse" />
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+          <div className="h-10 bg-muted rounded-xl w-72 mb-8 animate-pulse" />
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
             {[1, 2, 3, 4].map(i => (
-              <div key={i} className="bg-muted rounded-xl h-64 animate-pulse" />
+              <div key={i} className="bg-muted rounded-2xl h-72 animate-pulse" />
             ))}
           </div>
         </div>
@@ -93,45 +94,58 @@ export function DeveloperProjects({
   const displayName = developer?.name || developerName
 
   return (
-    <section className="py-8 md:py-12">
+    <section className="py-12 md:py-16">
       <div className="max-w-6xl mx-auto px-4">
         {/* Developer Header */}
-        <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4 mb-6">
-          <div className="flex items-center gap-4">
+        <div className="flex flex-col lg:flex-row lg:items-center gap-6 mb-10 p-6 bg-gradient-to-br from-card to-muted/50 border border-border rounded-3xl">
+          <div className="flex items-center gap-5">
             {developer?.logo_url ? (
               <img
                 src={developer.logo_url}
                 alt={displayName}
-                className="w-16 h-16 rounded-xl object-contain bg-card border border-border p-2"
+                className="w-20 h-20 rounded-2xl object-contain bg-white border border-border p-2 shadow-sm"
               />
             ) : (
-              <div className="w-16 h-16 rounded-xl bg-primary/10 flex items-center justify-center">
-                <Building2 className="h-8 w-8 text-primary" />
+              <div className="w-20 h-20 rounded-2xl bg-gradient-to-br from-primary/20 to-primary/10 flex items-center justify-center">
+                <Building2 className="h-10 w-10 text-primary" />
               </div>
             )}
             <div>
-              <h2 className="text-xl md:text-2xl font-bold text-foreground">About {displayName}</h2>
+              <div className="flex items-center gap-2 mb-1">
+                <h2 className="text-2xl md:text-3xl font-bold text-foreground">{displayName}</h2>
+                <BadgeCheck className="h-6 w-6 text-primary" />
+              </div>
               {developer?.project_count && (
-                <p className="text-sm text-muted-foreground">
-                  {developer.project_count} Projects
+                <p className="text-muted-foreground">
+                  <span className="font-semibold text-foreground">{developer.project_count}</span> Projects Delivered
                 </p>
               )}
             </div>
           </div>
 
-          {developer?.slug && (
-            <Button asChild variant="outline">
-              <Link href={`/developers/${developer.slug}`}>
-                View All Projects
-                <ArrowRight className="h-4 w-4 ml-2" />
-              </Link>
-            </Button>
-          )}
+          <div className="lg:ml-auto flex flex-wrap gap-3">
+            {developer?.website && (
+              <Button asChild variant="outline" size="lg" className="rounded-xl">
+                <a href={developer.website} target="_blank" rel="noopener noreferrer">
+                  <ExternalLink className="h-4 w-4 mr-2" />
+                  Visit Website
+                </a>
+              </Button>
+            )}
+            {developer?.slug && (
+              <Button asChild size="lg" className="rounded-xl">
+                <Link href={`/developers/${developer.slug}`}>
+                  View All Projects
+                  <ArrowRight className="h-4 w-4 ml-2" />
+                </Link>
+              </Button>
+            )}
+          </div>
         </div>
 
         {/* Developer Description */}
         {developer?.description && (
-          <p className="text-sm text-muted-foreground mb-6 leading-relaxed max-w-3xl">
+          <p className="text-[15px] text-muted-foreground mb-10 leading-relaxed max-w-4xl">
             {developer.description}
           </p>
         )}
@@ -139,48 +153,54 @@ export function DeveloperProjects({
         {/* Projects Grid */}
         {projects.length > 0 && (
           <>
-            <h3 className="text-lg font-semibold text-foreground mb-4">
+            <h3 className="text-xl font-bold text-foreground mb-6">
               More Projects by {displayName}
             </h3>
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
               {projects.map(project => (
                 <Link
                   key={project._id}
                   href={`/properties/${project.slug || project._id}`}
-                  className="group bg-card border border-border rounded-xl overflow-hidden hover:shadow-lg transition-shadow"
+                  className={cn(
+                    "group bg-card border border-border rounded-2xl overflow-hidden",
+                    "hover:border-primary/50 hover:shadow-xl hover:shadow-primary/5 transition-all duration-300",
+                    "hover:-translate-y-1"
+                  )}
                 >
                   <div className="aspect-[4/3] relative overflow-hidden">
                     {project.main_thumbnail ? (
                       <img
                         src={project.main_thumbnail}
                         alt={project.property_name}
-                        className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+                        className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
                       />
                     ) : (
-                      <div className="w-full h-full bg-muted flex items-center justify-center">
-                        <Building2 className="h-8 w-8 text-muted-foreground/30" />
+                      <div className="w-full h-full bg-gradient-to-br from-muted to-muted/50 flex items-center justify-center">
+                        <Building2 className="h-10 w-10 text-muted-foreground/30" />
                       </div>
                     )}
+                    {/* Overlay */}
+                    <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
                   </div>
 
-                  <div className="p-4">
-                    <h4 className="font-semibold text-foreground text-sm mb-1 line-clamp-1 group-hover:text-primary transition-colors">
+                  <div className="p-5">
+                    <h4 className="font-bold text-foreground text-[15px] mb-2 line-clamp-1 group-hover:text-primary transition-colors">
                       {project.property_name}
                     </h4>
 
                     {(project.city || project.state) && (
-                      <p className="text-xs text-muted-foreground flex items-center gap-1 mb-2">
-                        <MapPin className="h-3 w-3" />
-                        {[project.city, project.state].filter(Boolean).join(", ")}
+                      <p className="text-sm text-muted-foreground flex items-center gap-1.5 mb-3">
+                        <MapPin className="h-3.5 w-3.5 flex-shrink-0" />
+                        <span className="truncate">{[project.city, project.state].filter(Boolean).join(", ")}</span>
                       </p>
                     )}
 
                     {project.lowest_price && (
-                      <p className="text-sm font-bold text-primary">
+                      <p className="text-lg font-bold text-primary">
                         {formatPriceToIndian(project.lowest_price)}
                         {project.max_price && project.max_price !== project.lowest_price && (
-                          <span className="text-xs text-muted-foreground font-normal">
-                            {" "}- {formatPriceToIndian(project.max_price)}
+                          <span className="text-xs text-muted-foreground font-normal ml-1">
+                            onwards
                           </span>
                         )}
                       </p>
