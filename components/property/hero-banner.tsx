@@ -80,7 +80,7 @@ export function HeroBanner({ property }: HeroBannerProps) {
           {/* Price */}
           <div className="group bg-white/10 backdrop-blur-md border border-white/20 rounded-2xl p-5 text-white hover:bg-white/20 hover:border-white/40 transition-all duration-300 hover:-translate-y-1 hover:shadow-xl">
             <div className="w-12 h-12 rounded-xl bg-primary/20 flex items-center justify-center mx-auto mb-3 group-hover:bg-primary/30 transition-colors">
-              <IndianRupee className="h-6 w-6 text-primary" />
+              <IndianRupee className="h-6 w-6 text-white" />
             </div>
             <p className="text-sm text-white/70 mb-1.5 font-medium">Starting Price</p>
             <p className="font-bold text-lg md:text-xl">
@@ -100,7 +100,7 @@ export function HeroBanner({ property }: HeroBannerProps) {
           {/* Possession */}
           <div className="group bg-white/10 backdrop-blur-md border border-white/20 rounded-2xl p-5 text-white hover:bg-white/20 hover:border-white/40 transition-all duration-300 hover:-translate-y-1 hover:shadow-xl">
             <div className="w-12 h-12 rounded-xl bg-primary/20 flex items-center justify-center mx-auto mb-3 group-hover:bg-primary/30 transition-colors">
-              <Calendar className="h-6 w-6 text-primary" />
+              <Calendar className="h-6 w-6 text-white" />
             </div>
             <p className="text-sm text-white/70 mb-1.5 font-medium">Possession</p>
             <p className="font-bold text-lg md:text-xl">
@@ -111,7 +111,7 @@ export function HeroBanner({ property }: HeroBannerProps) {
           {/* Unit Types */}
           <div className="group bg-white/10 backdrop-blur-md border border-white/20 rounded-2xl p-5 text-white hover:bg-white/20 hover:border-white/40 transition-all duration-300 hover:-translate-y-1 hover:shadow-xl">
             <div className="w-12 h-12 rounded-xl bg-primary/20 flex items-center justify-center mx-auto mb-3 group-hover:bg-primary/30 transition-colors">
-              <Home className="h-6 w-6 text-primary" />
+              <Home className="h-6 w-6 text-white" />
             </div>
             <p className="text-sm text-white/70 mb-1.5 font-medium">Unit Types</p>
             <p className="font-bold text-lg md:text-xl">
@@ -122,7 +122,7 @@ export function HeroBanner({ property }: HeroBannerProps) {
           {/* Payment Plan */}
           <div className="group bg-white/10 backdrop-blur-md border border-white/20 rounded-2xl p-5 text-white hover:bg-white/20 hover:border-white/40 transition-all duration-300 hover:-translate-y-1 hover:shadow-xl">
             <div className="w-12 h-12 rounded-xl bg-primary/20 flex items-center justify-center mx-auto mb-3 group-hover:bg-primary/30 transition-colors">
-              <Building2 className="h-6 w-6 text-primary" />
+              <Building2 className="h-6 w-6 text-white" />
             </div>
             <p className="text-sm text-white/70 mb-1.5 font-medium">Payment Plan</p>
             <p className="font-bold text-lg md:text-xl">
