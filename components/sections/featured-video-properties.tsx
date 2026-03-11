@@ -231,14 +231,14 @@ export default function FeaturedVideoProperties() {
               </span>
             </div>
             <h2 className="text-2xl md:text-3xl font-bold text-foreground">
-              Luxury Collection
+              Luxury Properties
             </h2>
             <p className="text-sm text-muted-foreground max-w-md">
               Explore exclusive high-end properties crafted for modern lifestyles
             </p>
           </div>
-          
-          <Link 
+
+          <Link
             href="/properties?listing_type=new"
             className={cn(
               "inline-flex items-center gap-2 px-4 py-2 rounded-full",
