@@ -1,11 +1,11 @@
 "use client"
 
 import { useState, useEffect } from "react"
-import { 
-  MapPin, Bed, Bath, Square, Building2, 
-  ChevronLeft, ChevronRight, Car, Compass, Layers, 
+import {
+  MapPin, Bed, Bath, Square, Building2,
+  ChevronLeft, ChevronRight, Car, Compass, Layers,
   IndianRupee, Warehouse, Building, Home,
-  Share2, Heart, Video, ImageIcon, 
+  Share2, Heart, Video, ImageIcon,
   Check, Phone, Mail, Calendar, ArrowLeft,
   Shield, Clock, TreePine, Dumbbell,
   Waves, Wifi, Zap, Wind, Sun, FileText,
@@ -320,7 +320,7 @@ export default function PropertyDetailPage({ params }: { params: Promise<{ id: s
         <section className="py-10 md:py-14 relative overflow-hidden">
           {/* Decorative background */}
           <div className="absolute inset-0 bg-gradient-to-br from-primary/[0.02] via-transparent to-primary/[0.02]" />
-          
+
           <div className="max-w-6xl mx-auto px-4 relative">
             {/* Section Header */}
             <div className="flex flex-col items-center text-center mb-8">
@@ -336,11 +336,11 @@ export default function PropertyDetailPage({ params }: { params: Promise<{ id: s
             <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-2.5">
               {allAmenities.map((amenity: string, idx: number) => {
                 const Icon = getAmenityIcon(amenity)
-                const isHighlight = idx < 5
+                const isHighlight = idx < 100
 
                 return (
-                  <div 
-                    key={idx} 
+                  <div
+                    key={idx}
                     className={cn(
                       "group relative flex items-center gap-2.5 p-3 rounded-xl transition-all duration-200",
                       isHighlight
@@ -358,7 +358,7 @@ export default function PropertyDetailPage({ params }: { params: Promise<{ id: s
                       <Icon className="h-3.5 w-3.5" />
                     </div>
                     <span className="text-xs font-medium text-foreground truncate">{amenity}</span>
-                    
+
                     {/* Checkmark for highlights */}
                     {isHighlight && (
                       <Check className="h-3 w-3 text-primary ml-auto flex-shrink-0 opacity-60" />
@@ -383,7 +383,7 @@ export default function PropertyDetailPage({ params }: { params: Promise<{ id: s
         <section className="py-10 md:py-14 bg-gradient-to-b from-muted/30 to-muted/50 relative overflow-hidden">
           {/* Decorative elements */}
           <div className="absolute top-0 left-1/4 w-64 h-64 bg-primary/5 rounded-full blur-3xl" />
-          
+
           <div className="max-w-6xl mx-auto px-4 relative">
             {/* Section Header */}
             <div className="flex items-center justify-between mb-6">
@@ -396,7 +396,7 @@ export default function PropertyDetailPage({ params }: { params: Promise<{ id: s
                   <p className="text-muted-foreground text-xs">{images.length} Images</p>
                 </div>
               </div>
-              
+
               {property.walkthrough_video && (
                 <a
                   href={property.walkthrough_video}
@@ -415,7 +415,7 @@ export default function PropertyDetailPage({ params }: { params: Promise<{ id: s
               {images.slice(0, 8).map((img: string, idx: number) => {
                 // First image is larger
                 const isLarge = idx === 0
-                
+
                 return (
                   <button
                     key={idx}
@@ -425,15 +425,15 @@ export default function PropertyDetailPage({ params }: { params: Promise<{ id: s
                       isLarge ? "md:col-span-2 md:row-span-2 aspect-[4/3] md:aspect-square" : "aspect-[4/3]"
                     )}
                   >
-                    <img 
-                      src={img} 
-                      alt={`Gallery ${idx + 1}`} 
-                      className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" 
+                    <img
+                      src={img}
+                      alt={`Gallery ${idx + 1}`}
+                      className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
                     />
-                    
+
                     {/* Overlay on hover */}
                     <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
-                    
+
                     {/* View icon */}
                     <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300">
                       <div className="w-10 h-10 rounded-full bg-white/90 flex items-center justify-center shadow-lg">
