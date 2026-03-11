@@ -26,15 +26,15 @@ export function HeroBanner({ property }: HeroBannerProps) {
   const bgImage = property.main_banner || property.main_thumbnail
 
   // Get unit types from configurations or units
-  const unitTypes = property.configurations?.map(c => c.type).filter(Boolean) || 
-                    property.units?.map(u => u.type).filter(Boolean) || []
+  const unitTypes = property.configurations?.map(c => c.type).filter(Boolean) ||
+    property.units?.map(u => u.type).filter(Boolean) || []
 
   // Format payment plan
-  const paymentPlan = property.payment_plan_details || 
-    (property.payment_plan === "clp" ? "Construction Linked" : 
-     property.payment_plan === "possession_linked" ? "Possession Linked" :
-     property.payment_plan === "down_payment" ? "Down Payment" : 
-     property.payment_plan)
+  const paymentPlan = property.payment_plan_details ||
+    (property.payment_plan === "clp" ? "Construction Linked" :
+      property.payment_plan === "possession_linked" ? "Possession Linked" :
+        property.payment_plan === "down_payment" ? "Down Payment" :
+          property.payment_plan)
 
   const formatPrice = (price: number) => formatPriceToIndian(price)
 
@@ -132,8 +132,6 @@ export function HeroBanner({ property }: HeroBannerProps) {
         </div>
       </div>
 
-      {/* Bottom fade for smooth transition */}
-      <div className="absolute bottom-0 left-0 right-0 h-24 bg-gradient-to-t from-background to-transparent" />
     </section>
   )
 }
