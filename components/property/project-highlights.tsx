@@ -38,7 +38,7 @@ export function ProjectHighlights({ highlights }: ProjectHighlightsProps) {
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
           {highlights.map((highlight, index) => {
             const Icon = getHighlightIcon(index)
-            const isFeature = index < 3
+            const isFeature = index < 6
 
             return (
               <div
