@@ -1,11 +1,11 @@
 "use client"
 
 import { useState, useEffect } from "react"
-import { 
-  MapPin, Bed, Bath, Square, Building2, 
-  ChevronLeft, ChevronRight, Car, Compass, Layers, 
+import {
+  MapPin, Bed, Bath, Square, Building2,
+  ChevronLeft, ChevronRight, Car, Compass, Layers,
   IndianRupee, Warehouse, Building, Home,
-  Share2, Heart, Video, ImageIcon, 
+  Share2, Heart, Video, ImageIcon,
   Check, Phone, Mail, Calendar, ArrowLeft,
   Shield, Clock, TreePine, Dumbbell,
   Waves, Wifi, Zap, Wind, Sun, FileText,
@@ -234,22 +234,26 @@ export default function PropertyDetailPage({ params }: { params: Promise<{ id: s
       {(property.about_project || property.short_description || property.long_description) && (
         <section className="py-8 md:py-12">
           <div className="max-w-6xl mx-auto px-4">
-            <div className="flex items-center gap-2 mb-6">
-              <Building2 className="h-5 w-5 text-primary" />
-              <h2 className="text-xl md:text-2xl font-bold text-foreground">About {property.property_name}</h2>
+            <div className="flex items-center gap-2 mb-5">
+              <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-primary to-primary/80 flex items-center justify-center shadow-sm shadow-primary/20">
+                <Building2 className="h-4 w-4 text-primary-foreground" />
+              </div>
+              <div>
+                <h2 className="text-lg md:text-xl font-bold text-foreground">About {property.property_name}</h2>
+              </div>
             </div>
             <div className="prose prose-sm max-w-none">
               {property.about_project ? (
-                <p className="text-muted-foreground leading-relaxed whitespace-pre-line">
+                <p className="text-sm text-muted-foreground leading-relaxed whitespace-pre-line">
                   {property.about_project}
                 </p>
               ) : (
                 <>
                   {property.short_description && (
-                    <p className="text-muted-foreground leading-relaxed mb-4">{property.short_description}</p>
+                    <p className="text-sm text-muted-foreground leading-relaxed mb-4">{property.short_description}</p>
                   )}
                   {property.long_description && (
-                    <p className="text-muted-foreground leading-relaxed whitespace-pre-line">{property.long_description}</p>
+                    <p className="text-sm text-muted-foreground leading-relaxed whitespace-pre-line">{property.long_description}</p>
                   )}
                 </>
               )}
@@ -266,34 +270,39 @@ export default function PropertyDetailPage({ params }: { params: Promise<{ id: s
         <section className="py-8 md:py-12 bg-muted/30">
           <div className="max-w-6xl mx-auto px-4">
             <div className="flex items-center gap-2 mb-6">
-              <FileText className="h-5 w-5 text-primary" />
-              <h2 className="text-xl md:text-2xl font-bold text-foreground">Property Details</h2>
+              <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-primary to-primary/80 flex items-center justify-center shadow-sm shadow-primary/20">
+                <FileText className="h-4 w-4 text-primary-foreground" />
+              </div>
+              <div>
+                <h2 className="text-lg md:text-xl font-bold text-foreground">Property Details</h2>
+                <p className="text-muted-foreground text-xs">Complete specifications</p>
+              </div>
             </div>
 
-            <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4">
+            <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-2.5">
               {allSpecs.map((spec, idx) => (
-                <div key={idx} className="bg-card border border-border rounded-xl p-4">
-                  <spec.icon className="h-5 w-5 text-primary mb-2" />
-                  <p className="text-xs text-muted-foreground mb-0.5">{spec.label}</p>
-                  <p className="text-sm font-semibold text-foreground capitalize">{spec.value}</p>
+                <div key={idx} className="bg-card border border-border rounded-xl p-3 hover:border-primary/30 transition-colors">
+                  <spec.icon className="h-4 w-4 text-primary mb-1.5" />
+                  <p className="text-[10px] text-muted-foreground uppercase tracking-wider mb-0.5">{spec.label}</p>
+                  <p className="text-xs font-semibold text-foreground capitalize truncate">{spec.value}</p>
                 </div>
               ))}
             </div>
 
             {/* RERA Info */}
             {(property.rera_registered || property.rera_id) && (
-              <div className="mt-6 bg-blue-50 dark:bg-blue-950/30 border border-blue-200 dark:border-blue-800 rounded-xl p-4">
-                <div className="flex items-center gap-2 mb-2">
-                  <Shield className="h-5 w-5 text-blue-600" />
-                  <h3 className="font-semibold text-blue-700 dark:text-blue-400">RERA Registered</h3>
+              <div className="mt-5 bg-blue-50 dark:bg-blue-950/30 border border-blue-200 dark:border-blue-800 rounded-xl p-3">
+                <div className="flex items-center gap-2 mb-1.5">
+                  <Shield className="h-4 w-4 text-blue-600" />
+                  <h3 className="text-xs font-semibold text-blue-700 dark:text-blue-400">RERA Registered</h3>
                 </div>
-                <div className="flex flex-wrap gap-4 text-sm">
+                <div className="flex flex-wrap gap-3 text-xs">
                   {property.rera_id && (
                     <p><span className="text-muted-foreground">RERA ID:</span> <span className="font-medium">{property.rera_id}</span></p>
                   )}
                   {property.rera_website_link && (
                     <a href={property.rera_website_link} target="_blank" rel="noopener noreferrer" className="flex items-center gap-1 text-blue-600 hover:underline">
-                      <ExternalLink className="h-3.5 w-3.5" />View on RERA Website
+                      <ExternalLink className="h-3 w-3" />View on RERA Website
                     </a>
                   )}
                 </div>
@@ -308,23 +317,62 @@ export default function PropertyDetailPage({ params }: { params: Promise<{ id: s
 
       {/* Section 6: Amenities */}
       {allAmenities.length > 0 && (
-        <section className="py-8 md:py-12">
-          <div className="max-w-6xl mx-auto px-4">
-            <div className="flex items-center gap-2 mb-6">
-              <Check className="h-5 w-5 text-primary" />
-              <h2 className="text-xl md:text-2xl font-bold text-foreground">Amenities & Facilities</h2>
+        <section className="py-10 md:py-14 relative overflow-hidden">
+          {/* Decorative background */}
+          <div className="absolute inset-0 bg-gradient-to-br from-primary/[0.02] via-transparent to-primary/[0.02]" />
+
+          <div className="max-w-6xl mx-auto px-4 relative">
+            {/* Section Header */}
+            <div className="flex flex-col items-center text-center mb-8">
+              <div className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-primary/10 border border-primary/20 rounded-full text-primary text-xs font-semibold mb-3 tracking-wide">
+                <Check className="h-3 w-3" />
+                WORLD-CLASS LIVING
+              </div>
+              <h2 className="text-lg md:text-xl font-bold text-foreground">Amenities & Facilities</h2>
+              <p className="text-muted-foreground text-xs mt-1">{allAmenities.length} Premium amenities for modern lifestyle</p>
             </div>
 
-            <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-3">
+            {/* Amenities Grid - Compact Masonry Style */}
+            <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-2.5">
               {allAmenities.map((amenity: string, idx: number) => {
                 const Icon = getAmenityIcon(amenity)
+                const isHighlight = idx < 100
+
                 return (
-                  <div key={idx} className="flex items-center gap-3 p-3 bg-card border border-border rounded-xl">
-                    <Icon className="h-4 w-4 text-primary flex-shrink-0" />
-                    <span className="text-sm truncate">{amenity}</span>
+                  <div
+                    key={idx}
+                    className={cn(
+                      "group relative flex items-center gap-2.5 p-3 rounded-xl transition-all duration-200",
+                      isHighlight
+                        ? "bg-gradient-to-br from-primary/10 to-primary/5 border border-primary/20 hover:border-primary/40"
+                        : "bg-card border border-border hover:border-primary/30 hover:shadow-sm",
+                      "hover:-translate-y-0.5"
+                    )}
+                  >
+                    <div className={cn(
+                      "flex-shrink-0 w-7 h-7 rounded-lg flex items-center justify-center transition-colors",
+                      isHighlight
+                        ? "bg-primary/20 text-primary"
+                        : "bg-muted text-muted-foreground group-hover:bg-primary/10 group-hover:text-primary"
+                    )}>
+                      <Icon className="h-3.5 w-3.5" />
+                    </div>
+                    <span className="text-xs font-medium text-foreground truncate">{amenity}</span>
+
+                    {/* Checkmark for highlights */}
+                    {isHighlight && (
+                      <Check className="h-3 w-3 text-primary ml-auto flex-shrink-0 opacity-60" />
+                    )}
                   </div>
                 )
               })}
+            </div>
+
+            {/* Bottom decorative line */}
+            <div className="mt-8 flex items-center justify-center gap-2">
+              <div className="h-px w-12 bg-gradient-to-r from-transparent to-primary/30" />
+              <div className="w-1.5 h-1.5 rounded-full bg-primary/40" />
+              <div className="h-px w-12 bg-gradient-to-l from-transparent to-primary/30" />
             </div>
           </div>
         </section>
@@ -332,36 +380,86 @@ export default function PropertyDetailPage({ params }: { params: Promise<{ id: s
 
       {/* Section 7: Gallery */}
       {images.length > 1 && (
-        <section className="py-8 md:py-12 bg-muted/30">
-          <div className="max-w-6xl mx-auto px-4">
-            <div className="flex items-center gap-2 mb-6">
-              <ImageIcon className="h-5 w-5 text-primary" />
-              <h2 className="text-xl md:text-2xl font-bold text-foreground">Gallery</h2>
-            </div>
+        <section className="py-10 md:py-14 bg-gradient-to-b from-muted/30 to-muted/50 relative overflow-hidden">
+          {/* Decorative elements */}
+          <div className="absolute top-0 left-1/4 w-64 h-64 bg-primary/5 rounded-full blur-3xl" />
 
-            <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3">
-              {images.map((img: string, idx: number) => (
-                <button
-                  key={idx}
-                  onClick={() => { setActiveImage(idx); setShowFullscreen(true); }}
-                  className="aspect-[4/3] rounded-xl overflow-hidden border border-border hover:border-primary transition-colors"
-                >
-                  <img src={img} alt={`Gallery ${idx + 1}`} className="w-full h-full object-cover" />
-                </button>
-              ))}
-            </div>
+          <div className="max-w-6xl mx-auto px-4 relative">
+            {/* Section Header */}
+            <div className="flex items-center justify-between mb-6">
+              <div className="flex items-center gap-3">
+                <div className="w-9 h-9 rounded-xl bg-gradient-to-br from-primary to-primary/80 flex items-center justify-center shadow-lg shadow-primary/20">
+                  <ImageIcon className="h-4 w-4 text-primary-foreground" />
+                </div>
+                <div>
+                  <h2 className="text-lg md:text-xl font-bold text-foreground">Project Gallery</h2>
+                  <p className="text-muted-foreground text-xs">{images.length} Images</p>
+                </div>
+              </div>
 
-            {property.walkthrough_video && (
-              <div className="mt-4">
+              {property.walkthrough_video && (
                 <a
                   href={property.walkthrough_video}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="inline-flex items-center gap-2 px-4 py-2 bg-card border border-border rounded-xl hover:border-primary transition-colors"
+                  className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-primary/10 border border-primary/20 rounded-full text-primary text-xs font-semibold hover:bg-primary/20 transition-colors"
                 >
-                  <Video className="h-4 w-4 text-primary" />
-                  <span className="text-sm font-medium">Watch Walkthrough Video</span>
+                  <Video className="h-3 w-3" />
+                  <span>Watch Video</span>
                 </a>
+              )}
+            </div>
+
+            {/* Gallery Grid - Bento Style */}
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-2.5">
+              {images.slice(0, 8).map((img: string, idx: number) => {
+                // First image is larger
+                const isLarge = idx === 0
+
+                return (
+                  <button
+                    key={idx}
+                    onClick={() => { setActiveImage(idx); setShowFullscreen(true); }}
+                    className={cn(
+                      "group relative overflow-hidden rounded-xl border-2 border-transparent hover:border-primary/50 transition-all duration-300",
+                      isLarge ? "md:col-span-2 md:row-span-2 aspect-[4/3] md:aspect-square" : "aspect-[4/3]"
+                    )}
+                  >
+                    <img
+                      src={img}
+                      alt={`Gallery ${idx + 1}`}
+                      className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                    />
+
+                    {/* Overlay on hover */}
+                    <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+
+                    {/* View icon */}
+                    <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                      <div className="w-10 h-10 rounded-full bg-white/90 flex items-center justify-center shadow-lg">
+                        <ImageIcon className="h-4 w-4 text-foreground" />
+                      </div>
+                    </div>
+
+                    {/* Image number badge */}
+                    <div className="absolute bottom-2 left-2 px-2 py-0.5 bg-black/60 backdrop-blur-sm rounded text-[10px] text-white font-medium">
+                      {idx + 1}/{images.length}
+                    </div>
+                  </button>
+                )
+              })}
+            </div>
+
+            {/* Show more if there are more images */}
+            {images.length > 8 && (
+              <div className="mt-4 text-center">
+                <button
+                  onClick={() => { setActiveImage(0); setShowFullscreen(true); }}
+                  className="inline-flex items-center gap-2 px-4 py-2 bg-card border border-border rounded-xl text-xs font-semibold text-foreground hover:border-primary/50 hover:text-primary transition-colors"
+                >
+                  <ImageIcon className="h-3.5 w-3.5" />
+                  View All {images.length} Images
+                </button>
               </div>
             )}
           </div>
