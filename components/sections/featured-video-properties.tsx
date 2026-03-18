@@ -1,6 +1,6 @@
 "use client"
 
-import { useState, useRef, useEffect } from "react"
+import { useState } from "react"
 import { Play, MapPin, Home, Sparkles, ArrowRight } from "lucide-react"
 import { cn } from "@/lib/utils"
 import Link from "next/link"
@@ -59,19 +59,6 @@ const FEATURED_PROPERTIES = [
 
 function PropertyVideoCard({ property, index }: { property: typeof FEATURED_PROPERTIES[0]; index: number }) {
   const [isHovered, setIsHovered] = useState(false)
-  const videoRef = useRef<HTMLVideoElement>(null)
-
-  // Fix for videos not playing on client-side navigation
-  useEffect(() => {
-    const video = videoRef.current
-    if (video) {
-      // Reset and play the video when component mounts or navigates to page
-      video.load()
-      video.play().catch(() => {
-        // Autoplay was prevented, which is fine - user can interact to play
-      })
-    }
-  }, [])
 
   return (
     <div
@@ -88,7 +75,6 @@ function PropertyVideoCard({ property, index }: { property: typeof FEATURED_PROP
     >
       {/* Video Background */}
       <video
-        ref={videoRef}
         src={property.video}
         autoPlay
         loop
@@ -227,18 +213,18 @@ export default function FeaturedVideoProperties() {
                 <Sparkles className="h-4 w-4 text-primary" />
               </div>
               <span className="text-xs font-semibold text-primary uppercase tracking-wider">
-                Premium Estates
+                Handpicked Selection
               </span>
             </div>
             <h2 className="text-2xl md:text-3xl font-bold text-foreground">
               Luxury Properties
             </h2>
             <p className="text-sm text-muted-foreground max-w-md">
-              Explore exclusive high-end properties crafted for modern lifestyles
+              Experience premium living with our exclusive collection of luxury residences
             </p>
           </div>
-
-          <Link
+          
+          <Link 
             href="/properties?listing_type=new"
             className={cn(
               "inline-flex items-center gap-2 px-4 py-2 rounded-full",

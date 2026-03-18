@@ -1,5 +1,3 @@
-export const dynamic = "force-dynamic";
-
 import type { MetadataRoute } from "next"
 import { MongoClient } from "mongodb"
 
@@ -78,7 +76,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const properties = await getProperties()
   const propertyPages = properties.map((prop: any) => ({
     url: `${baseUrl}/properties/${prop._id}`,
-    lastModified: new Date(prop.updated_at || Date.now()),
+    lastModified: new Date(prop.updated_at),
     changeFrequency: "weekly" as const,
     priority: 0.7,
   }))
@@ -87,7 +85,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const blogs = await getBlogs()
   const blogPages = blogs.map((blog: any) => ({
     url: `${baseUrl}/blog/${blog.slug}`,
-    lastModified: new Date(blog.updated_at || Date.now()),
+    lastModified: new Date(blog.updated_at),
     changeFrequency: "monthly" as const,
     priority: 0.6,
   }))

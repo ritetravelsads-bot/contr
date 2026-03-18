@@ -3,33 +3,33 @@ import { Shield, Award, Users, TrendingUp, Clock, HeadphonesIcon } from "lucide-
 const features = [
   {
     icon: Shield,
-    title: "100% RERA Verified Properties",
-    description: "Every listing is legally approved and thoroughly vetted.",
+    title: "100% Verified Listings",
+    description: "Every property is thoroughly verified and authenticated by our expert team",
   },
   {
     icon: Award,
-    title: "Dedicated Property Advisory",
-    description: "Personalized consultation for HNIs, NRIs, and corporate buyers.",
+    title: "Award-Winning Service",
+    description: "Recognized as India's most trusted real estate platform in 2024",
   },
   {
     icon: Users,
-    title: "Local Market Intelligence",
-    description: "Data-driven insights on pricing trends and sector-wise appreciation.",
+    title: "Expert Guidance",
+    description: "Connect with certified agents and property consultants",
   },
   {
     icon: TrendingUp,
-    title: "Priority Access to New Launches",
-    description: "Early entry into premium and limited-inventory projects.",
+    title: "Market Insights",
+    description: "Access real-time market trends and property valuations",
   },
   {
     icon: Clock,
-    title: "Seamless Property Transactions",
-    description: "End-to-end support including documentation, negotiations, and closing.",
+    title: "Quick Transactions",
+    description: "Streamlined process with digital documentation and support",
   },
   {
     icon: HeadphonesIcon,
-    title: "24/7 Client Assistance",
-    description: "Professional support before, during, and after purchase.",
+    title: "24/7 Support",
+    description: "Our customer support team is always ready to help you",
   },
 ]
 
@@ -40,7 +40,7 @@ export default function WhyChooseUs() {
         <div className="text-center mb-12">
           <h2 className="text-primary mb-4">Why Choose CountryRoof</h2>
           <p className="text-muted-foreground text-lg max-w-2xl mx-auto">
-            Gurugram’s Trusted Real Estate Advisory Platform
+            India's most trusted real estate platform with unmatched service and support
           </p>
         </div>
 

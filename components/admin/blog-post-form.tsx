@@ -67,41 +67,28 @@ export default function BlogPostForm({ initialData }: BlogPostFormProps) {
     }))
   }
 
-  const [uploading, setUploading] = useState<Record<string, boolean>>({})
-
   const handleImageUpload = async (e: React.ChangeEvent<HTMLInputElement>, fieldName: string) => {
     const file = e.target.files?.[0]
     if (!file) return
 
-    setUploading((prev) => ({ ...prev, [fieldName]: true }))
-    setError("")
+    const formDataUpload = new FormData()
+    formDataUpload.append("file", file)
+    formDataUpload.append("publicKey", process.env.NEXT_PUBLIC_IMAGEKIT_PUBLIC_KEY || "")
+    formDataUpload.append("fileName", file.name)
 
     try {
-      const uploadFormData = new FormData()
-      uploadFormData.append("file", file)
-      uploadFormData.append("folder", "blog")
-
-      const response = await fetch("/api/upload", {
+      const response = await fetch("https://upload.imagekit.io/api/v1/files/upload", {
         method: "POST",
-        body: uploadFormData,
+        body: formDataUpload,
       })
-
-      if (!response.ok) {
-        const errorData = await response.json().catch(() => ({}))
-        throw new Error(errorData.error || "Upload failed")
-      }
-
       const data = await response.json()
       setFormData((prev) => ({ ...prev, [fieldName]: data.url }))
     } catch (err) {
-      setError(err instanceof Error ? err.message : "Failed to upload image")
-    } finally {
-      setUploading((prev) => ({ ...prev, [fieldName]: false }))
-      e.target.value = ""
+      setError("Failed to upload image")
     }
   }
 
-  const handleSubmit = async (e: React.FormEvent, publishStatus: boolean = true) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
     setLoading(true)
     setError("")
@@ -111,33 +98,24 @@ export default function BlogPostForm({ initialData }: BlogPostFormProps) {
       const url = isEditing ? `/api/admin/blog/posts/${initialData._id}` : "/api/admin/blog/posts"
       const method = isEditing ? "PUT" : "POST"
 
-      const payload = {
-        ...formData,
-        tags: formData.tags.split(",").map((t) => t.trim()).filter(Boolean),
-        is_published: publishStatus,
-      }
-
       const response = await fetch(url, {
         method,
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(payload),
+        body: JSON.stringify({
+          ...formData,
+          tags: formData.tags.split(",").map((t) => t.trim()),
+        }),
       })
 
       if (!response.ok) {
         const data = await response.json()
         throw new Error(data.error || `Failed to ${isEditing ? "update" : "create"} blog post`)
       }
-      
-      await response.json()
 
       setSuccess(true)
-      setFormData((prev) => ({ ...prev, is_published: publishStatus }))
-      
-      // Use router.refresh() before navigation to ensure the list is updated
       setTimeout(() => {
-        router.refresh()
         router.push("/admin/blog")
-      }, 1000)
+      }, 1500)
     } catch (err) {
       setError(err instanceof Error ? err.message : "An error occurred")
     } finally {
@@ -231,32 +209,16 @@ export default function BlogPostForm({ initialData }: BlogPostFormProps) {
                   <label htmlFor="banner_image" className="text-sm font-medium">
                     Banner Image
                   </label>
-                  <div className="flex items-center gap-4">
-                    <label className="flex items-center justify-center px-4 py-2 border border-border rounded-md cursor-pointer hover:bg-muted transition-colors">
-                      <input
-                        id="banner_image"
-                        type="file"
-                        accept="image/*"
-                        onChange={(e) => handleImageUpload(e, "banner_image")}
-                        disabled={uploading.banner_image}
-                        className="hidden"
-                      />
-                      {uploading.banner_image ? "Uploading..." : "Choose File"}
-                    </label>
-                    {formData.banner_image && (
-                      <Button
-                        type="button"
-                        variant="ghost"
-                        size="sm"
-                        onClick={() => setFormData((prev) => ({ ...prev, banner_image: "" }))}
-                      >
-                        Remove
-                      </Button>
-                    )}
-                  </div>
+                  <input
+                    id="banner_image"
+                    type="file"
+                    accept="image/*"
+                    onChange={(e) => handleImageUpload(e, "banner_image")}
+                    className="w-full"
+                  />
                   {formData.banner_image && (
                     <img
-                      src={formData.banner_image}
+                      src={formData.banner_image || "/placeholder.svg"}
                       alt="Banner preview"
                       className="w-full h-48 object-cover rounded-md"
                     />
@@ -265,34 +227,18 @@ export default function BlogPostForm({ initialData }: BlogPostFormProps) {
 
                 <div className="space-y-2">
                   <label htmlFor="cover_image" className="text-sm font-medium">
-                    Cover Image (Thumbnail)
+                    Cover Image
                   </label>
-                  <div className="flex items-center gap-4">
-                    <label className="flex items-center justify-center px-4 py-2 border border-border rounded-md cursor-pointer hover:bg-muted transition-colors">
-                      <input
-                        id="cover_image"
-                        type="file"
-                        accept="image/*"
-                        onChange={(e) => handleImageUpload(e, "cover_image")}
-                        disabled={uploading.cover_image}
-                        className="hidden"
-                      />
-                      {uploading.cover_image ? "Uploading..." : "Choose File"}
-                    </label>
-                    {formData.cover_image && (
-                      <Button
-                        type="button"
-                        variant="ghost"
-                        size="sm"
-                        onClick={() => setFormData((prev) => ({ ...prev, cover_image: "" }))}
-                      >
-                        Remove
-                      </Button>
-                    )}
-                  </div>
+                  <input
+                    id="cover_image"
+                    type="file"
+                    accept="image/*"
+                    onChange={(e) => handleImageUpload(e, "cover_image")}
+                    className="w-full"
+                  />
                   {formData.cover_image && (
                     <img
-                      src={formData.cover_image}
+                      src={formData.cover_image || "/placeholder.svg"}
                       alt="Cover preview"
                       className="w-full h-48 object-cover rounded-md"
                     />
@@ -310,7 +256,7 @@ export default function BlogPostForm({ initialData }: BlogPostFormProps) {
                 <CardHeader>
                   <CardTitle className="text-lg">Blog Content</CardTitle>
                 </CardHeader>
-                <CardContent className="space-y-4 overflow-auto">
+                <CardContent className="space-y-4">
                   <div className="space-y-2">
                     <label className="text-sm font-medium">Content *</label>
                     <RichTextEditor
@@ -456,10 +402,9 @@ export default function BlogPostForm({ initialData }: BlogPostFormProps) {
         <Button
           type="button"
           variant="outline"
-          disabled={loading}
-          onClick={(e) => handleSubmit(e as unknown as React.FormEvent, false)}
+          onClick={() => setFormData((prev) => ({ ...prev, is_published: false }))}
         >
-          {loading ? "Saving..." : "Save as Draft"}
+          Save as Draft
         </Button>
       </div>
     </form>

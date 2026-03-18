@@ -2,8 +2,11 @@
 
 import { useState } from "react"
 import { useRouter } from "next/navigation"
+import Header from "@/components/layout/header"
+import Footer from "@/components/layout/footer"
+import AdminNav from "@/components/admin/admin-nav"
 import { Button } from "@/components/ui/button"
-import PageHeader from "@/components/dashboard/page-header"
+import Link from "next/link"
 
 export default function AdminAddCategoryPage() {
   const router = useRouter()
@@ -43,15 +46,20 @@ export default function AdminAddCategoryPage() {
   }
 
   return (
-    <div className="space-y-6">
-      <PageHeader
-        title="Add New Category"
-        description="Create a new property category"
-        showBackButton
-        backHref="/admin/categories"
-      />
+    <>
+      <Header />
+      <main className="min-h-screen">
+        <div className="flex flex-col md:flex-row">
+          <AdminNav />
 
-      <form onSubmit={handleSubmit} className="space-y-4 bg-card border border-border rounded-lg p-6 max-w-2xl">
+          <div className="flex-1 px-4 py-8 md:py-12">
+            <div className="max-w-2xl mx-auto space-y-6">
+              <div>
+                <h1 className="text-2xl font-bold text-foreground">Add New Category</h1>
+                <p className="text-sm text-muted-foreground mt-1">Create a new property category</p>
+              </div>
+
+              <form onSubmit={handleSubmit} className="space-y-4 bg-card border border-border rounded-lg p-6">
                 <div>
                   <label className="text-xs font-medium text-muted-foreground block mb-1.5">Category Name</label>
                   <input
@@ -89,15 +97,20 @@ export default function AdminAddCategoryPage() {
                   />
                 </div>
 
-        <div className="flex gap-3 pt-4">
-          <Button type="submit" disabled={loading} className="text-xs h-8">
-            {loading ? "Creating..." : "Create Category"}
-          </Button>
-          <Button type="button" variant="outline" className="text-xs h-8" onClick={() => router.back()}>
-            Cancel
-          </Button>
+                <div className="flex gap-3 pt-4">
+                  <Button type="submit" disabled={loading} className="text-xs h-8">
+                    {loading ? "Creating..." : "Create Category"}
+                  </Button>
+                  <Button asChild variant="outline" className="text-xs h-8 bg-transparent">
+                    <Link href="/admin/categories">Cancel</Link>
+                  </Button>
+                </div>
+              </form>
+            </div>
+          </div>
         </div>
-      </form>
-    </div>
+      </main>
+      <Footer />
+    </>
   )
 }

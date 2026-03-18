@@ -33,11 +33,11 @@ export default function FeaturedDevelopers() {
         <div className="text-center mb-12">
           <div className="inline-flex items-center gap-2 mb-4">
             <Award className="text-primary" size={24} />
-            <span className="text-primary font-semibold">TOP REAL ESTATE DEVELOPERS</span>
+            <span className="text-primary font-semibold">Trusted Partners</span>
           </div>
-          <h2 className="text-primary mb-4">Gurugram’s Leading Developers & Luxury Builders</h2>
+          <h2 className="text-primary mb-4">Featured Developers & Builders</h2>
           <p className="text-muted-foreground text-lg max-w-2xl mx-auto">
-            Strategic partnerships with reputed developers known for timely delivery, architectural excellence, and RERA compliance.
+            Partner with India's leading real estate developers
           </p>
         </div>
 

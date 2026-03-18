@@ -18,10 +18,9 @@ async function getBlogPost(slug: string) {
     const db = client.db("countryroof")
     const collection = db.collection("blog_posts")
 
-    // Check for both is_published and published fields for compatibility
     const post = await collection.findOne({
       slug,
-      $or: [{ is_published: true }, { published: true }],
+      is_published: true,
     })
 
     return post
@@ -68,7 +67,7 @@ export default async function BlogPostPage({ params }: { params: Promise<{ slug:
     notFound()
   }
 
-  const publishDate = new Date(post.publication_date || post.createdAt).toLocaleDateString("en-US", {
+  const publishDate = new Date(post.publication_date).toLocaleDateString("en-US", {
     year: "numeric",
     month: "long",
     day: "numeric",
@@ -109,7 +108,7 @@ export default async function BlogPostPage({ params }: { params: Promise<{ slug:
                 <span>•</span>
                 <span>{publishDate}</span>
                 <span>•</span>
-                <span>{post.readTime || post.read_time || "5"} min read</span>
+                <span>{post.read_time || "5"} min read</span>
                 {post.category && (
                   <>
                     <span>•</span>
@@ -136,11 +135,12 @@ export default async function BlogPostPage({ params }: { params: Promise<{ slug:
 
         {/* Content */}
         <section className="w-full py-12 md:py-16 px-4">
-          <article className="max-w-3xl mx-auto prose prose-sm md:prose-base dark:prose-invert">
-            <div
-              className="text-sm md:text-base leading-relaxed"
-              dangerouslySetInnerHTML={{ __html: post.content }}
-            />
+          <article className="max-w-3xl mx-auto prose prose-sm md:prose-base dark:prose-invert max-w-none">
+            <div className="space-y-4 text-sm md:text-base leading-relaxed text-muted-foreground">
+              {post.content.split("\n\n").map((paragraph: string, idx: number) => (
+                <p key={idx}>{paragraph}</p>
+              ))}
+            </div>
           </article>
         </section>
 
@@ -157,10 +157,10 @@ export default async function BlogPostPage({ params }: { params: Promise<{ slug:
                   <p className="text-sm text-foreground">{post.category}</p>
                 </div>
               )}
-              {(post.readTime || post.read_time) && (
+              {post.read_time && (
                 <div className="space-y-2">
                   <p className="text-xs font-semibold text-muted-foreground">READING TIME</p>
-                  <p className="text-sm text-foreground">{post.readTime || post.read_time} minutes</p>
+                  <p className="text-sm text-foreground">{post.read_time} minutes</p>
                 </div>
               )}
             </div>

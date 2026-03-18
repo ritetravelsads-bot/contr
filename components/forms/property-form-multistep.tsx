@@ -54,13 +54,6 @@ export default function PropertyFormMultiStep({
     amenities: [] as string[],
     facilities: [] as string[],
     luxury_amenities: [] as string[],
-    // New fields for enhanced property detail page
-    about_project: "",
-    project_highlights: [] as string[],
-    units: [] as Array<{ type: string; size_range?: string; price_range?: string; available?: boolean }>,
-    location_connectivity: [] as Array<{ type: string; name: string; distance: string }>,
-    faqs: [] as Array<{ question: string; answer: string }>,
-    payment_plan_details: "",
     meta_title: "",
     meta_keywords: "",
     meta_description: "",

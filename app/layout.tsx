@@ -9,19 +9,23 @@ const geist = Geist({ subsets: ["latin"] })
 const geistMono = Geist_Mono({ subsets: ["latin"] })
 
 export const metadata: Metadata = {
-  title: "Country Roof Real Estate | Buy & Sell Property in Gurgaon",
+  title: "CountryRoof | Premium Property Marketplace & Real Estate Listings",
   description:
-    "Find the best property in Gurgaon including flats, plots, villas and commercial spaces. Buy, sell or rent property with trusted real estate experts.",
+    "Discover premium properties for sale and rent. CountryRoof offers verified listings, professional agents, and secure transactions. Find your perfect home today.",
+  generator: "v0.app",
   keywords: [
-    "Gurgaon Property",
-    "Real Estate Gurgaon",
-    "Buy Property in Gurgaon",
-    "Property for Sale in Gurgaon",
-    "Commercial Property Gurgaon",
+    "property listings",
+    "real estate",
+    "houses for sale",
+    "apartments for rent",
+    "property search",
+    "real estate marketplace",
+    "buy property",
+    "rent property",
   ],
   authors: [{ name: "CountryRoof" }],
   icons: {
-    icon: "/fav.png",
+    icon: "/favicon.ico",
   },
   openGraph: {
     type: "website",

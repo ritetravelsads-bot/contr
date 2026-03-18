@@ -208,26 +208,6 @@ export interface Property {
   }
 
   developer_id?: ObjectId
-
-  // New fields for enhanced property detail page
-  about_project?: string
-  project_highlights?: string[]
-  units?: Array<{
-    type: string
-    size_range?: string
-    price_range?: string
-    available?: boolean
-  }>
-  location_connectivity?: Array<{
-    type: "metro" | "airport" | "highway" | "hospital" | "school" | "mall" | "railway" | "bus_stand"
-    name: string
-    distance: string
-  }>
-  faqs?: Array<{
-    question: string
-    answer: string
-  }>
-  payment_plan_details?: string
 }
 
 // State Model

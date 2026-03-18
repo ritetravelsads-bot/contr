@@ -9,10 +9,9 @@ interface BlogPost {
   content: string
   banner_image?: string
   cover_image?: string
-  publication_date?: string
-  createdAt?: string
+  publication_date: string
   author?: string
-  readTime?: string | number
+  readTime?: string
   tags?: string[]
   category?: string
 }
@@ -22,7 +21,7 @@ interface BlogPostPreviewProps {
 }
 
 export function BlogPostPreview({ blogPost }: BlogPostPreviewProps) {
-  const publishDate = new Date(blogPost.publication_date || blogPost.createdAt || Date.now()).toLocaleDateString("en-US", {
+  const publishDate = new Date(blogPost.publication_date).toLocaleDateString("en-US", {
     year: "numeric",
     month: "long",
     day: "numeric",

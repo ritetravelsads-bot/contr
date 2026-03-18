@@ -54,46 +54,46 @@ export default function Footer() {
 
   const quickLinks = [
     { name: "Home", href: "/" },
-    { name: "About CountryRoof", href: "/about" },
+    { name: "About Us", href: "/about" },
     { name: "Our Services", href: "/services" },
-    { name: "All Properties", href: "/properties" },
-    { name: "Real Estate Blog", href: "/blog" },
+    { name: "Luxury Properties", href: "/properties?category=luxury" },
+    { name: "Blog", href: "/blog" },
     { name: "Career", href: "/career" },
     { name: "Contact", href: "/contact" },
   ]
 
   const primeLocations = [
-    { name: "Properties on Golf Course Road", href: "/properties?location=golf-course-road" },
-    { name: "Projects on Dwarka Expressway", href: "/properties?location=dwarka-expressway" },
-    { name: "Luxury Homes in New Gurugram", href: "/properties?location=new-gurugram" },
-    { name: "Apartments on SPR", href: "/properties?location=spr" },
-    { name: "Golf Course Extension Road", href: "/properties?location=golf-course-extension" },
-    { name: "Properties on Sohna Road", href: "/properties?location=sohna-road" },
+    "Projects on Sohna Road",
+    "Projects on Golf Course",
+    "Projects on Dwarka Expressway",
+    "Projects on New Gurgaon",
+    "Projects on Southern Peripheral Road",
+    "Projects on Golf Course Extn Road",
   ]
 
   const propertyTypes = [
-    { name: "Luxury Apartments", href: "/properties?category=luxury" },
-    { name: "Premium Penthouses", href: "/properties?category=penthouse" },
-    { name: "SCO Plots", href: "/properties?category=sco" },
-    { name: "Commercial Properties", href: "/properties?category=commercial" },
-    { name: "Residential Plots", href: "/properties?category=plots" },
-    { name: "Furnished Flats", href: "/properties?category=furnished" },
+    "1 BHK Flats in Gurgaon",
+    "2 BHK Flats in Gurgaon",
+    "3 BHK Flats in Gurgaon",
+    "4 BHK Flats in Gurgaon",
+    "5 BHK Flats in Gurgaon",
+    "Fully Furnished Flats in Gurgaon",
   ]
 
   const toolsServices = [
-    { name: "EMI Calculator", href: "/tools/emi-calculator" },
-    { name: "QR Code Generator", href: "/tools/qr-generator" },
-    { name: "Gurugram Master Plan 2031", href: "/gurugram-master-plan" },
-    { name: "Privacy Policy", href: "/privacy-policy" },
-    { name: "Terms & Conditions", href: "/terms-and-conditions" },
-    { name: "Disclaimer", href: "/disclaimer" },
+    { name: "EMI Calculator", href: "#" },
+    { name: "QR Generator", href: "#" },
+    { name: "Gurugram Master Plan 2031", href: "#" },
+    { name: "Privacy Policy", href: "#" },
+    { name: "Terms & Conditions", href: "#" },
+    { name: "Disclaimer", href: "#" },
   ]
 
   const FooterSection = ({
     title,
     items,
     sectionKey,
-  }: { title: string; items: { name: string; href: string }[]; sectionKey: string }) => {
+  }: { title: string; items: string[] | { name: string; href: string }[]; sectionKey: string }) => {
     const isExpanded = expandedSections[sectionKey]
 
     return (
@@ -109,13 +109,18 @@ export default function Footer() {
         <ul
           className={`space-y-1.5 overflow-hidden transition-all duration-300 md:block ${isExpanded ? "max-h-96" : "max-h-0 md:max-h-96"}`}
         >
-          {items.map((item, idx) => (
-            <li key={idx} className="pt-2 md:pt-0">
-              <Link href={item.href} className="text-xs text-gray-600 hover:text-red-500 transition-colors">
-                {item.name}
-              </Link>
-            </li>
-          ))}
+          {items.map((item, idx) => {
+            const linkText = typeof item === "string" ? item : item.name
+            const href = typeof item === "string" ? "#" : item.href
+
+            return (
+              <li key={idx} className="pt-2 md:pt-0">
+                <Link href={href} className="text-xs text-gray-600 hover:text-red-500 transition-colors">
+                  {linkText}
+                </Link>
+              </li>
+            )
+          })}
         </ul>
       </div>
     )
@@ -132,7 +137,9 @@ export default function Footer() {
             <div>
               <h2 className="text-2xl md:text-3xl font-bold text-[#002366] mb-4">About Country Roof</h2>
               <p className="text-sm text-gray-600 leading-relaxed max-w-sm">
-                Gurugram-based real estate advisory firm specializing in luxury residential and high-growth commercial investments. We assist elite homebuyers and investors in identifying premium properties across Golf Course Road, Dwarka Expressway, New Gurugram, and SPR. Our approach combines deep local expertise, verified inventory, and transparent advisory services to ensure secure and rewarding property decisions.
+                Real Estate Company specializes in providing premier property solutions tailored to meet your needs. We
+                offer world-class luxury homes with stylish design, premium features, and top-class amenities for a
+                truly exclusive lifestyle.
               </p>
             </div>
 
@@ -141,8 +148,8 @@ export default function Footer() {
                 <div className="w-10 h-10 bg-[#002366] rounded-lg flex items-center justify-center flex-shrink-0">
                   <Phone size={18} className="text-white" />
                 </div>
-                <a href="tel:+919873702365" className="text-sm text-gray-700 hover:text-red-500 transition-colors">
-                  +91 98737-02365
+                <a href="tel:+918500900100" className="text-sm text-gray-700 hover:text-red-500 transition-colors">
+                  +91 8500-900-100
                 </a>
               </div>
               <div className="flex items-center gap-3">
@@ -243,13 +250,13 @@ export default function Footer() {
               © {currentYear} countryroof.com All rights reserved.
             </p>
             <div className="flex items-center gap-6">
-              <Link href="/privacy-policy" className="text-xs text-gray-600 hover:text-red-500 transition-colors">
+              <Link href="#" className="text-xs text-gray-600 hover:text-red-500 transition-colors">
                 Privacy Policy
               </Link>
-              <Link href="/terms-and-conditions" className="text-xs text-gray-600 hover:text-red-500 transition-colors">
+              <Link href="#" className="text-xs text-gray-600 hover:text-red-500 transition-colors">
                 Terms & Conditions
               </Link>
-              <Link href="/site-map" className="text-xs text-gray-600 hover:text-red-500 transition-colors">
+              <Link href="#" className="text-xs text-gray-600 hover:text-red-500 transition-colors">
                 Sitemap
               </Link>
             </div>

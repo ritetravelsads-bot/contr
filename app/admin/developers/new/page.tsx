@@ -3,8 +3,8 @@
 import { useState, useRef } from "react"
 import { useRouter } from "next/navigation"
 import { Button } from "@/components/ui/button"
+import Link from "next/link"
 import { Upload } from "lucide-react"
-import PageHeader from "@/components/dashboard/page-header"
 
 export default function AdminAddDeveloperPage() {
   const router = useRouter()
@@ -72,15 +72,18 @@ export default function AdminAddDeveloperPage() {
   }
 
   return (
-    <div className="space-y-6">
-      <PageHeader
-        title="Add New Developer"
-        description="Add a new property developer or builder"
-        showBackButton
-        backHref="/admin/developers"
-      />
+    <>
+      <main className="min-h-screen">
+        <div className="flex flex-col md:flex-row">
 
-      <form onSubmit={handleSubmit} className="space-y-4 bg-card border border-border rounded-lg p-6 max-w-2xl">
+          <div className="flex-1 px-4 py-8 md:py-12">
+            <div className="max-w-2xl mx-auto space-y-6">
+              <div>
+                <h1 className="text-2xl font-bold text-foreground">Add New Developer</h1>
+                <p className="text-sm text-muted-foreground mt-1">Add a new property developer or builder</p>
+              </div>
+
+              <form onSubmit={handleSubmit} className="space-y-4 bg-card border border-border rounded-lg p-6">
                 <div>
                   <label className="text-xs font-medium text-muted-foreground block mb-1.5">Developer Name</label>
                   <input
@@ -140,15 +143,19 @@ export default function AdminAddDeveloperPage() {
                   />
                 </div>
 
-        <div className="flex gap-3 pt-4">
-          <Button type="submit" disabled={loading} className="text-xs h-8">
-            {loading ? "Creating..." : "Create Developer"}
-          </Button>
-          <Button type="button" variant="outline" className="text-xs h-8" onClick={() => router.back()}>
-            Cancel
-          </Button>
+                <div className="flex gap-3 pt-4">
+                  <Button type="submit" disabled={loading} className="text-xs h-8">
+                    {loading ? "Creating..." : "Create Developer"}
+                  </Button>
+                  <Button asChild variant="outline" className="text-xs h-8 bg-transparent">
+                    <Link href="/admin/developers">Cancel</Link>
+                  </Button>
+                </div>
+              </form>
+            </div>
+          </div>
         </div>
-      </form>
-    </div>
+      </main>
+    </>
   )
 }

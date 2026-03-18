@@ -2,7 +2,7 @@
 
 import type React from "react"
 import { useState } from "react"
-import { Upload, X, ImageIcon, CheckCircle2, AlertCircle, Loader2, FileImage, Plus, Trash2 } from "lucide-react"
+import { Upload, X, ImageIcon, CheckCircle2, AlertCircle, Loader2, FileImage } from "lucide-react"
 import { cn } from "@/lib/utils"
 
 interface UploadedImage {
@@ -16,25 +16,6 @@ export default function PropertyFormStep4({ formData, onChange }: any) {
   const [uploading, setUploading] = useState<Record<string, boolean>>({})
   const [uploadProgress, setUploadProgress] = useState<Record<string, number>>({})
   const [uploadErrors, setUploadErrors] = useState<Record<string, string>>({})
-
-  // FAQs management
-  const faqs = formData.faqs || []
-
-  const addFaq = () => {
-    const newFaq = { question: "", answer: "" }
-    onChange("faqs", [...faqs, newFaq])
-  }
-
-  const updateFaq = (index: number, field: string, value: string) => {
-    const updated = [...faqs]
-    updated[index] = { ...updated[index], [field]: value }
-    onChange("faqs", updated)
-  }
-
-  const removeFaq = (index: number) => {
-    const updated = faqs.filter((_: any, i: number) => i !== index)
-    onChange("faqs", updated)
-  }
 
   const handleImageUpload = async (
     e: React.ChangeEvent<HTMLInputElement>,
@@ -553,75 +534,6 @@ export default function PropertyFormStep4({ formData, onChange }: any) {
             {(formData.meta_description || "").length}/160 characters
           </p>
         </div>
-      </div>
-
-      {/* FAQs Section */}
-      <div className="border border-border rounded-xl p-4 space-y-4 bg-card">
-        <div className="flex items-center justify-between">
-          <div>
-            <h4 className="font-semibold text-sm">FAQs</h4>
-            <p className="text-xs text-muted-foreground">Add frequently asked questions about this property</p>
-          </div>
-          <button
-            type="button"
-            onClick={addFaq}
-            className="flex items-center gap-1 text-xs text-primary hover:text-primary/80 transition-colors"
-          >
-            <Plus className="h-4 w-4" />
-            Add FAQ
-          </button>
-        </div>
-
-        {faqs.length === 0 ? (
-          <div className="border-2 border-dashed border-border rounded-lg p-6 text-center">
-            <p className="text-sm text-muted-foreground mb-2">No FAQs added yet</p>
-            <button
-              type="button"
-              onClick={addFaq}
-              className="text-sm text-primary hover:underline"
-            >
-              Add your first FAQ
-            </button>
-          </div>
-        ) : (
-          <div className="space-y-3">
-            {faqs.map((faq: any, index: number) => (
-              <div key={index} className="border border-border rounded-lg p-3 bg-muted/30">
-                <div className="flex items-start justify-between mb-2">
-                  <span className="text-xs font-medium text-muted-foreground">FAQ {index + 1}</span>
-                  <button
-                    type="button"
-                    onClick={() => removeFaq(index)}
-                    className="text-destructive hover:text-destructive/80 transition-colors"
-                  >
-                    <Trash2 className="h-4 w-4" />
-                  </button>
-                </div>
-                <div className="space-y-2">
-                  <div>
-                    <label className="text-xs text-muted-foreground block mb-1">Question *</label>
-                    <input
-                      type="text"
-                      value={faq.question}
-                      onChange={(e) => updateFaq(index, "question", e.target.value)}
-                      placeholder="e.g., What is the possession date?"
-                      className="w-full px-2 py-1.5 text-sm border border-border rounded bg-background focus:outline-none focus:ring-1 focus:ring-ring"
-                    />
-                  </div>
-                  <div>
-                    <label className="text-xs text-muted-foreground block mb-1">Answer *</label>
-                    <textarea
-                      value={faq.answer}
-                      onChange={(e) => updateFaq(index, "answer", e.target.value)}
-                      placeholder="Enter the answer..."
-                      className="w-full px-2 py-1.5 text-sm border border-border rounded bg-background focus:outline-none focus:ring-1 focus:ring-ring resize-none h-20"
-                    />
-                  </div>
-                </div>
-              </div>
-            ))}
-          </div>
-        )}
       </div>
 
       {/* Helpful Note */}

@@ -2,10 +2,12 @@
 
 import { useEffect, useState, useRef } from "react"
 import { useRouter, useParams } from "next/navigation"
+import Header from "@/components/layout/header"
+import Footer from "@/components/layout/footer"
+import AdminNav from "@/components/admin/admin-nav"
 import { Button } from "@/components/ui/button"
+import Link from "next/link"
 import { Upload } from "lucide-react"
-import PageHeader from "@/components/dashboard/page-header"
-import { Skeleton } from "@/components/ui/skeleton"
 
 export default function EditDeveloperPage() {
   const router = useRouter()
@@ -91,34 +93,23 @@ export default function EditDeveloperPage() {
     }
   }
 
-  if (loading) {
-    return (
-      <div className="space-y-6">
-        <PageHeader
-          title="Edit Developer"
-          description="Loading..."
-          showBackButton
-          backHref="/admin/developers"
-        />
-        <div className="space-y-4 max-w-2xl">
-          <Skeleton className="h-10 w-full" />
-          <Skeleton className="h-10 w-full" />
-          <Skeleton className="h-24 w-full" />
-        </div>
-      </div>
-    )
-  }
+  if (loading) return <div>Loading...</div>
 
   return (
-    <div className="space-y-6">
-      <PageHeader
-        title="Edit Developer"
-        description={`Editing: ${formData.name || "Developer"}`}
-        showBackButton
-        backHref="/admin/developers"
-      />
+    <>
+      <Header />
+      <main className="min-h-screen">
+        <div className="flex flex-col md:flex-row">
+          <AdminNav />
 
-      <form onSubmit={handleSubmit} className="space-y-4 bg-card border border-border rounded-lg p-6 max-w-2xl">
+          <div className="flex-1 px-4 py-8 md:py-12">
+            <div className="max-w-2xl mx-auto space-y-6">
+              <div>
+                <h1 className="text-2xl font-bold text-foreground">Edit Developer</h1>
+                <p className="text-sm text-muted-foreground mt-1">Update developer information</p>
+              </div>
+
+              <form onSubmit={handleSubmit} className="space-y-4 bg-card border border-border rounded-lg p-6">
                 <div>
                   <label className="text-xs font-medium text-muted-foreground block mb-1.5">Developer Name</label>
                   <input
@@ -176,15 +167,20 @@ export default function EditDeveloperPage() {
                   />
                 </div>
 
-        <div className="flex gap-3 pt-4">
-          <Button type="submit" disabled={saving} className="text-xs h-8">
-            {saving ? "Saving..." : "Save Changes"}
-          </Button>
-          <Button type="button" variant="outline" className="text-xs h-8" onClick={() => router.back()}>
-            Cancel
-          </Button>
+                <div className="flex gap-3 pt-4">
+                  <Button type="submit" disabled={saving} className="text-xs h-8">
+                    {saving ? "Saving..." : "Save Changes"}
+                  </Button>
+                  <Button asChild variant="outline" className="text-xs h-8 bg-transparent">
+                    <Link href="/admin/developers">Cancel</Link>
+                  </Button>
+                </div>
+              </form>
+            </div>
+          </div>
         </div>
-      </form>
-    </div>
+      </main>
+      <Footer />
+    </>
   )
 }

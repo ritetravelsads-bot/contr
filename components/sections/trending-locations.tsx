@@ -5,14 +5,14 @@ import { MapPin, TrendingUp } from "lucide-react"
 
 const trendingLocations = [
   {
+    name: "Sohna Road",
+    properties: "150+ Properties",
+    image: "/sohna-road-gurugram-properties.jpg",
+  },
+  {
     name: "Golf Course Road",
     properties: "200+ Properties",
     image: "/golf-course-road-gurugram-luxury-properties.jpg",
-  },
-  {
-    name: "Golf Course Extn Road",
-    properties: "160+ Properties",
-    image: "/golf-course-extension-road-properties.jpg",
   },
   {
     name: "Dwarka Expressway",
@@ -20,22 +20,22 @@ const trendingLocations = [
     image: "/dwarka-expressway-gurugram-modern-properties.jpg",
   },
   {
-    name: "Southern Peripheral Road",
-    properties: "90+ Properties",
-    image: "/southern-peripheral-road-gurugram-properties.jpg",
-  },
-  {
-    name: "Sohna",
-    properties: "150+ Properties",
-    image: "/sohna-road-gurugram-properties.jpg",
-  },
-  {
     name: "New Gurgaon",
     properties: "120+ Properties",
     image: "/new-gurgaon-properties-development.jpg",
   },
   {
-    name: "NH-2",
+    name: "Southern Peripheral Road",
+    properties: "90+ Properties",
+    image: "/southern-peripheral-road-gurugram-properties.jpg",
+  },
+  {
+    name: "Golf Course Extn Road",
+    properties: "160+ Properties",
+    image: "/golf-course-extension-road-properties.jpg",
+  },
+  {
+    name: "NH-48",
     properties: "110+ Properties",
     image: "/nh-48-highway-properties-gurugram.jpg",
   },
@@ -47,10 +47,10 @@ export default function TrendingLocations() {
       <div className="max-w-7xl mx-auto">
         <div className="flex items-center justify-center gap-3 mb-3">
           <TrendingUp className="h-8 w-8 text-[#002366]" />
-          <h2 className="text-3xl md:text-4xl font-bold text-[#002366] text-center">Prime Investment Corridors</h2>
+          <h2 className="text-3xl md:text-4xl font-bold text-[#002366] text-center">Trending Locations</h2>
         </div>
         <p className="text-center text-gray-600 mb-12 max-w-2xl mx-auto">
-          Invest in rapidly developing Gurugram areas with strong appreciation potential
+          Explore the most sought-after locations in Gurugram with premium properties and excellent connectivity
         </p>
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">

@@ -181,8 +181,8 @@ export default function AdvancedSearch() {
               <Sparkles className="h-5 w-5 text-primary" />
             </div>
             <div>
-              <h2 className="text-lg md:text-xl font-bold text-foreground">Smart Real Estate Starts Here</h2>
-              <p className="text-xs text-muted-foreground">Premium Properties in Gurugram & Delhi NCR</p>
+              <h2 className="text-lg md:text-xl font-bold text-foreground">Find Your Perfect Property</h2>
+              <p className="text-xs text-muted-foreground">Search from 5000+ premium properties</p>
             </div>
           </div>
           
@@ -274,7 +274,7 @@ export default function AdvancedSearch() {
         {/* Categories Section */}
         <div className="border-t border-border bg-muted/20 px-6 md:px-8 py-4">
           <div className="flex items-center justify-between mb-3">
-            <p className="text-xs font-medium text-muted-foreground uppercase tracking-wider">Explore Properties by Category</p>
+            <p className="text-xs font-medium text-muted-foreground uppercase tracking-wider">Browse by Category</p>
             <Link 
               href="/properties" 
               className="text-xs font-medium text-primary hover:text-primary/80 transition-colors flex items-center gap-1"
