@@ -14,7 +14,7 @@ const FEATURED_PROPERTIES = [
     location: "Sector 111, Gurgaon",
     price: "₹14.60 Cr",
     paymentPlan: "25 : 25 : 25 : 25",
-    video: "videos/elie-saab.mp4",
+    video: "https://hebbkx1anhila5yf.public.blob.vercel-storage.com/m3m-elie-saab-Rn2uhhmd8HwhB2KvbuvUG0xlt2vTXC.mp4",
     gradient: "from-amber-500/80 to-orange-600/80",
     accent: "bg-amber-500",
     url: "smartworld-elie-saab-residences"
@@ -27,7 +27,7 @@ const FEATURED_PROPERTIES = [
     location: "Sector 106, Gurgaon",
     price: "₹4.50 Cr",
     paymentPlan: "30 : 30 : 40",
-    video: "videos/elan-presidential.mp4",
+    video: "https://hebbkx1anhila5yf.public.blob.vercel-storage.com/elan-the-presidential-R93g7zWSOf9ON0aaUBWYf5Kmy7Og6j.mp4",
     gradient: "from-emerald-500/80 to-teal-600/80",
     accent: "bg-emerald-500",
     url: "elan-the-presidential"
@@ -40,7 +40,7 @@ const FEATURED_PROPERTIES = [
     location: "Sector 103, Gurgaon",
     price: "₹5.75 Cr",
     paymentPlan: "35 : 30 : 35",
-    video: "videos/whiteland-westin.mp4",
+    video: "https://hebbkx1anhila5yf.public.blob.vercel-storage.com/whiteland-westin-if18bh7XqgAFCqVf8jLaHcjcEaUBs5.mp4",
     gradient: "from-violet-500/80 to-purple-600/80",
     accent: "bg-violet-500",
     url: "whiteland-westin-residences"
@@ -53,7 +53,7 @@ const FEATURED_PROPERTIES = [
     location: "Sector 113, Gurgaon",
     price: "₹3.77 Cr",
     paymentPlan: "25 : 25 : 50",
-    video: "videos/m3m-mansion.mp4",
+    video: "https://hebbkx1anhila5yf.public.blob.vercel-storage.com/m3m-mansion-SO0ctFZ1amCCJSKj8bXlp2qR0uTZiD.mp4",
     gradient: "from-rose-500/80 to-pink-600/80",
     accent: "bg-rose-500",
     url: "m3m-mansion"
