@@ -7,14 +7,14 @@ import { cn } from "@/lib/utils"
 const slides = [
   {
     id: 1,
-    image: "/home-banner-1.png",
+    image: "https://hebbkx1anhila5yf.public.blob.vercel-storage.com/home-banner-1.png-rcT1Qg87Hy0IKJBDSf6o89UHjejfJM.jpeg",
     title: "",
     subtitle: "",
     tag: "",
   },
   {
     id: 2,
-    image: "/home-banner-2.png",
+    image: "https://hebbkx1anhila5yf.public.blob.vercel-storage.com/home-banner-2.png-rsXFU1H6x0wS5i5mcT7exhcXKzkW3j.jpeg",
     title: "",
     subtitle: "",
     tag: "",
@@ -53,7 +53,7 @@ export default function BannerSlider() {
   }, [isPaused, nextSlide])
 
   return (
-    <div className="relative w-full h-[450px] md:h-[450px] lg:h-[450px] overflow-hidden">
+    <div className="relative w-full aspect-[10/3] overflow-hidden bg-gray-900">
       {/* Slides */}
       {slides.map((slide, index) => (
         <div
@@ -65,17 +65,12 @@ export default function BannerSlider() {
               : "opacity-0 scale-105"
           )}
         >
-          {/* Background Image with Ken Burns effect */}
-          <div 
-            className={cn(
-              "absolute inset-0 transition-transform duration-[8000ms] ease-out",
-              index === currentSlide && "scale-110"
-            )}
-          >
+          {/* Background Image */}
+          <div className="absolute inset-0 flex items-center justify-center">
             <img 
               src={slide.image || "/placeholder.svg"} 
-              alt={slide.title} 
-              className="w-full h-full object-cover" 
+              alt={slide.title || "Banner"} 
+              className="w-full h-full object-contain" 
             />
           </div>
           
