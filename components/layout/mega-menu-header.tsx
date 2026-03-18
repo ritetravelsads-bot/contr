@@ -1,6 +1,6 @@
 "use client"
 
-import { useState, useEffect, useRef } from "react"
+import { useState, useEffect } from "react"
 import Link from "next/link"
 import Image from "next/image"
 import { Menu, X, LogOut, User, ChevronDown, IndianRupee } from "lucide-react"
@@ -12,7 +12,7 @@ import {
   DropdownMenuTrigger,
   DropdownMenuSeparator,
 } from "@/components/ui/dropdown-menu"
-import { LocationMegaMenu, ProjectMegaMenu } from "./product-mega-menu-content"
+import { MapPin, Building2 } from "lucide-react"
 import { BUDGET_RANGES } from "@/lib/utils"
 import HeaderSearch from "./header-search"
 
@@ -23,26 +23,30 @@ interface CurrentUser {
   user_type: "customer" | "agent" | "admin"
 }
 
-const locations = ["Dwarka Expressway", "Golf Course Road", "Sohna Road", "Sushant Lok", "New Gurgaon"]
+const locations = [
+  { name: "Golf Course Road", href: "/properties?location=Golf%20Course%20Road" },
+  { name: "Golf Course Extn Road", href: "/properties?location=Golf%20Course%20Extn%20Road" },
+  { name: "Dwarka Expressway", href: "/properties?location=Dwarka%20Expressway" },
+  { name: "Southern Peripheral Road", href: "/properties?location=Southern%20Peripheral%20Road" },
+  { name: "Sohna", href: "/properties?location=Sohna" },
+  { name: "New Gurgaon", href: "/properties?location=New%20Gurgaon" },
+  { name: "NH-2", href: "/properties?location=NH-2" },
+]
 
-const projectStatus = ["Upcoming Projects", "New Launch Projects", "Under Construction", "Ready To Move"]
-
-const projectTypes = [
-  "SCO Plots",
-  "Plots In Gurugram",
-  "Luxury Appartment",
-  "Residential Projects",
-  "Commercial Projects",
-  "Independent Floors",
+const projects = [
+  { name: "Ready To Move", href: "/properties?status=Ready%20To%20Move" },
+  { name: "New Launch", href: "/properties?status=New%20Launch" },
+  { name: "Upcoming", href: "/properties?status=Upcoming" },
+  { name: "Luxury Apartments", href: "/properties?type=Apartment" },
+  { name: "Plots & Land", href: "/properties?type=Plot" },
+  { name: "Commercial", href: "/properties?type=Commercial" },
 ]
 
 export default function MegaMenuHeader() {
   const [mounted, setMounted] = useState(false)
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
   const [currentUser, setCurrentUser] = useState<CurrentUser | null>(null)
-  const [activeMenu, setActiveMenu] = useState<string | null>(null)
-  const locationMenuRef = useRef<HTMLDivElement>(null)
-  const projectMenuRef = useRef<HTMLDivElement>(null)
+
 
   useEffect(() => {
     setMounted(true)
@@ -62,13 +66,7 @@ export default function MegaMenuHeader() {
     checkAuth()
   }, [])
 
-  useEffect(() => {
-    const handleEscape = (e: KeyboardEvent) => {
-      if (e.key === "Escape") setActiveMenu(null)
-    }
-    window.addEventListener("keydown", handleEscape)
-    return () => window.removeEventListener("keydown", handleEscape)
-  }, [])
+
 
   const handleLogout = async () => {
     await fetch("/api/auth/logout", { method: "POST", credentials: "include" })
@@ -113,55 +111,45 @@ export default function MegaMenuHeader() {
               Home
             </Link>
 
-            {/* Locations Mega Menu */}
-            <div
-              ref={locationMenuRef}
-              className=""
-              onMouseEnter={() => setActiveMenu("locations")}
-              onMouseLeave={() => setActiveMenu(null)}
-            >
-              <button className="px-4 py-2 text-sm font-medium text-gray-700 hover:text-[#002366] transition-colors flex items-center gap-1">
-                Locations{" "}
-                <ChevronDown
-                  className={`h-4 w-4 transition-transform ${activeMenu === "locations" ? "rotate-180" : ""}`}
-                />
-              </button>
-              {activeMenu === "locations" && (
-                <>
-                  <div className="fixed inset-0 z-40" onClick={() => setActiveMenu(null)} />
-                  <div className="absolute left-0 right-0 top-full pt-0 z-50 w-screen origin-top-left">
-                    <div className="ml-0 mr-auto" style={{ width: "100vw", marginLeft: "calc(-50vw + 50%)" }}>
-                      <LocationMegaMenu />
-                    </div>
-                  </div>
-                </>
-              )}
-            </div>
+            {/* Locations Dropdown */}
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <button className="px-4 py-2 text-sm font-medium text-gray-700 hover:text-[#002366] transition-colors flex items-center gap-1">
+                  <MapPin className="h-4 w-4" />
+                  Locations
+                  <ChevronDown className="h-4 w-4" />
+                </button>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent align="start" className="w-56">
+                {locations.map((location) => (
+                  <DropdownMenuItem key={location.name} asChild>
+                    <Link href={location.href} className="w-full">
+                      {location.name}
+                    </Link>
+                  </DropdownMenuItem>
+                ))}
+              </DropdownMenuContent>
+            </DropdownMenu>
 
-            {/* Projects Mega Menu */}
-            <div
-              ref={projectMenuRef}
-              className=""
-              onMouseEnter={() => setActiveMenu("projects")}
-              onMouseLeave={() => setActiveMenu(null)}
-            >
-              <button className="px-4 py-2 text-sm font-medium text-gray-700 hover:text-[#002366] transition-colors flex items-center gap-1">
-                Projects{" "}
-                <ChevronDown
-                  className={`h-4 w-4 transition-transform ${activeMenu === "projects" ? "rotate-180" : ""}`}
-                />
-              </button>
-              {activeMenu === "projects" && (
-                <>
-                  <div className="fixed inset-0 z-40" onClick={() => setActiveMenu(null)} />
-                  <div className="absolute left-0 right-0 top-full pt-0 z-50 w-screen origin-top-left">
-                    <div className="ml-0 mr-auto" style={{ width: "100vw", marginLeft: "calc(-50vw + 50%)" }}>
-                      <ProjectMegaMenu />
-                    </div>
-                  </div>
-                </>
-              )}
-            </div>
+            {/* Projects Dropdown */}
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <button className="px-4 py-2 text-sm font-medium text-gray-700 hover:text-[#002366] transition-colors flex items-center gap-1">
+                  <Building2 className="h-4 w-4" />
+                  Projects
+                  <ChevronDown className="h-4 w-4" />
+                </button>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent align="start" className="w-48">
+                {projects.map((project) => (
+                  <DropdownMenuItem key={project.name} asChild>
+                    <Link href={project.href} className="w-full">
+                      {project.name}
+                    </Link>
+                  </DropdownMenuItem>
+                ))}
+              </DropdownMenuContent>
+            </DropdownMenu>
 
             {/* Budget Dropdown */}
             <DropdownMenu>
@@ -288,35 +276,23 @@ export default function MegaMenuHeader() {
             <p className="px-3 py-1 text-xs font-semibold text-gray-500 uppercase">Locations</p>
             {locations.map((location) => (
               <Link
-                key={location}
-                href={`/properties?search=${encodeURIComponent(location)}`}
+                key={location.name}
+                href={location.href}
                 className="px-3 py-2 text-sm text-gray-600 hover:text-[#002366] hover:bg-gray-50 rounded transition-colors"
               >
-                {location}
+                {location.name}
               </Link>
             ))}
 
             <div className="border-t border-gray-100 my-2" />
-            <p className="px-3 py-1 text-xs font-semibold text-gray-500 uppercase">Project Status</p>
-            {projectStatus.map((status) => (
+            <p className="px-3 py-1 text-xs font-semibold text-gray-500 uppercase">Projects</p>
+            {projects.map((project) => (
               <Link
-                key={status}
-                href={`/properties?search=${encodeURIComponent(status)}`}
+                key={project.name}
+                href={project.href}
                 className="px-3 py-2 text-sm text-gray-600 hover:text-[#002366] hover:bg-gray-50 rounded transition-colors"
               >
-                {status}
-              </Link>
-            ))}
-
-            <div className="border-t border-gray-100 my-2" />
-            <p className="px-3 py-1 text-xs font-semibold text-gray-500 uppercase">Project Type</p>
-            {projectTypes.map((type) => (
-              <Link
-                key={type}
-                href={`/properties?search=${encodeURIComponent(type)}`}
-                className="px-3 py-2 text-sm text-gray-600 hover:text-[#002366] hover:bg-gray-50 rounded transition-colors"
-              >
-                {type}
+                {project.name}
               </Link>
             ))}
 
