@@ -1,7 +1,20 @@
 import type { MetadataRoute } from "next"
 import { MongoClient } from "mongodb"
 
-const baseUrl = "https://countryroof.com"
+const baseUrl = "https://countryroof.in"
+
+// Ensure slug is valid for URLs - the slugs in DB should already be clean
+// but we encode any special characters just in case
+function sanitizeSlug(slug: string): string {
+  if (!slug) return ""
+  // The slug should already be URL-friendly from the database
+  // Just ensure it's properly encoded for the sitemap XML
+  return slug
+    .toLowerCase()
+    .trim()
+    .replace(/\s+/g, "-") // Replace any spaces with hyphens
+    .replace(/&/g, "-and-") // Replace & with -and-
+}
 
 async function getDbConnection() {
   if (!process.env.MONGODB_URI) {
@@ -203,7 +216,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const propertyPages: MetadataRoute.Sitemap = properties
     .filter((prop: any) => prop.slug) // Only include properties with slugs
     .map((prop: any) => ({
-      url: `${baseUrl}/properties/${prop.slug}`,
+      url: `${baseUrl}/properties/${sanitizeSlug(prop.slug)}`,
       lastModified: prop.updated_at ? new Date(prop.updated_at) : new Date(),
       changeFrequency: "weekly" as const,
       priority: 0.7,
@@ -213,7 +226,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const blogPages: MetadataRoute.Sitemap = blogs
     .filter((blog: any) => blog.slug)
     .map((blog: any) => ({
-      url: `${baseUrl}/blog/${blog.slug}`,
+      url: `${baseUrl}/blog/${sanitizeSlug(blog.slug)}`,
       lastModified: blog.updated_at ? new Date(blog.updated_at) : new Date(),
       changeFrequency: "monthly" as const,
       priority: 0.6,
@@ -223,7 +236,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const developerPages: MetadataRoute.Sitemap = developers
     .filter((dev: any) => dev.slug)
     .map((dev: any) => ({
-      url: `${baseUrl}/developer/${dev.slug}`,
+      url: `${baseUrl}/developer/${sanitizeSlug(dev.slug)}`,
       lastModified: dev.updated_at ? new Date(dev.updated_at) : new Date(),
       changeFrequency: "weekly" as const,
       priority: 0.6,
@@ -233,7 +246,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const locationPages: MetadataRoute.Sitemap = locations
     .filter((loc: any) => loc.slug)
     .map((loc: any) => ({
-      url: `${baseUrl}/location/${loc.slug}`,
+      url: `${baseUrl}/location/${sanitizeSlug(loc.slug)}`,
       lastModified: loc.updated_at ? new Date(loc.updated_at) : new Date(),
       changeFrequency: "weekly" as const,
       priority: 0.6,
@@ -243,7 +256,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const newsPages: MetadataRoute.Sitemap = news
     .filter((item: any) => item.slug)
     .map((item: any) => ({
-      url: `${baseUrl}/news/${item.slug}`,
+      url: `${baseUrl}/news/${sanitizeSlug(item.slug)}`,
       lastModified: item.updated_at ? new Date(item.updated_at) : new Date(),
       changeFrequency: "weekly" as const,
       priority: 0.5,
