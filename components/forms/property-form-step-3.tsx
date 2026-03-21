@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from "react"
 import { ComboSelect, MultiComboSelect } from "@/components/ui/combo-select"
+import { Plus, Trash2 } from "lucide-react"
 
 interface Option {
   _id: string
@@ -9,7 +10,40 @@ interface Option {
   [key: string]: any
 }
 
+const CONNECTIVITY_TYPES = [
+  { value: "metro", label: "Metro Station" },
+  { value: "airport", label: "Airport" },
+  { value: "highway", label: "Highway" },
+  { value: "hospital", label: "Hospital" },
+  { value: "school", label: "School" },
+  { value: "mall", label: "Mall" },
+  { value: "railway", label: "Railway Station" },
+  { value: "bus_stand", label: "Bus Stand" },
+]
+
 export default function PropertyFormStep3({ formData, onChange }: any) {
+  // Location connectivity management
+  const connectivity = formData.location_connectivity || []
+
+  const addConnectivity = () => {
+    const newItem = {
+      type: "metro",
+      name: "",
+      distance: ""
+    }
+    onChange("location_connectivity", [...connectivity, newItem])
+  }
+
+  const updateConnectivity = (index: number, field: string, value: string) => {
+    const updated = [...connectivity]
+    updated[index] = { ...updated[index], [field]: value }
+    onChange("location_connectivity", updated)
+  }
+
+  const removeConnectivity = (index: number) => {
+    const updated = connectivity.filter((_: any, i: number) => i !== index)
+    onChange("location_connectivity", updated)
+  }
   const [states, setStates] = useState<Option[]>([])
   const [amenities, setAmenities] = useState<Option[]>([])
   const [facilities, setFacilities] = useState<Option[]>([])
@@ -301,6 +335,90 @@ export default function PropertyFormStep3({ formData, onChange }: any) {
           </div>
         </div>
       )}
+
+      {/* Location & Connectivity Section */}
+      <div className="border-t border-border pt-4 mt-4">
+        <div className="flex items-center justify-between mb-3">
+          <h4 className="font-semibold">Location & Connectivity</h4>
+          <button
+            type="button"
+            onClick={addConnectivity}
+            className="flex items-center gap-1 text-xs text-primary hover:text-primary/80 transition-colors"
+          >
+            <Plus className="h-4 w-4" />
+            Add Location
+          </button>
+        </div>
+        <p className="text-xs text-muted-foreground mb-3">
+          Add nearby landmarks, transport hubs, and key locations with distances
+        </p>
+
+        {connectivity.length === 0 ? (
+          <div className="border-2 border-dashed border-border rounded-lg p-6 text-center">
+            <p className="text-sm text-muted-foreground mb-2">No connectivity points added yet</p>
+            <button
+              type="button"
+              onClick={addConnectivity}
+              className="text-sm text-primary hover:underline"
+            >
+              Add your first connectivity point
+            </button>
+          </div>
+        ) : (
+          <div className="space-y-3">
+            {connectivity.map((item: any, index: number) => (
+              <div key={index} className="border border-border rounded-lg p-3 bg-muted/30">
+                <div className="flex items-start justify-between mb-2">
+                  <span className="text-xs font-medium text-muted-foreground">Location {index + 1}</span>
+                  <button
+                    type="button"
+                    onClick={() => removeConnectivity(index)}
+                    className="text-destructive hover:text-destructive/80 transition-colors"
+                  >
+                    <Trash2 className="h-4 w-4" />
+                  </button>
+                </div>
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
+                  <div>
+                    <label className="text-xs text-muted-foreground block mb-1">Type</label>
+                    <select
+                      value={item.type}
+                      onChange={(e) => updateConnectivity(index, "type", e.target.value)}
+                      className="w-full px-2 py-1.5 text-sm border border-border rounded bg-background focus:outline-none focus:ring-1 focus:ring-ring"
+                    >
+                      {CONNECTIVITY_TYPES.map((type) => (
+                        <option key={type.value} value={type.value}>
+                          {type.label}
+                        </option>
+                      ))}
+                    </select>
+                  </div>
+                  <div>
+                    <label className="text-xs text-muted-foreground block mb-1">Name *</label>
+                    <input
+                      type="text"
+                      value={item.name}
+                      onChange={(e) => updateConnectivity(index, "name", e.target.value)}
+                      placeholder="e.g., Huda City Centre Metro"
+                      className="w-full px-2 py-1.5 text-sm border border-border rounded bg-background focus:outline-none focus:ring-1 focus:ring-ring"
+                    />
+                  </div>
+                  <div>
+                    <label className="text-xs text-muted-foreground block mb-1">Distance *</label>
+                    <input
+                      type="text"
+                      value={item.distance}
+                      onChange={(e) => updateConnectivity(index, "distance", e.target.value)}
+                      placeholder="e.g., 2.5 km"
+                      className="w-full px-2 py-1.5 text-sm border border-border rounded bg-background focus:outline-none focus:ring-1 focus:ring-ring"
+                    />
+                  </div>
+                </div>
+              </div>
+            ))}
+          </div>
+        )}
+      </div>
     </div>
   )
 }

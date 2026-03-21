@@ -2,11 +2,9 @@
 
 import { useState, useEffect } from "react"
 import { useRouter, useParams } from "next/navigation"
-import Header from "@/components/layout/header"
-import Footer from "@/components/layout/footer"
-import AdminNav from "@/components/admin/admin-nav"
 import { Button } from "@/components/ui/button"
-import Link from "next/link"
+import PageHeader from "@/components/dashboard/page-header"
+import { Skeleton } from "@/components/ui/skeleton"
 
 export default function AdminEditCategoryPage() {
   const router = useRouter()
@@ -36,7 +34,7 @@ export default function AdminEditCategoryPage() {
     loadCategory()
   }, [id])
 
-  const handleChange = (e: any) => {
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target
     setFormData((prev) => {
       const updated = { ...prev, [name]: value }
@@ -47,7 +45,7 @@ export default function AdminEditCategoryPage() {
     })
   }
 
-  const handleSubmit = async (e: any) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
     setLoading(true)
     try {
@@ -68,86 +66,77 @@ export default function AdminEditCategoryPage() {
 
   if (initialLoading) {
     return (
-      <>
-        <Header />
-        <main className="min-h-screen">
-          <div className="flex flex-col md:flex-row">
-            <AdminNav />
-            <div className="flex-1 px-4 py-8 md:py-12">
-              <p className="text-muted-foreground text-sm">Loading...</p>
-            </div>
-          </div>
-        </main>
-        <Footer />
-      </>
+      <div className="space-y-6">
+        <PageHeader
+          title="Edit Category"
+          description="Loading..."
+          showBackButton
+          backHref="/admin/categories"
+        />
+        <div className="space-y-4 max-w-2xl">
+          <Skeleton className="h-10 w-full" />
+          <Skeleton className="h-10 w-full" />
+          <Skeleton className="h-10 w-full" />
+        </div>
+      </div>
     )
   }
 
   return (
-    <>
-      <Header />
-      <main className="min-h-screen">
-        <div className="flex flex-col md:flex-row">
-          <AdminNav />
+    <div className="space-y-6">
+      <PageHeader
+        title="Edit Category"
+        description={`Editing: ${formData.name || "Category"}`}
+        showBackButton
+        backHref="/admin/categories"
+      />
 
-          <div className="flex-1 px-4 py-8 md:py-12">
-            <div className="max-w-2xl mx-auto space-y-6">
-              <div>
-                <h1 className="text-2xl font-bold text-foreground">Edit Category</h1>
-                <p className="text-sm text-muted-foreground mt-1">Update category details</p>
-              </div>
-
-              <form onSubmit={handleSubmit} className="space-y-4 bg-card border border-border rounded-lg p-6">
-                <div>
-                  <label className="text-xs font-medium text-muted-foreground block mb-1.5">Category Name</label>
-                  <input
-                    type="text"
-                    name="name"
-                    value={formData.name}
-                    onChange={handleChange}
-                    required
-                    className="w-full px-3 py-2 text-sm border border-border rounded-md bg-input focus:outline-none focus:ring-1 focus:ring-ring"
-                  />
-                </div>
-
-                <div>
-                  <label className="text-xs font-medium text-muted-foreground block mb-1.5">Slug</label>
-                  <input
-                    type="text"
-                    name="slug"
-                    value={formData.slug}
-                    onChange={handleChange}
-                    required
-                    className="w-full px-3 py-2 text-sm border border-border rounded-md bg-input focus:outline-none focus:ring-1 focus:ring-ring"
-                  />
-                </div>
-
-                <div>
-                  <label className="text-xs font-medium text-muted-foreground block mb-1.5">Icon Class (Lucide)</label>
-                  <input
-                    type="text"
-                    name="icon_class"
-                    value={formData.icon_class}
-                    onChange={handleChange}
-                    placeholder="e.g., home, building2, key"
-                    className="w-full px-3 py-2 text-sm border border-border rounded-md bg-input focus:outline-none focus:ring-1 focus:ring-ring"
-                  />
-                </div>
-
-                <div className="flex gap-3 pt-4">
-                  <Button type="submit" disabled={loading} className="text-xs h-8">
-                    {loading ? "Updating..." : "Update Category"}
-                  </Button>
-                  <Button asChild variant="outline" className="text-xs h-8 bg-transparent">
-                    <Link href="/admin/categories">Cancel</Link>
-                  </Button>
-                </div>
-              </form>
-            </div>
-          </div>
+      <form onSubmit={handleSubmit} className="space-y-4 bg-card border border-border rounded-lg p-6 max-w-2xl">
+        <div>
+          <label className="text-xs font-medium text-muted-foreground block mb-1.5">Category Name</label>
+          <input
+            type="text"
+            name="name"
+            value={formData.name}
+            onChange={handleChange}
+            required
+            className="w-full px-3 py-2 text-sm border border-border rounded-md bg-input focus:outline-none focus:ring-1 focus:ring-ring"
+          />
         </div>
-      </main>
-      <Footer />
-    </>
+
+        <div>
+          <label className="text-xs font-medium text-muted-foreground block mb-1.5">Slug</label>
+          <input
+            type="text"
+            name="slug"
+            value={formData.slug}
+            onChange={handleChange}
+            required
+            className="w-full px-3 py-2 text-sm border border-border rounded-md bg-input focus:outline-none focus:ring-1 focus:ring-ring"
+          />
+        </div>
+
+        <div>
+          <label className="text-xs font-medium text-muted-foreground block mb-1.5">Icon Class (Lucide)</label>
+          <input
+            type="text"
+            name="icon_class"
+            value={formData.icon_class}
+            onChange={handleChange}
+            placeholder="e.g., home, building2, key"
+            className="w-full px-3 py-2 text-sm border border-border rounded-md bg-input focus:outline-none focus:ring-1 focus:ring-ring"
+          />
+        </div>
+
+        <div className="flex gap-3 pt-4">
+          <Button type="submit" disabled={loading} className="text-xs h-8">
+            {loading ? "Updating..." : "Update Category"}
+          </Button>
+          <Button type="button" variant="outline" className="text-xs h-8" onClick={() => router.back()}>
+            Cancel
+          </Button>
+        </div>
+      </form>
+    </div>
   )
 }

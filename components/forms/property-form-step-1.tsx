@@ -365,6 +365,58 @@ export default function PropertyFormStep1({ formData, onChange }: any) {
           className="w-full px-3 py-2 text-sm border border-border rounded-md bg-input focus:outline-none focus:ring-1 focus:ring-ring resize-none h-28"
         />
       </div>
+
+      {/* About Project Section */}
+      <div className="border-t border-border pt-4 mt-4">
+        <h4 className="text-sm font-semibold mb-3">About Project</h4>
+        <div>
+          <label className="text-xs font-medium text-muted-foreground block mb-1.5">
+            About the Project (for property detail page)
+          </label>
+          <textarea
+            value={formData.about_project || ""}
+            onChange={(e) => onChange("about_project", e.target.value)}
+            placeholder="Write a detailed about section for the project. This will be shown prominently on the property detail page."
+            className="w-full px-3 py-2 text-sm border border-border rounded-md bg-input focus:outline-none focus:ring-1 focus:ring-ring resize-none h-32"
+          />
+        </div>
+      </div>
+
+      {/* Project Highlights Section */}
+      <div className="border-t border-border pt-4 mt-4">
+        <h4 className="text-sm font-semibold mb-3">Project Highlights</h4>
+        <div>
+          <label className="text-xs font-medium text-muted-foreground block mb-1.5">
+            Key Highlights (one per line)
+          </label>
+          <textarea
+            value={(formData.project_highlights || []).join("\n")}
+            onChange={(e) => {
+              const lines = e.target.value.split("\n").filter((line: string) => line.trim())
+              onChange("project_highlights", lines)
+            }}
+            placeholder={"Premium location in Sector 103\n2-side open plots\nGreen certified project\nSwimming pool & clubhouse\nPrime connectivity to metro"}
+            className="w-full px-3 py-2 text-sm border border-border rounded-md bg-input focus:outline-none focus:ring-1 focus:ring-ring resize-none h-32"
+          />
+          <p className="text-xs text-muted-foreground mt-1">Enter each highlight on a new line</p>
+        </div>
+      </div>
+
+      {/* Payment Plan Details */}
+      <div className="border-t border-border pt-4 mt-4">
+        <h4 className="text-sm font-semibold mb-3">Payment Plan</h4>
+        <div>
+          <label className="text-xs font-medium text-muted-foreground block mb-1.5">
+            Payment Plan Details
+          </label>
+          <textarea
+            value={formData.payment_plan_details || ""}
+            onChange={(e) => onChange("payment_plan_details", e.target.value)}
+            placeholder="e.g., 10:80:10 | Flexi Payment Plan | Down payment options"
+            className="w-full px-3 py-2 text-sm border border-border rounded-md bg-input focus:outline-none focus:ring-1 focus:ring-ring resize-none h-20"
+          />
+        </div>
+      </div>
     </div>
   )
 }

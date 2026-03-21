@@ -31,7 +31,7 @@ export default function BlogPage() {
 
         {/* Blog Grid */}
         <section className="w-full py-12 md:py-16 px-4">
-          <div className="max-w-4xl mx-auto">
+          <div className="">
             <BlogGrid />
           </div>
         </section>

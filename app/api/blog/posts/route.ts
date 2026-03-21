@@ -27,7 +27,9 @@ export async function GET() {
     const db = client.db("countryroof")
     const collection = db.collection("blog_posts")
 
-    const posts = await collection.find({ published: true }).sort({ createdAt: -1 }).limit(50).toArray()
+    const posts = await collection.find({ 
+      $or: [{ is_published: true }, { published: true }] 
+    }).sort({ createdAt: -1 }).limit(50).toArray()
 
     return new Response(JSON.stringify({ posts }), {
       status: 200,

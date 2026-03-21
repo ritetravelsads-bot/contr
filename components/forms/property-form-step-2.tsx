@@ -1,8 +1,32 @@
 "use client"
 
 import { formatPriceToIndian } from "@/lib/utils"
+import { Plus, Trash2 } from "lucide-react"
 
 export default function PropertyFormStep2({ formData, onChange }: any) {
+  // Units management
+  const units = formData.units || []
+
+  const addUnit = () => {
+    const newUnit = {
+      type: "",
+      size_range: "",
+      price_range: "",
+      available: true
+    }
+    onChange("units", [...units, newUnit])
+  }
+
+  const updateUnit = (index: number, field: string, value: any) => {
+    const updated = [...units]
+    updated[index] = { ...updated[index], [field]: value }
+    onChange("units", updated)
+  }
+
+  const removeUnit = (index: number) => {
+    const updated = units.filter((_: any, i: number) => i !== index)
+    onChange("units", updated)
+  }
   // Helper to display formatted price preview
   const getPricePreview = (value: number | string | undefined) => {
     if (!value) return ""
@@ -337,6 +361,97 @@ export default function PropertyFormStep2({ formData, onChange }: any) {
                 />
               </div>
             </div>
+          </div>
+
+          {/* Unit Configurations */}
+          <div className="border-t border-border pt-4 mt-4">
+            <div className="flex items-center justify-between mb-3">
+              <h4 className="font-semibold">Unit Configurations</h4>
+              <button
+                type="button"
+                onClick={addUnit}
+                className="flex items-center gap-1 text-xs text-primary hover:text-primary/80 transition-colors"
+              >
+                <Plus className="h-4 w-4" />
+                Add Unit Type
+              </button>
+            </div>
+            <p className="text-xs text-muted-foreground mb-3">
+              Define available unit types (e.g., 3BHK, 4BHK) with their sizes and prices
+            </p>
+
+            {units.length === 0 ? (
+              <div className="border-2 border-dashed border-border rounded-lg p-6 text-center">
+                <p className="text-sm text-muted-foreground mb-2">No unit types added yet</p>
+                <button
+                  type="button"
+                  onClick={addUnit}
+                  className="text-sm text-primary hover:underline"
+                >
+                  Add your first unit type
+                </button>
+              </div>
+            ) : (
+              <div className="space-y-3">
+                {units.map((unit: any, index: number) => (
+                  <div key={index} className="border border-border rounded-lg p-3 bg-muted/30">
+                    <div className="flex items-start justify-between mb-2">
+                      <span className="text-xs font-medium text-muted-foreground">Unit {index + 1}</span>
+                      <button
+                        type="button"
+                        onClick={() => removeUnit(index)}
+                        className="text-destructive hover:text-destructive/80 transition-colors"
+                      >
+                        <Trash2 className="h-4 w-4" />
+                      </button>
+                    </div>
+                    <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
+                      <div>
+                        <label className="text-xs text-muted-foreground block mb-1">Type *</label>
+                        <input
+                          type="text"
+                          value={unit.type}
+                          onChange={(e) => updateUnit(index, "type", e.target.value)}
+                          placeholder="e.g., 3 BHK"
+                          className="w-full px-2 py-1.5 text-sm border border-border rounded bg-background focus:outline-none focus:ring-1 focus:ring-ring"
+                        />
+                      </div>
+                      <div>
+                        <label className="text-xs text-muted-foreground block mb-1">Size Range</label>
+                        <input
+                          type="text"
+                          value={unit.size_range || ""}
+                          onChange={(e) => updateUnit(index, "size_range", e.target.value)}
+                          placeholder="e.g., 1800-2200 sqft"
+                          className="w-full px-2 py-1.5 text-sm border border-border rounded bg-background focus:outline-none focus:ring-1 focus:ring-ring"
+                        />
+                      </div>
+                      <div>
+                        <label className="text-xs text-muted-foreground block mb-1">Price Range</label>
+                        <input
+                          type="text"
+                          value={unit.price_range || ""}
+                          onChange={(e) => updateUnit(index, "price_range", e.target.value)}
+                          placeholder="e.g., 1.2 Cr - 1.8 Cr"
+                          className="w-full px-2 py-1.5 text-sm border border-border rounded bg-background focus:outline-none focus:ring-1 focus:ring-ring"
+                        />
+                      </div>
+                      <div>
+                        <label className="text-xs text-muted-foreground block mb-1">Available</label>
+                        <select
+                          value={unit.available ? "yes" : "no"}
+                          onChange={(e) => updateUnit(index, "available", e.target.value === "yes")}
+                          className="w-full px-2 py-1.5 text-sm border border-border rounded bg-background focus:outline-none focus:ring-1 focus:ring-ring"
+                        >
+                          <option value="yes">Yes</option>
+                          <option value="no">No</option>
+                        </select>
+                      </div>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            )}
           </div>
         </>
       )}

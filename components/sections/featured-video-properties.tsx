@@ -8,52 +8,55 @@ import Link from "next/link"
 const FEATURED_PROPERTIES = [
   {
     id: 1,
-    name: "Signature Sarvam",
-    tagline: "Discover Wellness at Sarvam!",
-    bhk: "3BHK",
-    location: "Sector 37D, Dwarka Expressway, Gurgaon",
-    price: "₹2.90 Cr",
-    video: "videos/signature-sarvam.mp4",
-    gradient: "from-amber-500/80 to-orange-600/80",
-    accent: "bg-amber-500",
-    url: "signature-sarvam"
-  },
-  {
-    id: 2,
-    name: "Ashiana Aaroham",
-    tagline: "Family Bliss at Aaroham!",
-    bhk: "3/4 BHK",
-    location: "Gurgaon",
-    price: "₹2.60 Cr",
-    video: "videos/ashiana-aaroham.mp4",
-    gradient: "from-emerald-500/80 to-teal-600/80",
-    accent: "bg-emerald-500",
-    url: "ashiana-aaroham"
-  },
-  {
-    id: 3,
-    name: "GIC Manesar",
-    tagline: "Luxury Redefined!",
-    bhk: "3BHK",
-    location: "Sector 9, Manesar",
-    price: "₹2.75 Cr",
-    video: "videos/gic-manesar.mp4",
-    gradient: "from-violet-500/80 to-purple-600/80",
-    accent: "bg-violet-500",
-    url: "gic-manesar"
-  },
-  {
-    id: 4,
-    name: "Elie Saab",
-    tagline: "Elie Saab Elegance Awaits!",
-    bhk: "Ultra Luxury",
+    name: "M3M Elie Saab",
+    tagline: "Global Luxury Awaits!",
+    bhk: "4/4.5 BHK",
     location: "Sector 111, Gurgaon",
     price: "₹14.60 Cr",
     paymentPlan: "25 : 25 : 25 : 25",
-    video: "videos/elie-saab.mp4",
+    video: "https://hebbkx1anhila5yf.public.blob.vercel-storage.com/m3m-elie-saab-Rn2uhhmd8HwhB2KvbuvUG0xlt2vTXC.mp4",
+    gradient: "from-amber-500/80 to-orange-600/80",
+    accent: "bg-amber-500",
+    url: "smartworld-elie-saab-residences"
+  },
+  {
+    id: 2,
+    name: "Elan The Presidential",
+    tagline: "Presidential Living Redefined!",
+    bhk: "3/4/5 BHK",
+    location: "Sector 106, Gurgaon",
+    price: "₹4.50 Cr",
+    paymentPlan: "30 : 30 : 40",
+    video: "https://hebbkx1anhila5yf.public.blob.vercel-storage.com/elan-the-presidential-R93g7zWSOf9ON0aaUBWYf5Kmy7Og6j.mp4",
+    gradient: "from-emerald-500/80 to-teal-600/80",
+    accent: "bg-emerald-500",
+    url: "elan-the-presidential"
+  },
+  {
+    id: 3,
+    name: "Whiteland Westin Residences",
+    tagline: "Resort Style Living!",
+    bhk: "3/4 BHK",
+    location: "Sector 103, Gurgaon",
+    price: "₹5.75 Cr",
+    paymentPlan: "35 : 30 : 35",
+    video: "https://hebbkx1anhila5yf.public.blob.vercel-storage.com/whiteland-westin-if18bh7XqgAFCqVf8jLaHcjcEaUBs5.mp4",
+    gradient: "from-violet-500/80 to-purple-600/80",
+    accent: "bg-violet-500",
+    url: "whiteland-westin-residences"
+  },
+  {
+    id: 4,
+    name: "M3M Mansion",
+    tagline: "Live the Mansion Life!",
+    bhk: "2/3/4/5 BHK",
+    location: "Sector 113, Gurgaon",
+    price: "₹3.77 Cr",
+    paymentPlan: "25 : 25 : 50",
+    video: "https://hebbkx1anhila5yf.public.blob.vercel-storage.com/m3m-mansion-SO0ctFZ1amCCJSKj8bXlp2qR0uTZiD.mp4",
     gradient: "from-rose-500/80 to-pink-600/80",
     accent: "bg-rose-500",
-    url: "smartworld-elie-saab-residences"
+    url: "m3m-mansion"
   },
 ]
 

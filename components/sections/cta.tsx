@@ -11,9 +11,9 @@ export default function CTA() {
       </div>
 
       <div className="max-w-4xl mx-auto text-center space-y-8">
-        <h2 className="text-white text-balance">Ready to Find Your Dream Property?</h2>
+        <h2 className="text-white text-balance">Looking to Invest in Gurugram Real Estate?</h2>
         <p className="text-white/90 text-xl md:text-2xl leading-relaxed max-w-2xl mx-auto">
-          Join 50,000+ satisfied customers who found their perfect home with CountryRoof
+          Join thousands of discerning buyers who trust CountryRoof for premium property investments across NCR.
         </p>
 
         <div className="flex flex-col sm:flex-row gap-4 justify-center items-center pt-4">
@@ -23,7 +23,7 @@ export default function CTA() {
             className="bg-white text-primary hover:bg-white/90 h-14 px-8 text-base font-semibold"
           >
             <Link href="/properties">
-              Explore Properties
+              Explore Premium Properties
               <ArrowRight className="ml-2" size={20} />
             </Link>
           </Button>
@@ -35,7 +35,7 @@ export default function CTA() {
           >
             <Link href="/contact">
               <Phone className="mr-2" size={20} />
-              Talk to Expert
+              Speak with a Property Specialist
             </Link>
           </Button>
         </div>
@@ -43,15 +43,15 @@ export default function CTA() {
         <div className="pt-8 flex items-center justify-center gap-8 text-white/90 text-sm">
           <div className="flex items-center gap-2">
             <div className="w-2 h-2 bg-white rounded-full" />
-            <span>No Brokerage</span>
+            <span>Zero Brokerage</span>
           </div>
           <div className="flex items-center gap-2">
             <div className="w-2 h-2 bg-white rounded-full" />
-            <span>Verified Properties</span>
+            <span>RERA Approved Projects</span>
           </div>
           <div className="flex items-center gap-2">
             <div className="w-2 h-2 bg-white rounded-full" />
-            <span>Expert Support</span>
+            <span>Exclusive Developer Pricing</span>
           </div>
         </div>
       </div>

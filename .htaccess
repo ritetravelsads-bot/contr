@@ -8,4 +8,4 @@ RequestHeader set X-Forwarded-Proto "https"
 RequestHeader set X-Forwarded-Port "443"
 
 # 3. Pass the exact requested URL directly to the PM2 app
-RewriteRule ^(.*)$ http://127.0.0.1:3002%{REQUEST_URI} [P,L]
+RewriteRule ^(.*)$ http://127.0.0.1:3005%{REQUEST_URI} [P,L]

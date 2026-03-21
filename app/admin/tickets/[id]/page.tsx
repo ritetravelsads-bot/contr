@@ -2,11 +2,10 @@
 
 import { useState, useEffect } from "react"
 import { useParams } from "next/navigation"
-import Header from "@/components/layout/header"
-import Footer from "@/components/layout/footer"
-import AdminNav from "@/components/admin/admin-nav"
 import Link from "next/link"
 import { Button } from "@/components/ui/button"
+import PageHeader from "@/components/dashboard/page-header"
+import { Skeleton } from "@/components/ui/skeleton"
 
 export default function AdminTicketDetailPage() {
   const params = useParams()
@@ -52,56 +51,52 @@ export default function AdminTicketDetailPage() {
 
   if (loading) {
     return (
-      <>
-        <Header />
-        <main className="min-h-screen">
-          <div className="flex flex-col md:flex-row">
-            <AdminNav />
-            <div className="flex-1 px-4 py-8 md:py-12">
-              <p className="text-muted-foreground text-sm">Loading...</p>
-            </div>
+      <div className="space-y-6">
+        <PageHeader
+          title="Loading Ticket..."
+          showBackButton
+          backHref="/admin/tickets"
+        />
+        <div className="space-y-4 max-w-4xl">
+          <Skeleton className="h-8 w-3/4" />
+          <div className="grid grid-cols-4 gap-4">
+            <Skeleton className="h-20" />
+            <Skeleton className="h-20" />
+            <Skeleton className="h-20" />
+            <Skeleton className="h-20" />
           </div>
-        </main>
-        <Footer />
-      </>
+          <Skeleton className="h-40" />
+        </div>
+      </div>
     )
   }
 
   if (!ticket) {
     return (
-      <>
-        <Header />
-        <main className="min-h-screen">
-          <div className="flex flex-col md:flex-row">
-            <AdminNav />
-            <div className="flex-1 px-4 py-8 md:py-12">
-              <p className="text-muted-foreground text-sm">Ticket not found</p>
-            </div>
-          </div>
-        </main>
-        <Footer />
-      </>
+      <div className="space-y-6">
+        <PageHeader
+          title="Ticket Not Found"
+          description="The requested ticket could not be found"
+          showBackButton
+          backHref="/admin/tickets"
+        />
+      </div>
     )
   }
 
   return (
-    <>
-      <Header />
-      <main className="min-h-screen">
-        <div className="flex flex-col md:flex-row">
-          <AdminNav />
-
-          <div className="flex-1 px-4 py-8 md:py-12">
-            <div className="max-w-4xl mx-auto space-y-6">
-              <div className="flex items-center justify-between">
-                <div>
-                  <h1 className="text-2xl font-bold text-foreground">{ticket.subject}</h1>
-                  <p className="text-sm text-muted-foreground mt-1">Ticket ID: {ticket._id}</p>
-                </div>
-                <Button asChild variant="outline" className="text-xs h-8 bg-transparent">
-                  <Link href="/admin/tickets">Back</Link>
-                </Button>
-              </div>
+    <div className="space-y-6">
+      <PageHeader
+        title={ticket.subject}
+        description={`Ticket ID: ${ticket._id}`}
+        showBackButton
+        backHref="/admin/tickets"
+        actions={
+          <Button asChild size="sm">
+            <Link href={`/admin/tickets/${id}/reply`}>Reply</Link>
+          </Button>
+        }
+      />
 
               <div className="grid grid-cols-4 gap-4">
                 <div className="bg-card border border-border rounded-lg p-4">
@@ -129,16 +124,6 @@ export default function AdminTicketDetailPage() {
                 <p className="text-sm text-foreground leading-relaxed">{ticket.description}</p>
               </div>
 
-              <div className="flex gap-3">
-                <Button asChild className="text-xs h-8">
-                  <Link href={`/admin/tickets/${id}/reply`}>Reply</Link>
-                </Button>
-              </div>
-            </div>
-          </div>
-        </div>
-      </main>
-      <Footer />
-    </>
+    </div>
   )
 }

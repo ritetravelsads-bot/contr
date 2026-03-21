@@ -45,8 +45,8 @@ export default function ContactPage() {
                     <Phone size={14} className="text-primary" />
                     <p className="text-xs font-semibold text-foreground">Phone</p>
                   </div>
-                  <a href="tel:+919876543210" className="text-xs text-primary hover:underline block">
-                    +91 (98) 765-43210
+                  <a href="tel:+919873702365" className="text-xs text-primary hover:underline block">
+                    +91 98737-02365
                   </a>
                 </div>
 
@@ -55,8 +55,8 @@ export default function ContactPage() {
                     <Mail size={14} className="text-primary" />
                     <p className="text-xs font-semibold text-foreground">Email</p>
                   </div>
-                  <a href="mailto:support@countryroof.com" className="text-xs text-primary hover:underline block">
-                    support@countryroof.com
+                  <a href="mailto:info@countryroof.com" className="text-xs text-primary hover:underline block">
+                    info@countryroof.com
                   </a>
                 </div>
 
@@ -65,7 +65,7 @@ export default function ContactPage() {
                     <MapPin size={14} className="text-primary" />
                     <p className="text-xs font-semibold text-foreground">Address</p>
                   </div>
-                  <p className="text-xs text-muted-foreground">123 Business Avenue, Tech City, TC 12345, India</p>
+                  <p className="text-xs text-muted-foreground">555-A, 5th Floor, JMD Megapolis, Badshahpur Sohna Rd, near Subhash Chowk, Sector 48, Gurugram, Haryana 122001</p>
                 </div>
 
                 <div className="space-y-1.5">

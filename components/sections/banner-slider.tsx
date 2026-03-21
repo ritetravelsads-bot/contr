@@ -19,6 +19,20 @@ const slides = [
     subtitle: "",
     tag: "",
   },
+  {
+    id: 3,
+    image: "/home-banner-3.jpg",
+    title: "",
+    subtitle: "",
+    tag: "",
+  },
+  {
+    id: 4,
+    image: "/home-banner-4.jpg",
+    title: "",
+    subtitle: "",
+    tag: "",
+  },
 ]
 
 export default function BannerSlider() {
@@ -53,7 +67,7 @@ export default function BannerSlider() {
   }, [isPaused, nextSlide])
 
   return (
-    <div className="relative w-full h-[450px] md:h-[450px] lg:h-[450px] overflow-hidden">
+    <div className="relative w-full aspect-[10/3] overflow-hidden bg-gray-900">
       {/* Slides */}
       {slides.map((slide, index) => (
         <div
@@ -65,17 +79,12 @@ export default function BannerSlider() {
               : "opacity-0 scale-105"
           )}
         >
-          {/* Background Image with Ken Burns effect */}
-          <div 
-            className={cn(
-              "absolute inset-0 transition-transform duration-[8000ms] ease-out",
-              index === currentSlide && "scale-110"
-            )}
-          >
+          {/* Background Image */}
+          <div className="absolute inset-0 flex items-center justify-center">
             <img 
               src={slide.image || "/placeholder.svg"} 
-              alt={slide.title} 
-              className="w-full h-full object-cover" 
+              alt={slide.title || "Banner"} 
+              className="w-full h-full object-contain" 
             />
           </div>
           
@@ -87,21 +96,6 @@ export default function BannerSlider() {
           <div className="absolute inset-0 flex items-center">
             <div className="w-full max-w-7xl mx-auto px-6 md:px-10">
               <div className="max-w-2xl space-y-6">
-                {/* Tag */}
-                <div 
-                  className={cn(
-                    "inline-flex items-center px-4 py-1.5 rounded-full",
-                    "bg-white/10 backdrop-blur-md border border-white/20",
-                    "transition-all duration-700 delay-100",
-                    index === currentSlide 
-                      ? "opacity-100 translate-y-0" 
-                      : "opacity-0 translate-y-4"
-                  )}
-                >
-                  <span className="text-sm font-semibold text-white tracking-wide">
-                    {slide.tag}
-                  </span>
-                </div>
 
                 {/* Title */}
                 <h1 
