@@ -59,7 +59,7 @@ export default function HandpickedSelections({ limit = 4 }: HandpickedSelections
         {properties.length > 0 && (
           <div className="flex justify-center pt-2">
             <Button asChild variant="outline" className="bg-transparent text-xs h-8">
-              <Link href="/properties?is_featured=true">View All Handpicked</Link>
+              <Link href="/properties?featured=true">View All Handpicked</Link>
             </Button>
           </div>
         )}

@@ -50,7 +50,7 @@ export default function EMICalculatorPage() {
     return amount.toLocaleString("en-IN")
   }
 
-  const interestPercentage = calculations.totalPayment > 0 
+  const interestPercentage = calculations.totalPayment > 0
     ? Math.round((calculations.totalInterest / calculations.totalPayment) * 100)
     : 0
 
@@ -150,9 +150,8 @@ export default function EMICalculatorPage() {
                               setTenureType("years")
                               if (loanTenure > 30) setLoanTenure(30)
                             }}
-                            className={`px-3 py-1 text-xs font-medium transition-colors ${
-                              tenureType === "years" ? "bg-primary text-primary-foreground" : "hover:bg-muted"
-                            }`}
+                            className={`px-3 py-1 text-xs font-medium transition-colors ${tenureType === "years" ? "bg-primary text-primary-foreground" : "hover:bg-muted"
+                              }`}
                           >
                             Yr
                           </button>
@@ -161,9 +160,8 @@ export default function EMICalculatorPage() {
                               setTenureType("months")
                               setLoanTenure(loanTenure * 12 > 360 ? 360 : loanTenure * 12)
                             }}
-                            className={`px-3 py-1 text-xs font-medium transition-colors ${
-                              tenureType === "months" ? "bg-primary text-primary-foreground" : "hover:bg-muted"
-                            }`}
+                            className={`px-3 py-1 text-xs font-medium transition-colors ${tenureType === "months" ? "bg-primary text-primary-foreground" : "hover:bg-muted"
+                              }`}
                           >
                             Mo
                           </button>
@@ -206,12 +204,12 @@ export default function EMICalculatorPage() {
                     {/* Visual Breakdown */}
                     <div className="space-y-3">
                       <div className="flex h-4 rounded-full overflow-hidden">
-                        <div 
-                          className="bg-primary" 
+                        <div
+                          className="bg-primary"
                           style={{ width: `${100 - interestPercentage}%` }}
                         />
-                        <div 
-                          className="bg-red-500" 
+                        <div
+                          className="bg-red-500"
                           style={{ width: `${interestPercentage}%` }}
                         />
                       </div>
@@ -297,7 +295,6 @@ export default function EMICalculatorPage() {
           </div>
         </section>
       </main>
-      <Footer />
     </>
   )
 }

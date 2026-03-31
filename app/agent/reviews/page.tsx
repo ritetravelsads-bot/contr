@@ -95,7 +95,6 @@ export default function AgentReviewsPage() {
           )}
         </div>
       </main>
-      <Footer />
     </>
   )
 }

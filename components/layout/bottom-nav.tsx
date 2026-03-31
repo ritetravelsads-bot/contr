@@ -66,12 +66,15 @@ export default function BottomNav() {
             <span>Saved</span>
           </Link>
 
-          {/* Floating Action Button for Add Property */}
-          {isBuilder && (
-            <Link href="/builder/properties/new" className="fab" aria-label="Add property" title="Add Property">
-              <Plus size={24} />
-            </Link>
-          )}
+          {/* Floating Action Button for Add Property - Always visible */}
+          <Link 
+            href={isBuilder ? "/agent/properties/new" : "/auth/login?redirect=/agent/properties/new"} 
+            className="fab" 
+            aria-label="Add property" 
+            title="Add Property"
+          >
+            <Plus size={24} />
+          </Link>
 
           <Link href="/messages" className={`bottom-nav-item ${isActive("/messages") ? "active" : ""}`}>
             <MessageSquare size={20} />

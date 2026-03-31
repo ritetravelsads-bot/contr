@@ -92,7 +92,6 @@ export default function AgentTicketsPage() {
           </div>
         </div>
       </main>
-      <Footer />
     </>
   )
 }

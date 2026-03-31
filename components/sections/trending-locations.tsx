@@ -7,37 +7,50 @@ const trendingLocations = [
   {
     name: "Golf Course Road",
     properties: "200+ Properties",
-    image: "/golf-course-road-gurugram-luxury-properties.jpg",
+    image: "/locations/golf-course-road.jpg",
+    searchParam: "Golf Course Road",
   },
   {
     name: "Golf Course Extn Road",
     properties: "160+ Properties",
-    image: "/golf-course-extension-road-properties.jpg",
+    image: "/locations/golf-course-extension.jpg",
+    searchParam: "Golf Course Extension",
   },
   {
     name: "Dwarka Expressway",
     properties: "180+ Properties",
-    image: "/dwarka-expressway-gurugram-modern-properties.jpg",
+    image: "/locations/dwarka-expressway.jpg",
+    searchParam: "Dwarka Expressway",
   },
   {
     name: "Southern Peripheral Road",
     properties: "90+ Properties",
-    image: "/southern-peripheral-road-gurugram-properties.jpg",
+    image: "/locations/southern-peripheral-road.jpg",
+    searchParam: "Southern Peripheral Road",
   },
   {
     name: "Sohna",
     properties: "150+ Properties",
-    image: "/sohna-road-gurugram-properties.jpg",
+    image: "/locations/sohna.jpg",
+    searchParam: "Sohna",
   },
   {
     name: "New Gurgaon",
     properties: "120+ Properties",
-    image: "/new-gurgaon-properties-development.jpg",
+    image: "/locations/new-gurgaon.jpg",
+    searchParam: "New Gurgaon",
   },
   {
-    name: "NH-2",
+    name: "NH-48",
     properties: "110+ Properties",
-    image: "/nh-48-highway-properties-gurugram.jpg",
+    image: "/locations/nh-48.jpg",
+    searchParam: "NH-48",
+  },
+  {
+    name: "Manesar",
+    properties: "80+ Properties",
+    image: "/locations/manesar.jpg",
+    searchParam: "Manesar",
   },
 ]
 
@@ -57,7 +70,7 @@ export default function TrendingLocations() {
           {trendingLocations.map((location) => (
             <Link
               key={location.name}
-              href={`/properties?search=${encodeURIComponent(location.name)}`}
+              href={`/properties?location=${encodeURIComponent(location.searchParam)}`}
               className="relative overflow-hidden rounded-lg shadow-md hover:shadow-xl transition-all duration-300 bg-white"
             >
               <div className="relative h-48 overflow-hidden">

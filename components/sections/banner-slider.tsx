@@ -7,14 +7,16 @@ import { cn } from "@/lib/utils"
 const slides = [
   {
     id: 1,
-    image: "/home-banner-1.png",
+    image: "/home-banner-1.jpg",
+    mobileImage: "/banners/home-mob-banner-1.jpg",
     title: "",
     subtitle: "",
     tag: "",
   },
   {
     id: 2,
-    image: "/home-banner-2.png",
+    image: "/home-banner-2.jpg",
+    mobileImage: "/banners/home-mob-banner-2.jpg",
     title: "",
     subtitle: "",
     tag: "",
@@ -22,6 +24,7 @@ const slides = [
   {
     id: 3,
     image: "/home-banner-3.jpg",
+    mobileImage: "/banners/home-mob-banner-3.jpg",
     title: "",
     subtitle: "",
     tag: "",
@@ -29,6 +32,7 @@ const slides = [
   {
     id: 4,
     image: "/home-banner-4.jpg",
+    mobileImage: "/banners/home-mob-banner-4.jpg",
     title: "",
     subtitle: "",
     tag: "",
@@ -39,6 +43,18 @@ export default function BannerSlider() {
   const [currentSlide, setCurrentSlide] = useState(0)
   const [isPaused, setIsPaused] = useState(false)
   const [progress, setProgress] = useState(0)
+  const [isMobile, setIsMobile] = useState(false)
+
+  // Detect mobile screen size
+  useEffect(() => {
+    const checkMobile = () => {
+      setIsMobile(window.innerWidth < 768)
+    }
+    
+    checkMobile()
+    window.addEventListener("resize", checkMobile)
+    return () => window.removeEventListener("resize", checkMobile)
+  }, [])
 
   const nextSlide = useCallback(() => {
     setCurrentSlide((prev) => (prev + 1) % slides.length)
@@ -67,7 +83,10 @@ export default function BannerSlider() {
   }, [isPaused, nextSlide])
 
   return (
-    <div className="relative w-full aspect-[10/3] overflow-hidden bg-gray-900">
+    <div className={cn(
+      "relative w-full overflow-hidden bg-gray-900",
+      isMobile ? "aspect-[3/4]" : "aspect-[10/3]"
+    )}>
       {/* Slides */}
       {slides.map((slide, index) => (
         <div
@@ -79,12 +98,15 @@ export default function BannerSlider() {
               : "opacity-0 scale-105"
           )}
         >
-          {/* Background Image */}
+          {/* Background Image - Different for mobile/desktop */}
           <div className="absolute inset-0 flex items-center justify-center">
             <img 
-              src={slide.image || "/placeholder.svg"} 
+              src={(isMobile ? slide.mobileImage : slide.image) || "/placeholder.svg"} 
               alt={slide.title || "Banner"} 
-              className="w-full h-full object-contain" 
+              className={cn(
+                "w-full h-full",
+                isMobile ? "object-cover" : "object-contain"
+              )} 
             />
           </div>
           
@@ -127,78 +149,6 @@ export default function BannerSlider() {
           </div>
         </div>
       ))}
-
-      {/* Navigation Arrows */}
-      <button
-        onClick={prevSlide}
-        className={cn(
-          "absolute left-4 md:left-8 top-1/2 -translate-y-1/2 z-10",
-          "w-12 h-12 rounded-full flex items-center justify-center",
-          "bg-white/10 backdrop-blur-md border border-white/20",
-          "text-white hover:bg-white/20",
-          "transition-all duration-300 hover:scale-110"
-        )}
-      >
-        <ChevronLeft className="h-6 w-6" />
-      </button>
-
-      <button
-        onClick={nextSlide}
-        className={cn(
-          "absolute right-4 md:right-8 top-1/2 -translate-y-1/2 z-10",
-          "w-12 h-12 rounded-full flex items-center justify-center",
-          "bg-white/10 backdrop-blur-md border border-white/20",
-          "text-white hover:bg-white/20",
-          "transition-all duration-300 hover:scale-110"
-        )}
-      >
-        <ChevronRight className="h-6 w-6" />
-      </button>
-
-      {/* Bottom Controls */}
-      <div className="absolute bottom-6 left-1/2 -translate-x-1/2 z-10 flex items-center gap-6">
-        {/* Play/Pause Button */}
-        <button
-          onClick={() => setIsPaused(!isPaused)}
-          className={cn(
-            "w-10 h-10 rounded-full flex items-center justify-center",
-            "bg-white/10 backdrop-blur-md border border-white/20",
-            "text-white hover:bg-white/20",
-            "transition-all duration-300"
-          )}
-        >
-          {isPaused ? <Play className="h-4 w-4 ml-0.5" /> : <Pause className="h-4 w-4" />}
-        </button>
-
-        {/* Progress Indicators */}
-        <div className="flex items-center gap-3">
-          {slides.map((_, index) => (
-            <button
-              key={index}
-              onClick={() => {
-                setCurrentSlide(index)
-                setProgress(0)
-              }}
-              className="relative h-1 rounded-full overflow-hidden bg-white/30 transition-all duration-300"
-              style={{ width: index === currentSlide ? "3rem" : "0.75rem" }}
-            >
-              {index === currentSlide && (
-                <div 
-                  className="absolute inset-y-0 left-0 bg-white rounded-full transition-all duration-100"
-                  style={{ width: `${progress}%` }}
-                />
-              )}
-            </button>
-          ))}
-        </div>
-
-        {/* Slide Counter */}
-        {/* <div className="text-white/80 text-sm font-medium">
-          <span className="text-white">{String(currentSlide + 1).padStart(2, "0")}</span>
-          <span className="mx-1">/</span>
-          <span>{String(slides.length).padStart(2, "0")}</span>
-        </div> */}
-      </div>
 
     </div>
   )

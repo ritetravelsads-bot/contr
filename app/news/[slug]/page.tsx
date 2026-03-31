@@ -86,7 +86,7 @@ export default function NewsDetailPage({ params }: { params: { slug: string } })
           </div>
 
           {/* Article Content */}
-          <div className="prose prose-sm max-w-none">
+          <div className="max-w-none">
             <div
               className="text-muted-foreground text-sm leading-relaxed whitespace-pre-wrap"
               dangerouslySetInnerHTML={{ __html: article.content }}

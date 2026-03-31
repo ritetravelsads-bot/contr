@@ -94,6 +94,7 @@ export async function PUT(
     const body = await request.json()
     const {
       title,
+      slug: customSlug,
       excerpt,
       content,
       category,
@@ -109,6 +110,8 @@ export async function PUT(
       og_image,
       tags,
       is_published,
+      faqs,
+      schema_markup,
     } = body
 
     if (!title || !excerpt || !content || !author) {
@@ -142,11 +145,22 @@ export async function PUT(
         })
       }
 
-      // Generate new slug if title changed
+      // Use custom slug if provided, otherwise keep existing or generate from title
       let slug = existingPost.slug
-      if (title !== existingPost.title) {
-        slug = slugify(title)
+      if (customSlug && customSlug.trim()) {
+        // Use the custom slug provided by user
+        slug = customSlug.trim()
         // Check for existing slug (excluding current post)
+        const duplicateSlug = await collection.findOne({ 
+          slug, 
+          _id: { $ne: existingPost._id } 
+        })
+        if (duplicateSlug) {
+          slug = `${slug}-${Date.now()}`
+        }
+      } else if (title !== existingPost.title && !existingPost.slug) {
+        // Only auto-generate slug if title changed AND there's no existing slug
+        slug = slugify(title)
         const duplicateSlug = await collection.findOne({ 
           slug, 
           _id: { $ne: existingPost._id } 
@@ -156,6 +170,9 @@ export async function PUT(
         }
       }
 
+      // Handle category - support both string and array formats
+      const categoryValue = Array.isArray(category) ? category : (category ? [category] : ["general"])
+
       const result = await collection.updateOne(
         { _id: existingPost._id },
         {
@@ -164,7 +181,7 @@ export async function PUT(
             slug,
             excerpt,
             content,
-            category: category || "general",
+            category: categoryValue,
             author,
             readTime: Number.parseInt(readTime) || 5,
             read_time: Number.parseInt(readTime) || 5,
@@ -177,6 +194,8 @@ export async function PUT(
             og_description: og_description || excerpt,
             og_image: og_image || banner_image || cover_image || null,
             tags: Array.isArray(tags) ? tags : [],
+            faqs: Array.isArray(faqs) ? faqs : [],
+            schema_markup: schema_markup || null,
             is_published: is_published !== false,
             published: is_published !== false,
             updatedAt: new Date(),

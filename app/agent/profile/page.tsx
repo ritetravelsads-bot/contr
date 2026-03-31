@@ -101,7 +101,6 @@ export default function AgentProfilePage() {
           </form>
         </div>
       </main>
-      <Footer />
     </>
   )
 }

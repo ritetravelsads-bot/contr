@@ -219,7 +219,6 @@ export default function GurugramMasterPlanPage() {
           </div>
         </section>
       </main>
-      <Footer />
     </>
   )
 }

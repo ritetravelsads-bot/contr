@@ -38,7 +38,6 @@ export default function AdminLoginPage() {
           </div>
         </div>
       </main>
-      <Footer />
     </>
   )
 }

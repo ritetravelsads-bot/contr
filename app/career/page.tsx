@@ -84,7 +84,7 @@ export default function CareerPage() {
           <div className="max-w-4xl mx-auto text-center space-y-6">
             <h1 className="text-4xl md:text-5xl font-bold">Join Our Team</h1>
             <p className="text-lg text-blue-100 max-w-2xl mx-auto">
-              Build your career with Gurugram's leading real estate advisory firm. 
+              Build your career with Gurugram's leading real estate advisory firm.
               We're looking for passionate individuals who want to make a difference in the property industry.
             </p>
             <Button asChild size="lg" className="bg-white text-[#002366] hover:bg-blue-50">
@@ -184,7 +184,6 @@ export default function CareerPage() {
           </div>
         </section>
       </main>
-      <Footer />
     </>
   )
 }

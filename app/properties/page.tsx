@@ -2,8 +2,8 @@
 
 import Link from "next/link"
 import { useSearchParams, useRouter } from "next/navigation"
-import { 
-  MapPin, Bed, Bath, Maximize2, Heart, Search, Filter, ChevronDown, 
+import {
+  MapPin, Bed, Bath, Maximize2, Heart, Search, Filter, ChevronDown,
   ChevronUp, X, Building2, Home, CheckCircle2, SlidersHorizontal,
   ArrowUpDown, Grid3X3, List
 } from "lucide-react"
@@ -106,7 +106,7 @@ function PropertyCard({ property }: { property: Property }) {
           alt={property.property_name || "Property"}
           className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
         />
-        
+
         {/* Badges */}
         <div className="absolute top-2 left-2 flex flex-wrap gap-1.5">
           {property.listing_type && (
@@ -132,7 +132,7 @@ function PropertyCard({ property }: { property: Property }) {
         )}
 
         {/* Favorite Button */}
-        <button 
+        <button
           onClick={(e) => { e.preventDefault(); }}
           className="absolute bottom-2 right-2 p-1.5 bg-white/90 rounded-full hover:bg-white hover:scale-110 transition-all shadow-sm"
         >
@@ -187,13 +187,13 @@ function PropertyCard({ property }: { property: Property }) {
 function PropertiesContent() {
   const searchParams = useSearchParams()
   const router = useRouter()
-  
+
   const [properties, setProperties] = useState<Property[]>([])
   const [loading, setLoading] = useState(true)
   const [pagination, setPagination] = useState({ page: 1, total: 0, pages: 1 })
   const [showAdvanced, setShowAdvanced] = useState(false)
   const [viewMode, setViewMode] = useState<"grid" | "list">("grid")
-  
+
   // Filter state
   const [filters, setFilters] = useState({
     search: searchParams.get("search") || "",
@@ -247,7 +247,7 @@ function PropertiesContent() {
   const updateFilter = (key: string, value: string) => {
     const newFilters = { ...filters, [key]: value }
     setFilters(newFilters)
-    
+
     // Update URL
     const params = new URLSearchParams()
     Object.entries(newFilters).forEach(([k, v]) => {
@@ -307,7 +307,7 @@ function PropertiesContent() {
                   className="w-full pl-9 pr-4 py-2.5 text-sm border border-border rounded-lg bg-background focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary"
                 />
               </div>
-              
+
               <div className="flex gap-2 flex-wrap">
                 <select
                   value={filters.property_type}
@@ -590,8 +590,8 @@ function PropertiesContent() {
           ) : (
             <div className={cn(
               "grid gap-4",
-              viewMode === "grid" 
-                ? "grid-cols-1 md:grid-cols-2 lg:grid-cols-3" 
+              viewMode === "grid"
+                ? "grid-cols-1 md:grid-cols-2 lg:grid-cols-3"
                 : "grid-cols-1"
             )}>
               {properties.map((property) => (
@@ -612,7 +612,7 @@ function PropertiesContent() {
               >
                 Previous
               </Button>
-              
+
               <div className="flex gap-1">
                 {Array.from({ length: Math.min(5, pagination.pages) }, (_, i) => {
                   let pageNum: number
@@ -625,7 +625,7 @@ function PropertiesContent() {
                   } else {
                     pageNum = page - 2 + i
                   }
-                  
+
                   return (
                     <button
                       key={pageNum}
@@ -642,7 +642,7 @@ function PropertiesContent() {
                   )
                 })}
               </div>
-              
+
               <Button
                 variant="outline"
                 size="sm"
@@ -656,7 +656,6 @@ function PropertiesContent() {
           )}
         </div>
       </main>
-      <Footer />
     </>
   )
 }

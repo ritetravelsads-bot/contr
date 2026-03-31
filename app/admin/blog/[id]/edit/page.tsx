@@ -2,8 +2,7 @@ import type { Metadata } from "next"
 import { redirect } from "next/navigation"
 import { requireAdmin } from "@/lib/auth"
 import { getBlogPostById } from "@/app/blog/_actions"
-import BlogPostForm from "@/components/admin/blog-post-form"
-import PageHeader from "@/components/dashboard/page-header"
+import WordPressBlogEditor from "@/components/admin/wordpress-blog-editor"
 
 export const metadata: Metadata = {
   title: "Edit Blog Post | CountryRoof Admin",
@@ -28,15 +27,5 @@ export default async function EditBlogPostPage({
     redirect("/admin/blog")
   }
 
-  return (
-    <div className="space-y-6">
-      <PageHeader
-        title="Edit Blog Post"
-        description={`Editing: ${blogPost.title || "Blog Post"}`}
-        showBackButton
-        backHref="/admin/blog"
-      />
-      <BlogPostForm initialData={blogPost} />
-    </div>
-  )
+  return <WordPressBlogEditor initialData={blogPost} />
 }

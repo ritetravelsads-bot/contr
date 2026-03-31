@@ -47,6 +47,20 @@ export async function GET(req: NextRequest) {
       andConditions.push({ city: { $regex: city, $options: "i" } })
     }
 
+    // Location filter (searches address, neighborhood, city, area)
+    const location = searchParams.get("location")
+    if (location) {
+      andConditions.push({
+        $or: [
+          { address: { $regex: location, $options: "i" } },
+          { neighborhood: { $regex: location, $options: "i" } },
+          { city: { $regex: location, $options: "i" } },
+          { state: { $regex: location, $options: "i" } },
+          { property_name: { $regex: location, $options: "i" } },
+        ]
+      })
+    }
+
     // Category / Property Type filter
     const category = searchParams.get("category")
     if (category) {
@@ -146,8 +160,8 @@ export async function GET(req: NextRequest) {
       }
     }
 
-    // Developer name filter
-    const developerName = searchParams.get("developer")
+    // Developer name filter (supports both "developer" and "developer_name" params)
+    const developerName = searchParams.get("developer") || searchParams.get("developer_name")
     if (developerName) {
       andConditions.push({ developer_name: { $regex: developerName, $options: "i" } })
     }

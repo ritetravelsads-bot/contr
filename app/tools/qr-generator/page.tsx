@@ -37,13 +37,13 @@ export default function QRGeneratorPage() {
     setQrGenerated(true)
   }
 
-  const qrCodeUrl = qrGenerated 
+  const qrCodeUrl = qrGenerated
     ? `https://api.qrserver.com/v1/create-qr-code/?size=300x300&data=${encodeURIComponent(getQRValue())}`
     : null
 
   const handleDownload = async () => {
     if (!qrCodeUrl) return
-    
+
     try {
       const response = await fetch(qrCodeUrl)
       const blob = await response.blob()
@@ -62,7 +62,7 @@ export default function QRGeneratorPage() {
 
   const handleCopy = async () => {
     if (!qrCodeUrl) return
-    
+
     try {
       const response = await fetch(qrCodeUrl)
       const blob = await response.blob()
@@ -118,11 +118,10 @@ export default function QRGeneratorPage() {
                             setInputValue("")
                             setQrGenerated(false)
                           }}
-                          className={`flex flex-col items-center gap-1 p-3 rounded-lg border transition-colors ${
-                            inputType === type.id
+                          className={`flex flex-col items-center gap-1 p-3 rounded-lg border transition-colors ${inputType === type.id
                               ? "border-primary bg-primary/5 text-primary"
                               : "border-border hover:border-primary/50"
-                          }`}
+                            }`}
                         >
                           <type.icon className="w-5 h-5" />
                           <span className="text-xs font-medium">{type.label}</span>
@@ -162,8 +161,8 @@ export default function QRGeneratorPage() {
                   </div>
 
                   {/* Generate Button */}
-                  <Button 
-                    onClick={generateQR} 
+                  <Button
+                    onClick={generateQR}
                     className="w-full"
                     disabled={!inputValue.trim()}
                   >
@@ -179,13 +178,13 @@ export default function QRGeneratorPage() {
                   <CardTitle className="text-lg">Your QR Code</CardTitle>
                 </CardHeader>
                 <CardContent className="space-y-6">
-                  <div 
+                  <div
                     ref={qrRef}
                     className="aspect-square bg-muted rounded-lg flex items-center justify-center border border-border"
                   >
                     {qrGenerated && qrCodeUrl ? (
-                      <img 
-                        src={qrCodeUrl} 
+                      <img
+                        src={qrCodeUrl}
                         alt="Generated QR Code"
                         className="w-full h-full p-4"
                       />
@@ -263,7 +262,6 @@ export default function QRGeneratorPage() {
           </div>
         </section>
       </main>
-      <Footer />
     </>
   )
 }

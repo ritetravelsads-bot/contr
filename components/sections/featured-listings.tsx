@@ -127,7 +127,7 @@ export default function FeaturedListings() {
 
         <div className="flex justify-center pt-2">
           <Button asChild variant="outline" className="bg-transparent text-xs h-8">
-            <Link href="/properties">View All Properties</Link>
+            <Link href="/properties?featured=true">View All Properties</Link>
           </Button>
         </div>
       </div>

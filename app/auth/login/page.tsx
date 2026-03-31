@@ -38,7 +38,6 @@ export default function LoginPage() {
           </div>
         </div>
       </main>
-      <Footer />
     </>
   )
 }

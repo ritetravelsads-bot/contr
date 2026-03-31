@@ -18,7 +18,7 @@ export default function TermsPage() {
             <p className="text-muted-foreground">Countryroof - Effective Date: To be inserted</p>
           </div>
 
-          <div className="prose prose-sm max-w-none text-foreground space-y-6">
+          <div className="max-w-none text-foreground space-y-6">
             <section className="space-y-4">
               <p className="text-muted-foreground leading-relaxed">
                 By using this website, submitting information, or engaging with our services, you accept these Terms & Conditions. Countryroof reserves the right to modify these terms at any time without notice. Continued use constitutes acceptance of modifications.
@@ -233,7 +233,6 @@ export default function TermsPage() {
           </div>
         </div>
       </main>
-      <Footer />
     </>
   )
 }

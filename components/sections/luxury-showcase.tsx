@@ -46,7 +46,7 @@ export default function LuxuryShowcase() {
             <p className="text-muted-foreground text-lg">Handpicked properties that redefine luxury living</p>
           </div>
           <Button asChild variant="link" className="text-[#002366] hidden md:flex">
-            <Link href="/properties?category=luxury">
+            <Link href="/properties?segment=luxury">
               View All Luxury
               <ArrowRight size={18} className="ml-2" />
             </Link>
@@ -143,7 +143,7 @@ export default function LuxuryShowcase() {
 
         <div className="flex justify-center mt-8 md:hidden">
           <Button asChild variant="outline" className="text-[#002366] border-2 bg-transparent">
-            <Link href="/properties?category=luxury">
+            <Link href="/properties?segment=luxury">
               View All Luxury Properties
               <ArrowRight size={18} className="ml-2" />
             </Link>

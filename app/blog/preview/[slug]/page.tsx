@@ -33,7 +33,7 @@ export default async function BlogPostPreviewPage({ params }: { params: Promise<
             <span className="text-sm text-amber-800 font-medium">
               Preview Mode - This post is not published yet
             </span>
-            <a 
+            <a
               href={`/admin/blog/${blogPost._id}/edit`}
               className="text-sm text-amber-800 hover:text-amber-900 underline"
             >
@@ -43,7 +43,6 @@ export default async function BlogPostPreviewPage({ params }: { params: Promise<
         </div>
         <BlogPostPreview blogPost={blogPost} />
       </main>
-      <Footer />
     </>
   )
 }

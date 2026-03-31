@@ -228,7 +228,7 @@ export default function FeaturedVideoProperties() {
           </div>
           
           <Link 
-            href="/properties?listing_type=new"
+            href="/properties?segment=luxury"
             className={cn(
               "inline-flex items-center gap-2 px-4 py-2 rounded-full",
               "bg-primary/5 hover:bg-primary/10 border border-primary/20",

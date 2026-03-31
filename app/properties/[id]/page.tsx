@@ -242,7 +242,7 @@ export default function PropertyDetailPage({ params }: { params: Promise<{ id: s
                 <h2 className="text-lg md:text-xl font-bold text-foreground">About {property.property_name}</h2>
               </div>
             </div>
-            <div className="prose prose-sm max-w-none">
+            <div className="max-w-none">
               {property.about_project ? (
                 <p className="text-sm text-muted-foreground leading-relaxed whitespace-pre-line">
                   {property.about_project}

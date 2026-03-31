@@ -18,7 +18,7 @@ export default function DisclaimerPage() {
             <p className="text-muted-foreground text-sm">Last updated: April 04, 2025</p>
           </div>
 
-          <div className="prose prose-sm max-w-none text-foreground space-y-6">
+          <div className="max-w-none text-foreground space-y-6">
             <section className="space-y-3">
               <h2 className="text-2xl font-semibold text-foreground">General Information</h2>
               <p className="text-muted-foreground">
@@ -117,7 +117,6 @@ export default function DisclaimerPage() {
           </div>
         </div>
       </main>
-      <Footer />
     </>
   )
 }

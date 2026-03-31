@@ -38,7 +38,6 @@ export default function AgentRegisterPage() {
           </div>
         </div>
       </main>
-      <Footer />
     </>
   )
 }

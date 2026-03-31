@@ -49,7 +49,7 @@ export function BlogPostPreview({ blogPost }: BlogPostPreviewProps) {
 
       <p className="text-lg text-gray-700 mb-6 leading-relaxed">{blogPost.excerpt}</p>
 
-      <div className="prose max-w-none mb-8" dangerouslySetInnerHTML={{ __html: blogPost.content }} />
+      <div className="blog-content max-w-none mb-8" dangerouslySetInnerHTML={{ __html: blogPost.content }} />
 
       {blogPost.tags && blogPost.tags.length > 0 && (
         <div className="flex flex-wrap gap-2 mb-8">

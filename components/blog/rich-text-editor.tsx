@@ -1,18 +1,18 @@
 "use client"
 
 import { useEditor, EditorContent } from "@tiptap/react"
-import StarterKit from "@tiptap/starter-kit"
-import Image from "@tiptap/extension-image"
-import Link from "@tiptap/extension-link"
-import Placeholder from "@tiptap/extension-placeholder"
-import TextAlign from "@tiptap/extension-text-align"
-import Underline from "@tiptap/extension-underline"
-import TextStyle from "@tiptap/extension-text-style"
-import Color from "@tiptap/extension-color"
-import Table from "@tiptap/extension-table"
-import TableRow from "@tiptap/extension-table-row"
-import TableCell from "@tiptap/extension-table-cell"
-import TableHeader from "@tiptap/extension-table-header"
+import { StarterKit } from "@tiptap/starter-kit"
+import { Image } from "@tiptap/extension-image"
+import { Link } from "@tiptap/extension-link"
+import { Placeholder } from "@tiptap/extension-placeholder"
+import { TextAlign } from "@tiptap/extension-text-align"
+import { Underline } from "@tiptap/extension-underline"
+import { TextStyle } from "@tiptap/extension-text-style"
+import { Color } from "@tiptap/extension-color"
+import { Table } from "@tiptap/extension-table"
+import { TableRow } from "@tiptap/extension-table-row"
+import { TableCell } from "@tiptap/extension-table-cell"
+import { TableHeader } from "@tiptap/extension-table-header"
 import { EditorToolbar } from "./editor-toolbar"
 
 interface RichTextEditorProps {
@@ -28,7 +28,7 @@ export default function RichTextEditor({ content, onChange, placeholder }: RichT
 
     extensions: [
       StarterKit.configure({
-        heading: { levels: [1, 2, 3] },
+        heading: { levels: [1, 2, 3, 4] },
         // codeBlock and horizontalRule are included in StarterKit by default
       }),
       Image.configure({
@@ -85,15 +85,21 @@ export default function RichTextEditor({ content, onChange, placeholder }: RichT
   if (!editor) return null
 
   return (
-    <div className="border border-border rounded-lg overflow-hidden focus-within:ring-2 focus-within:ring-ring/30 transition-shadow">
-      <EditorToolbar editor={editor} />
-      <EditorContent editor={editor} />
-      {/* Status bar */}
-      <div className="flex items-center justify-between px-3 py-1 border-t border-border bg-muted/20 text-xs text-muted-foreground select-none">
+    <div className="flex flex-col h-full overflow-hidden focus-within:ring-2 focus-within:ring-ring/30 focus-within:ring-inset transition-shadow">
+      {/* Toolbar - fixed at top */}
+      <div className="flex-shrink-0 bg-card border-b border-border">
+        <EditorToolbar editor={editor} />
+      </div>
+      {/* Scrollable content area */}
+      <div className="flex-1 overflow-y-auto">
+        <EditorContent editor={editor} />
+      </div>
+      {/* Status bar - fixed at bottom */}
+      <div className="flex-shrink-0 flex items-center justify-between px-3 py-1.5 border-t border-border bg-muted/30 text-xs text-muted-foreground select-none">
         <span>Rich Text Editor</span>
         <div className="flex items-center gap-3">
           <span>{wordCount} {wordCount === 1 ? "word" : "words"}</span>
-          <span className="text-border">·</span>
+          <span className="text-muted-foreground/50">|</span>
           <span>{charCount} {charCount === 1 ? "character" : "characters"}</span>
         </div>
       </div>

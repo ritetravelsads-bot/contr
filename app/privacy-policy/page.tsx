@@ -23,7 +23,7 @@ export default function PrivacyPolicyPage() {
             </div>
           </div>
 
-          <div className="prose prose-sm max-w-none text-foreground space-y-6">
+          <div className="max-w-none text-foreground space-y-6">
             {/* Introduction */}
             <section className="space-y-3">
               <h2 className="text-2xl font-semibold text-foreground">Part I – Privacy Policy</h2>

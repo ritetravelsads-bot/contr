@@ -35,7 +35,6 @@ export default function RegisterPage() {
           </div>
         </div>
       </main>
-      <Footer />
     </>
   )
 }

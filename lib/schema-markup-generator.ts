@@ -1,14 +1,28 @@
 // Schema Markup Generators for SEO
 
+interface FAQItem {
+  id: string
+  question: string
+  answer: string
+}
+
 export function generateBlogSchema(post: any, authorName: string) {
-  return {
+  // If the post has pre-generated schema_markup from the editor, use it
+  if (post.schema_markup && Array.isArray(post.schema_markup)) {
+    return post.schema_markup
+  }
+
+  const schemas: object[] = []
+
+  // Article Schema
+  const articleSchema = {
     "@context": "https://schema.org",
     "@type": post.schema_markup?.article_type || "BlogPosting",
     headline: post.title,
     description: post.meta_description || post.excerpt,
     image: post.banner_image || post.cover_image,
-    datePublished: post.publication_date,
-    dateModified: post.updated_at || post.publication_date,
+    datePublished: post.publication_date || post.createdAt,
+    dateModified: post.updatedAt || post.publication_date || post.createdAt,
     author: {
       "@type": "Person",
       name: authorName,
@@ -18,14 +32,82 @@ export function generateBlogSchema(post: any, authorName: string) {
       name: "CountryRoof",
       logo: {
         "@type": "ImageObject",
-        url: "/logo.png",
+        url: "https://countryroof.com/logo.png",
       },
     },
     mainEntityOfPage: {
       "@type": "WebPage",
-      "@id": `https://countryroof.com/blog/${post.slug}`,
+      "@id": `https://countryroof.com/blogs/${post.slug}`,
     },
+    ...(post.tags && post.tags.length > 0 && {
+      keywords: post.tags.join(", ")
+    }),
+    articleSection: post.category 
+      ? (Array.isArray(post.category) ? post.category[0] : post.category)
+      : "Uncategorized"
   }
+  schemas.push(articleSchema)
+
+  // FAQ Schema (if FAQs exist)
+  if (post.faqs && Array.isArray(post.faqs) && post.faqs.length > 0) {
+    const validFaqs = post.faqs.filter((faq: FAQItem) => faq.question?.trim() && faq.answer?.trim())
+    if (validFaqs.length > 0) {
+      const faqSchema = {
+        "@context": "https://schema.org",
+        "@type": "FAQPage",
+        mainEntity: validFaqs.map((faq: FAQItem) => ({
+          "@type": "Question",
+          name: faq.question,
+          acceptedAnswer: {
+            "@type": "Answer",
+            text: faq.answer
+          }
+        }))
+      }
+      schemas.push(faqSchema)
+    }
+  }
+
+  // BreadcrumbList Schema - includes category (or Uncategorized) and blog title
+  const categoryName = post.category 
+    ? (Array.isArray(post.category) ? post.category[0] : post.category)
+    : "Uncategorized"
+  
+  const breadcrumbSchema = {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    itemListElement: [
+      {
+        "@type": "ListItem",
+        position: 1,
+        name: "Home",
+        item: "https://countryroof.com"
+      },
+      {
+        "@type": "ListItem",
+        position: 2,
+        name: "Blogs",
+        item: "https://countryroof.com/blogs"
+      },
+      {
+        "@type": "ListItem",
+        position: 3,
+        name: categoryName,
+        item: post.category 
+          ? `https://countryroof.com/blogs?category=${encodeURIComponent(categoryName)}`
+          : "https://countryroof.com/blogs"
+      },
+      {
+        "@type": "ListItem",
+        position: 4,
+        name: post.title,
+        item: `https://countryroof.com/blogs/${post.slug}`
+      }
+    ]
+  }
+  schemas.push(breadcrumbSchema)
+
+  return schemas
 }
 
 export function generatePropertySchema(property: any) {

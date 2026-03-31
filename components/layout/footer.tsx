@@ -57,7 +57,7 @@ export default function Footer() {
     { name: "About CountryRoof", href: "/about" },
     { name: "Our Services", href: "/services" },
     { name: "All Properties", href: "/properties" },
-    { name: "Real Estate Blog", href: "/blog" },
+    { name: "Real Estate Blog", href: "/blogs" },
     { name: "Career", href: "/career" },
     { name: "Contact", href: "/contact" },
   ]

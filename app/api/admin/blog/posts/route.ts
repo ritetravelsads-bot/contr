@@ -73,6 +73,7 @@ export async function POST(request: Request) {
     const body = await request.json()
     const {
       title,
+      slug: customSlug,
       excerpt,
       content,
       category,
@@ -88,6 +89,8 @@ export async function POST(request: Request) {
       og_image,
       tags,
       is_published,
+      faqs,
+      schema_markup,
     } = body
 
     if (!title || !excerpt || !content || !author) {
@@ -104,18 +107,22 @@ export async function POST(request: Request) {
       const db = client.db("countryroof")
       const collection = db.collection("blog_posts")
 
-      const slug = slugify(title)
+      // Use custom slug if provided, otherwise generate from title
+      const slug = customSlug ? customSlug.trim() : slugify(title)
 
       // Check for existing slug
       const existingPost = await collection.findOne({ slug })
       const finalSlug = existingPost ? `${slug}-${Date.now()}` : slug
+
+      // Handle category - support both string and array formats
+      const categoryValue = Array.isArray(category) ? category : (category ? [category] : ["general"])
 
       const result = await collection.insertOne({
         title,
         slug: finalSlug,
         excerpt,
         content,
-        category: category || "general",
+        category: categoryValue,
         author,
         readTime: Number.parseInt(readTime) || 5,
         read_time: Number.parseInt(readTime) || 5,
@@ -128,6 +135,8 @@ export async function POST(request: Request) {
         og_description: og_description || excerpt,
         og_image: og_image || banner_image || cover_image || null,
         tags: Array.isArray(tags) ? tags : [],
+        faqs: Array.isArray(faqs) ? faqs : [],
+        schema_markup: schema_markup || null,
         is_published: is_published !== false,
         published: is_published !== false,
         publication_date: new Date(),

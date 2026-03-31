@@ -107,7 +107,6 @@ export default function AgentPropertiesPage() {
           )}
         </div>
       </main>
-      <Footer />
     </>
   )
 }
