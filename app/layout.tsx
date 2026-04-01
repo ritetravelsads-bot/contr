@@ -21,6 +21,9 @@ export const metadata: Metadata = {
     "Commercial Property Gurgaon",
   ],
   authors: [{ name: "CountryRoof" }],
+  verification: {
+    google: "HMLmt_V-xGPk7KOvW60EO-cNggppOdM6OHT47vFLdQM",
+  },
   icons: {
     icon: "/fav.png",
   },
