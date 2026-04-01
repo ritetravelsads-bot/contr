@@ -1,8 +1,8 @@
 "use client"
 
-import { useState, useEffect, useRef } from "react"
+import { useState, useEffect } from "react"
 import Link from "next/link"
-import { Building2, Award, ArrowRight, ChevronLeft, ChevronRight } from "lucide-react"
+import { Building2, Star } from "lucide-react"
 import { cn } from "@/lib/utils"
 
 interface Developer {
@@ -16,17 +16,13 @@ interface Developer {
 export default function FeaturedDevelopers() {
   const [developers, setDevelopers] = useState<Developer[]>([])
   const [loading, setLoading] = useState(true)
-  const [isPaused, setIsPaused] = useState(false)
-  const scrollRef = useRef<HTMLDivElement>(null)
 
   useEffect(() => {
     const fetchDevelopers = async () => {
       try {
-        // Fetch developers with property count
         const response = await fetch("/api/developers")
         const data = await response.json()
         
-        // Filter to only show developers with at least 1 property and sort by property count
         const developersWithProperties = (Array.isArray(data) ? data : [])
           .filter((dev: Developer) => dev.property_count > 0)
           .sort((a: Developer, b: Developer) => b.property_count - a.property_count)
@@ -43,48 +39,17 @@ export default function FeaturedDevelopers() {
     fetchDevelopers()
   }, [])
 
-  // Auto-scroll animation
-  useEffect(() => {
-    if (!scrollRef.current || developers.length < 4 || isPaused) return
-
-    const scrollContainer = scrollRef.current
-    let animationId: number
-    let scrollPos = 0
-    const scrollSpeed = 0.5
-
-    const animate = () => {
-      scrollPos += scrollSpeed
-      if (scrollPos >= scrollContainer.scrollWidth / 2) {
-        scrollPos = 0
-      }
-      scrollContainer.scrollLeft = scrollPos
-      animationId = requestAnimationFrame(animate)
-    }
-
-    animationId = requestAnimationFrame(animate)
-
-    return () => cancelAnimationFrame(animationId)
-  }, [developers, isPaused])
-
-  const scroll = (direction: "left" | "right") => {
-    if (!scrollRef.current) return
-    const scrollAmount = 300
-    scrollRef.current.scrollBy({
-      left: direction === "left" ? -scrollAmount : scrollAmount,
-      behavior: "smooth",
-    })
-  }
-
   if (loading) {
     return (
-      <section className="w-full py-16 md:py-24 px-4 md:px-6 lg:px-8 bg-gradient-to-b from-white to-gray-50">
-        <div className="max-w-7xl mx-auto">
+      <section className="w-full py-20 md:py-28 border-y border-slate-200 bg-[#fcfcfc]">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="animate-pulse">
-            <div className="h-8 w-64 bg-gray-200 rounded mx-auto mb-4" />
-            <div className="h-4 w-96 bg-gray-200 rounded mx-auto mb-12" />
-            <div className="flex gap-6 overflow-hidden">
-              {[...Array(6)].map((_, i) => (
-                <div key={i} className="flex-shrink-0 w-48 h-32 bg-gray-200 rounded-xl" />
+            <div className="h-8 w-48 bg-slate-200 rounded mx-auto mb-4" />
+            <div className="h-12 w-64 bg-slate-200 rounded mx-auto mb-6" />
+            <div className="h-4 w-96 bg-slate-200 rounded mx-auto mb-16" />
+            <div className="flex gap-8 overflow-hidden justify-center">
+              {[...Array(5)].map((_, i) => (
+                <div key={i} className="flex-shrink-0 w-[220px] h-[110px] bg-slate-200 rounded" />
               ))}
             </div>
           </div>
@@ -95,136 +60,155 @@ export default function FeaturedDevelopers() {
 
   if (developers.length === 0) return null
 
-  // Duplicate developers for infinite scroll effect
-  const duplicatedDevelopers = [...developers, ...developers]
+  // Split developers into rows for the marquee effect
+  const rowSize = Math.ceil(developers.length / 3)
+  const row1 = developers.slice(0, rowSize)
+  const row2 = developers.slice(rowSize, rowSize * 2)
+  const row3 = developers.slice(rowSize * 2)
+
+  // Duplicate each row for seamless infinite scroll
+  const duplicateRow = (row: Developer[]) => [...row, ...row]
 
   return (
-    <section className="w-full py-16 md:py-24 px-4 md:px-6 lg:px-8 bg-gradient-to-b from-white to-gray-50 overflow-hidden">
-      <div className="max-w-7xl mx-auto">
-        {/* Header */}
-        <div className="text-center mb-12">
-          <div className="inline-flex items-center gap-2 mb-4 px-4 py-2 bg-primary/5 rounded-full">
-            <Award className="text-primary" size={20} />
-            <span className="text-primary font-semibold text-sm tracking-wide">TOP REAL ESTATE DEVELOPERS</span>
-          </div>
-          <h2 className="text-3xl md:text-4xl font-bold text-primary mb-4">
-            {"Gurugram's Leading Developers"}
-          </h2>
-          <p className="text-muted-foreground text-lg max-w-2xl mx-auto">
-            Trusted partnerships with reputed developers known for quality construction and timely delivery
-          </p>
+    <section 
+      className={cn(
+        "w-full py-20 md:py-28 border-y border-slate-200 overflow-hidden",
+        "bg-[#fcfcfc]",
+        // Architectural grid background
+        "bg-[linear-gradient(#f1f5f9_1px,transparent_1px),linear-gradient(90deg,#f1f5f9_1px,transparent_1px)]",
+        "bg-[size:32px_32px]"
+      )}
+    >
+      {/* Header */}
+      <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mb-16 text-center">
+        {/* Sharp Badge */}
+        <div className="inline-flex items-center gap-2 px-4 py-1.5 bg-slate-900 text-white text-xs font-bold tracking-widest uppercase mb-8 shadow-md rounded-sm">
+          <Star className="w-4 h-4 text-amber-400" fill="currentColor" />
+          Elite Partners
         </div>
 
-        {/* Animated Logo Carousel */}
-        <div className="relative group">
-          {/* Gradient Fade Edges */}
-          <div className="absolute left-0 top-0 bottom-0 w-20 bg-gradient-to-r from-white to-transparent z-10 pointer-events-none" />
-          <div className="absolute right-0 top-0 bottom-0 w-20 bg-gradient-to-l from-white to-transparent z-10 pointer-events-none" />
+        {/* Title */}
+        <h2 className="text-4xl md:text-6xl font-black mb-6 tracking-tighter text-slate-900 uppercase">
+          Master <br />
+          <span className="text-transparent bg-clip-text bg-gradient-to-r from-slate-400 to-slate-600">
+            Builders
+          </span>
+        </h2>
+        
+        <p className="text-slate-600 max-w-2xl mx-auto text-lg font-medium mt-6">
+          The visionary architectural firms and developers shaping tomorrow&apos;s skylines.
+        </p>
+      </div>
 
-          {/* Navigation Buttons */}
-          <button
-            onClick={() => scroll("left")}
-            className={cn(
-              "absolute left-2 top-1/2 -translate-y-1/2 z-20",
-              "w-10 h-10 rounded-full bg-white shadow-lg border border-gray-200",
-              "flex items-center justify-center",
-              "opacity-0 group-hover:opacity-100 transition-opacity duration-300",
-              "hover:bg-gray-50"
-            )}
-            aria-label="Scroll left"
-          >
-            <ChevronLeft className="h-5 w-5 text-gray-600" />
-          </button>
-          <button
-            onClick={() => scroll("right")}
-            className={cn(
-              "absolute right-2 top-1/2 -translate-y-1/2 z-20",
-              "w-10 h-10 rounded-full bg-white shadow-lg border border-gray-200",
-              "flex items-center justify-center",
-              "opacity-0 group-hover:opacity-100 transition-opacity duration-300",
-              "hover:bg-gray-50"
-            )}
-            aria-label="Scroll right"
-          >
-            <ChevronRight className="h-5 w-5 text-gray-600" />
-          </button>
+      {/* Marquee Wrapper */}
+      <div className="relative z-10 flex flex-col gap-8 py-8">
+        {/* Edge Fades */}
+        <div className="absolute left-0 top-0 w-[150px] h-full bg-gradient-to-r from-[#fcfcfc] to-transparent z-10 pointer-events-none" />
+        <div className="absolute right-0 top-0 w-[150px] h-full bg-gradient-to-l from-[#fcfcfc] to-transparent z-10 pointer-events-none" />
 
-          {/* Scrolling Container */}
-          <div
-            ref={scrollRef}
-            className="flex gap-6 overflow-x-hidden py-4"
-            onMouseEnter={() => setIsPaused(true)}
-            onMouseLeave={() => setIsPaused(false)}
-          >
-            {duplicatedDevelopers.map((developer, index) => (
-              <Link
-                key={`${developer._id}-${index}`}
-                href={`/properties?developer_name=${encodeURIComponent(developer.name)}`}
-                className={cn(
-                  "flex-shrink-0 w-48 group/card",
-                  "bg-white rounded-2xl p-6",
-                  "border border-gray-100 shadow-sm",
-                  "hover:shadow-xl hover:border-primary/20 hover:-translate-y-1",
-                  "transition-all duration-300 ease-out"
-                )}
-              >
-                <div className="flex flex-col items-center text-center">
-                  {/* Logo Container */}
-                  <div className={cn(
-                    "w-24 h-24 rounded-xl mb-4 overflow-hidden",
-                    "bg-gradient-to-br from-gray-50 to-gray-100",
-                    "flex items-center justify-center",
-                    "group-hover/card:scale-105 transition-transform duration-300"
-                  )}>
-                    {developer.logo_url ? (
-                      <img
-                        src={developer.logo_url}
-                        alt={developer.name}
-                        className="w-full h-full object-contain p-2"
-                      />
-                    ) : (
-                      <Building2 className="h-12 w-12 text-gray-400" />
-                    )}
-                  </div>
+        {/* Row 1: Scrolls Right */}
+        {row1.length > 0 && (
+          <MarqueeRow developers={duplicateRow(row1)} direction="right" />
+        )}
 
-                  {/* Developer Name */}
-                  <h3 className="font-semibold text-foreground text-sm line-clamp-2 mb-1 group-hover/card:text-primary transition-colors">
-                    {developer.name}
-                  </h3>
+        {/* Row 2: Scrolls Left */}
+        {row2.length > 0 && (
+          <MarqueeRow developers={duplicateRow(row2)} direction="left" />
+        )}
 
-                  {/* Property Count Badge */}
-                  <div className={cn(
-                    "inline-flex items-center gap-1 px-3 py-1 rounded-full",
-                    "bg-primary/5 text-primary text-xs font-medium",
-                    "group-hover/card:bg-primary group-hover/card:text-white",
-                    "transition-colors duration-300"
-                  )}>
-                    <Building2 className="h-3 w-3" />
-                    {developer.property_count} {developer.property_count === 1 ? "Project" : "Projects"}
-                  </div>
-                </div>
-              </Link>
-            ))}
-          </div>
-        </div>
+        {/* Row 3: Scrolls Right */}
+        {row3.length > 0 && (
+          <MarqueeRow developers={duplicateRow(row3)} direction="right" />
+        )}
+      </div>
 
-        {/* View All Button */}
-        <div className="text-center mt-10">
-          <Link
-            href="/developers"
-            className={cn(
-              "inline-flex items-center gap-2 px-6 py-3",
-              "bg-primary text-white rounded-full",
-              "font-medium text-sm",
-              "hover:bg-primary/90 hover:gap-3",
-              "transition-all duration-300 shadow-lg shadow-primary/20"
-            )}
-          >
-            View All Developers
-            <ArrowRight className="h-4 w-4" />
-          </Link>
-        </div>
+      {/* View All Button */}
+      <div className="relative z-10 text-center mt-12">
+        <Link
+          href="/developers"
+          className={cn(
+            "inline-flex items-center gap-2 px-8 py-3",
+            "bg-slate-900 text-white rounded-sm",
+            "font-bold text-sm uppercase tracking-wider",
+            "hover:bg-slate-800",
+            "transition-all duration-200",
+            "shadow-[4px_4px_0px_0px_#cbd5e1]",
+            "hover:shadow-[6px_6px_0px_0px_#0ea5e9]",
+            "hover:translate-x-[-2px] hover:translate-y-[-2px]"
+          )}
+        >
+          View All Developers
+        </Link>
       </div>
     </section>
+  )
+}
+
+// Marquee Row Component
+function MarqueeRow({ 
+  developers, 
+  direction 
+}: { 
+  developers: Developer[]
+  direction: "left" | "right" 
+}) {
+  return (
+    <div className="flex w-full overflow-hidden group/row">
+      <div 
+        className={cn(
+          "flex gap-8 pr-8 w-max",
+          direction === "right" ? "animate-scroll-right" : "animate-scroll-left",
+          "group-hover/row:[animation-play-state:paused]"
+        )}
+      >
+        {developers.map((developer, index) => (
+          <DeveloperCard key={`${developer._id}-${index}`} developer={developer} />
+        ))}
+      </div>
+    </div>
+  )
+}
+
+// Developer Card Component
+function DeveloperCard({ developer }: { developer: Developer }) {
+  return (
+    <Link
+      href={`/properties?developer_name=${encodeURIComponent(developer.name)}`}
+      title={developer.name}
+      className={cn(
+        "flex-shrink-0 w-[220px] h-[110px]",
+        "bg-white rounded-[4px]",
+        "flex items-center justify-center p-6",
+        "border-2 border-slate-200",
+        "shadow-[4px_4px_0px_0px_#cbd5e1]",
+        "transition-all duration-200 ease-out",
+        // Light blue hover effect
+        "hover:translate-x-[-3px] hover:translate-y-[-3px]",
+        "hover:shadow-[7px_7px_0px_0px_#0ea5e9]",
+        "hover:border-sky-500",
+        "hover:z-20",
+        // Mobile adjustments
+        "max-md:w-[160px] max-md:h-[85px] max-md:p-4",
+        "max-md:shadow-[3px_3px_0px_0px_#cbd5e1]",
+        "max-md:hover:translate-x-[-2px] max-md:hover:translate-y-[-2px]",
+        "max-md:hover:shadow-[5px_5px_0px_0px_#0ea5e9]"
+      )}
+    >
+      {developer.logo_url ? (
+        <img
+          src={developer.logo_url}
+          alt={developer.name}
+          loading="lazy"
+          className="max-w-full max-h-full object-contain opacity-90 hover:opacity-100 transition-opacity duration-200"
+        />
+      ) : (
+        <div className="flex flex-col items-center gap-2">
+          <Building2 className="h-8 w-8 text-slate-400" />
+          <span className="text-xs text-slate-600 font-medium text-center line-clamp-2">
+            {developer.name}
+          </span>
+        </div>
+      )}
+    </Link>
   )
 }

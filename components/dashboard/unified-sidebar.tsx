@@ -33,6 +33,7 @@ import {
   MessageCircle,
   PanelLeftClose,
   PanelLeftOpen,
+  Code2,
 } from "lucide-react"
 
 type UserRole = "admin" | "agent" | "builder" | "buyer" | "customer"
@@ -91,6 +92,7 @@ const getNavConfig = (role: UserRole): NavSection[] => {
             { href: "/admin/blog", label: "Blog", icon: BookOpen },
             { href: "/admin/homepage-sections", label: "Homepage Sections", icon: LayoutGrid },
             { href: "/admin/seo", label: "SEO", icon: Search },
+            { href: "/admin/head-tags", label: "Head Tags", icon: Code2 },
           ],
         },
         {

@@ -37,6 +37,15 @@ export async function GET(req: NextRequest, { params }: { params: Promise<{ id: 
       return NextResponse.json({ error: "Property not found" }, { status: 404 })
     }
 
+    // Debug: Log image fields being retrieved
+    console.log("[v0] API GET - Image fields retrieved:", {
+      main_thumbnail: property.main_thumbnail,
+      main_banner: property.main_banner,
+      multiple_images: property.multiple_images,
+      floor_plans: property.floor_plans,
+      master_plan: property.master_plan,
+    })
+
     return NextResponse.json(property)
   } catch (error) {
     console.error("[v0] Error fetching property:", error)
@@ -92,6 +101,15 @@ export async function PUT(req: NextRequest, { params }: { params: Promise<{ id: 
       slug = uniqueSlug
     }
 
+    // Debug: Log image fields being saved
+    console.log("[v0] API PUT - Image fields being saved:", {
+      main_thumbnail: body.main_thumbnail,
+      main_banner: body.main_banner,
+      multiple_images: body.multiple_images,
+      floor_plans: body.floor_plans,
+      master_plan: body.master_plan,
+    })
+    
     // Build the update object
     const updateData = {
       ...body,
