@@ -5,6 +5,7 @@ import { Analytics } from "@vercel/analytics/next"
 import "./globals.css"
 import "@/styles/blog-content.css"
 import FrontendLayout from "@/components/layout/frontend-layout"
+import CustomHeadTags from "@/components/layout/custom-head-tags"
 
 const geist = Geist({ subsets: ["latin"] })
 const geistMono = Geist_Mono({ subsets: ["latin"] })
@@ -21,6 +22,10 @@ export const metadata: Metadata = {
     "Commercial Property Gurgaon",
   ],
   authors: [{ name: "CountryRoof" }],
+  robots: {
+    index: false,
+    follow: false,
+  },
   verification: {
     google: "HMLmt_V-xGPk7KOvW60EO-cNggppOdM6OHT47vFLdQM",
   },
@@ -84,6 +89,8 @@ export default function RootLayout({
             }),
           }}
         />
+        {/* @ts-expect-error Server Component */}
+        <CustomHeadTags />
       </head>
       <body className={`${geist.className} antialiased`}>
         <FrontendLayout>
