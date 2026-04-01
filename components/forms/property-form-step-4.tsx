@@ -94,7 +94,21 @@ export default function PropertyFormStep4({ formData, onChange }: any) {
 
       // Update form data
       if (isMultiple) {
-        const existingUrls = formData[fieldName] || []
+        // Ensure existingUrls is always an array
+        let rawExisting = formData[fieldName]
+        let existingUrls: string[] = []
+        if (Array.isArray(rawExisting)) {
+          existingUrls = rawExisting
+        } else if (typeof rawExisting === 'string' && rawExisting.startsWith('[')) {
+          try {
+            existingUrls = JSON.parse(rawExisting)
+          } catch (e) {
+            existingUrls = []
+          }
+        } else if (typeof rawExisting === 'string' && rawExisting.length > 0) {
+          existingUrls = [rawExisting]
+        }
+        
         const newUrls = uploadedImages.map((img) => img.url)
         onChange(fieldName, [...existingUrls, ...newUrls])
         
@@ -121,9 +135,21 @@ export default function PropertyFormStep4({ formData, onChange }: any) {
 
   const removeImage = (fieldName: string, index?: number) => {
     if (index !== undefined) {
-      const updatedUrls = [...(formData[fieldName] || [])]
-      updatedUrls.splice(index, 1)
-      onChange(fieldName, updatedUrls)
+      // Ensure we're working with an array
+      let rawUrls = formData[fieldName]
+      let urls: string[] = []
+      if (Array.isArray(rawUrls)) {
+        urls = [...rawUrls]
+      } else if (typeof rawUrls === 'string' && rawUrls.startsWith('[')) {
+        try {
+          urls = JSON.parse(rawUrls)
+        } catch (e) {
+          urls = []
+        }
+      }
+      
+      urls.splice(index, 1)
+      onChange(fieldName, urls)
       
       // Also remove metadata
       const updatedMeta = [...(formData[`${fieldName}_meta`] || [])]
@@ -163,6 +189,9 @@ export default function PropertyFormStep4({ formData, onChange }: any) {
   }) => {
     const imageUrl = formData[fieldName]
     const imageMeta = getImageMeta(fieldName)
+    
+    // Debug: Log what's being rendered for this field
+    console.log(`[v0] SingleImageUpload - ${fieldName}:`, { imageUrl, imageMeta, hasImage: !!imageUrl })
     const isUploading = uploading[fieldName]
     const error = uploadErrors[fieldName]
 
@@ -195,6 +224,10 @@ export default function PropertyFormStep4({ formData, onChange }: any) {
                 src={imageUrl || "/placeholder.svg"}
                 alt={title}
                 className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105"
+                onError={(e) => {
+                  console.error(`[v0] Failed to load image for ${fieldName}:`, imageUrl)
+                  e.currentTarget.src = "/placeholder.svg"
+                }}
               />
               <div className="absolute inset-0 bg-black/0 group-hover:bg-black/40 transition-colors" />
               <button
@@ -272,8 +305,28 @@ export default function PropertyFormStep4({ formData, onChange }: any) {
     description: string
     gridCols?: string
   }) => {
-    const images = formData[fieldName] || []
+    // Ensure images is always an array (handle case where it might be stored as string)
+    let rawImages = formData[fieldName]
+    let images: string[] = []
+    if (Array.isArray(rawImages)) {
+      images = rawImages
+    } else if (typeof rawImages === 'string' && rawImages.startsWith('[')) {
+      // Handle case where images might be stored as JSON string
+      try {
+        images = JSON.parse(rawImages)
+      } catch (e) {
+        console.error(`[v0] Failed to parse ${fieldName} as JSON:`, e)
+        images = []
+      }
+    } else if (typeof rawImages === 'string' && rawImages.length > 0) {
+      // Single URL stored as string - convert to array
+      images = [rawImages]
+    }
+    
     const imagesMeta = formData[`${fieldName}_meta`] || []
+    
+    // Debug: Log what's being rendered for this field
+    console.log(`[v0] MultipleImageUpload - ${fieldName}:`, { rawImages, images, imagesMeta, count: images.length, isArray: Array.isArray(rawImages) })
     const isUploading = uploading[fieldName]
     const error = uploadErrors[fieldName]
 
@@ -308,6 +361,10 @@ export default function PropertyFormStep4({ formData, onChange }: any) {
                     src={url || "/placeholder.svg"}
                     alt={`${title} ${index + 1}`}
                     className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105"
+                    onError={(e) => {
+                      console.error(`[v0] Failed to load image in ${fieldName}[${index}]:`, url)
+                      e.currentTarget.src = "/placeholder.svg"
+                    }}
                   />
                   <div className="absolute inset-0 bg-black/0 group-hover:bg-black/40 transition-colors" />
                   <button

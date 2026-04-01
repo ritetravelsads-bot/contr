@@ -73,10 +73,52 @@ export default function PropertyFormMultiStep({
     balconies_count: "",
   }
   
+  // Helper function to ensure array fields are properly formatted
+  const normalizeArrayField = (value: any): string[] => {
+    if (Array.isArray(value)) {
+      return value
+    }
+    if (typeof value === 'string' && value.startsWith('[')) {
+      try {
+        const parsed = JSON.parse(value)
+        return Array.isArray(parsed) ? parsed : []
+      } catch (e) {
+        return []
+      }
+    }
+    if (typeof value === 'string' && value.length > 0) {
+      // Single URL stored as string
+      return [value]
+    }
+    return []
+  }
+  
   // Merge initial data with defaults to ensure all fields exist
   const [formData, setFormData] = useState(() => {
     if (initialData) {
-      return { ...defaultFormData, ...initialData }
+      // Normalize array fields that might come from the database in unexpected formats
+      const normalizedData = {
+        ...defaultFormData,
+        ...initialData,
+        // Ensure image arrays are properly formatted
+        multiple_images: normalizeArrayField(initialData.multiple_images),
+        floor_plans: normalizeArrayField(initialData.floor_plans),
+        amenities: normalizeArrayField(initialData.amenities),
+        facilities: normalizeArrayField(initialData.facilities),
+        luxury_amenities: normalizeArrayField(initialData.luxury_amenities),
+        project_highlights: normalizeArrayField(initialData.project_highlights),
+      }
+      
+      // Debug: Log normalized data
+      console.log("[v0] Form initialized with normalized data - image fields:", {
+        main_thumbnail: normalizedData.main_thumbnail,
+        main_banner: normalizedData.main_banner,
+        multiple_images: normalizedData.multiple_images,
+        floor_plans: normalizedData.floor_plans,
+        master_plan: normalizedData.master_plan,
+      })
+      
+      return normalizedData
     }
     return defaultFormData
   })
@@ -102,6 +144,15 @@ export default function PropertyFormMultiStep({
     try {
       const method = isEdit ? "PUT" : "POST"
       
+      // Debug: Log image fields before processing
+      console.log("[v0] Form data before submit - image fields:", {
+        main_thumbnail: formData.main_thumbnail,
+        main_banner: formData.main_banner,
+        multiple_images: formData.multiple_images,
+        floor_plans: formData.floor_plans,
+        master_plan: formData.master_plan,
+      })
+      
       // Clean up the form data - remove _id for updates (it's in the URL)
       // and convert numeric strings to numbers
       const cleanedData: Record<string, any> = {}
@@ -126,6 +177,15 @@ export default function PropertyFormMultiStep({
           cleanedData[key] = value
         }
       }
+      
+      // Debug: Log cleaned data being sent
+      console.log("[v0] Cleaned data being sent - image fields:", {
+        main_thumbnail: cleanedData.main_thumbnail,
+        main_banner: cleanedData.main_banner,
+        multiple_images: cleanedData.multiple_images,
+        floor_plans: cleanedData.floor_plans,
+        master_plan: cleanedData.master_plan,
+      })
       
       const res = await fetch(apiEndpoint, {
         method,

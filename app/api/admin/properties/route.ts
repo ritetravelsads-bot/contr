@@ -93,6 +93,18 @@ export async function GET(req: NextRequest) {
       _id: p._id.toString(),
     }))
 
+    // Debug: Log thumbnail status for properties
+    console.log("[v0] API GET list - Properties thumbnail status:", 
+      serializedProperties.slice(0, 5).map(p => ({
+        id: p._id,
+        name: p.property_name?.substring(0, 30),
+        has_thumbnail: !!p.main_thumbnail,
+        thumbnail_preview: p.main_thumbnail?.substring(0, 50),
+        has_multiple_images: Array.isArray(p.multiple_images) && p.multiple_images.length > 0,
+        multiple_images_count: Array.isArray(p.multiple_images) ? p.multiple_images.length : 0,
+      }))
+    )
+
     return NextResponse.json(serializedProperties)
   } catch (error) {
     console.error("[v0] Error fetching admin properties:", error)

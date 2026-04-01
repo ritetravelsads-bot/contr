@@ -39,7 +39,19 @@ export default function AdminPropertiesPage() {
       const query = buildQuery(newFilters);
       const res = await fetch(`/api/admin/properties?${query}`);
       const data = await res.json();
-      setProperties(Array.isArray(data) ? data : data.data || []);
+      const propertiesList = Array.isArray(data) ? data : data.data || [];
+      
+      // Debug: Log image fields for all properties
+      console.log("[v0] Properties list - thumbnail check:", 
+        propertiesList.map((p: any) => ({
+          id: p._id,
+          name: p.property_name,
+          main_thumbnail: p.main_thumbnail,
+          has_thumbnail: !!p.main_thumbnail
+        }))
+      );
+      
+      setProperties(propertiesList);
     } catch (error) {
       console.error("[v0] Error loading properties:", error);
       toast({
@@ -279,6 +291,10 @@ export default function AdminPropertiesPage() {
                             src={property.main_thumbnail || "/placeholder.svg"}
                             alt="thumbnail"
                             className="w-12 h-12 object-cover rounded"
+                            onError={(e) => {
+                              console.error("[v0] Failed to load thumbnail for property:", property._id, property.main_thumbnail)
+                              e.currentTarget.src = "/placeholder.svg"
+                            }}
                           />
                         ) : (
                           <div className="w-12 h-12 bg-muted rounded flex items-center justify-center text-xs text-muted-foreground">
