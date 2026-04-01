@@ -1,4 +1,4 @@
-import clientPromise from "@/lib/mongodb"
+import { connectDB } from "@/lib/mongodb"
 
 interface HeadTag {
   _id: string
@@ -8,8 +8,7 @@ interface HeadTag {
 
 async function getActiveHeadTags(): Promise<HeadTag[]> {
   try {
-    const client = await clientPromise
-    const db = client.db()
+    const db = await connectDB()
     
     const tags = await db
       .collection("head_tags")
