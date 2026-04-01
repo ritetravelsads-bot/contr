@@ -1,12 +1,11 @@
 import { NextRequest, NextResponse } from "next/server"
-import clientPromise from "@/lib/mongodb"
+import { connectDB } from "@/lib/mongodb"
 import { ObjectId } from "mongodb"
 
 // GET all head tags
 export async function GET() {
   try {
-    const client = await clientPromise
-    const db = client.db()
+    const db = await connectDB()
     
     const tags = await db
       .collection("head_tags")
@@ -61,8 +60,7 @@ export async function POST(request: NextRequest) {
       }
     }
     
-    const client = await clientPromise
-    const db = client.db()
+    const db = await connectDB()
     
     // Check for duplicate tags
     const existingTag = await db.collection("head_tags").findOne({ tag_content: trimmedTag })

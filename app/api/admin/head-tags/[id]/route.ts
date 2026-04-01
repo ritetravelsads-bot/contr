@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from "next/server"
-import clientPromise from "@/lib/mongodb"
+import { connectDB } from "@/lib/mongodb"
 import { ObjectId } from "mongodb"
 
 // GET single head tag
@@ -14,8 +14,7 @@ export async function GET(
       return NextResponse.json({ error: "Invalid ID" }, { status: 400 })
     }
     
-    const client = await clientPromise
-    const db = client.db()
+    const db = await connectDB()
     
     const tag = await db.collection("head_tags").findOne({ _id: new ObjectId(id) })
     
@@ -53,8 +52,7 @@ export async function PUT(
       }
     }
     
-    const client = await clientPromise
-    const db = client.db()
+    const db = await connectDB()
     
     const updateData: Record<string, any> = {
       updated_at: new Date(),
@@ -93,8 +91,7 @@ export async function DELETE(
       return NextResponse.json({ error: "Invalid ID" }, { status: 400 })
     }
     
-    const client = await clientPromise
-    const db = client.db()
+    const db = await connectDB()
     
     const result = await db.collection("head_tags").deleteOne({ _id: new ObjectId(id) })
     
