@@ -188,7 +188,7 @@ export default function HeadTagsManagementPage() {
   const activeTags = tags.filter(t => t.is_active)
 
   return (
-    <main className="min-h-screen px-4 py-6">
+    <div className="w-full pb-8">
       <div className="max-w-6xl mx-auto space-y-6">
         <PageHeader
           title="Head Tags Management"
@@ -465,6 +465,6 @@ export default function HeadTagsManagementPage() {
           </CardContent>
         </Card>
       </div>
-    </main>
+    </div>
   )
 }
