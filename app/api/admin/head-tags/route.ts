@@ -32,18 +32,18 @@ export async function POST(request: NextRequest) {
     const { tag_content, tag_type, description, is_active } = body
     
     // Validate the tag content
-    if (!tag_content || typeof tag_content !== 'string') {
+    if (!tag_content || typeof tag_content !== "string") {
       return NextResponse.json({ error: "Tag content is required" }, { status: 400 })
     }
     
     // Check if it's a valid HTML tag (basic validation)
     const trimmedTag = tag_content.trim()
-    if (!trimmedTag.startsWith('<') || !trimmedTag.endsWith('>')) {
+    if (!trimmedTag.startsWith("<") || !trimmedTag.endsWith(">")) {
       return NextResponse.json({ error: "Invalid HTML tag format. Must start with < and end with >" }, { status: 400 })
     }
     
     // Check for self-closing tags or proper closing
-    const isSelfClosing = trimmedTag.endsWith('/>') || 
+    const isSelfClosing = trimmedTag.endsWith("/>") || 
       trimmedTag.match(/<(meta|link|base|br|hr|img|input|col|area|embed|keygen|param|source|track|wbr)\s/i)
     
     if (!isSelfClosing) {
@@ -52,7 +52,7 @@ export async function POST(request: NextRequest) {
       if (tagNameMatch) {
         const tagName = tagNameMatch[1]
         const hasClosing = trimmedTag.includes(`</${tagName}>`)
-        if (!hasClosing && !trimmedTag.endsWith('/>')) {
+        if (!hasClosing && !trimmedTag.endsWith("/>")) {
           return NextResponse.json({ 
             error: `Tag appears to be incomplete. Make sure it has a proper closing tag </${tagName}> or is self-closing` 
           }, { status: 400 })
