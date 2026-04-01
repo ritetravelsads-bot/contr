@@ -84,7 +84,7 @@ export function TableOfContents({ content }: { content: string }) {
   if (headings.length < 2) return null
 
   return (
-    <div className="rounded-xl border border-border bg-card p-5">
+    <div className="rounded-xl border border-border bg-card p-5 max-h-[500px] overflow-y-auto">
       <div className="flex items-center gap-2 mb-4">
         <BookOpen className="h-4 w-4 text-primary" />
         <span className="text-sm font-semibold">Table of Contents</span>

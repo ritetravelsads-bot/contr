@@ -104,78 +104,7 @@ export default async function BlogsPage({
     <>
       <Header />
       <main className="min-h-screen bg-gradient-to-b from-gray-50 to-white">
-        {/* Hero Section */}
-        <section className="relative w-full py-16 md:py-24 px-4 bg-[#002366] overflow-hidden">
-          {/* Background Pattern */}
-          <div className="absolute inset-0 opacity-10">
-            <div className="absolute top-0 left-0 w-96 h-96 bg-white rounded-full blur-3xl -translate-x-1/2 -translate-y-1/2" />
-            <div className="absolute bottom-0 right-0 w-96 h-96 bg-red-500 rounded-full blur-3xl translate-x-1/2 translate-y-1/2" />
-          </div>
-
-          <div className="max-w-7xl mx-auto relative z-10">
-            {/* Breadcrumb */}
-            <nav className="flex items-center gap-2 text-sm text-blue-200 mb-8">
-              <Link href="/" className="hover:text-white transition-colors">Home</Link>
-              <ChevronRight className="h-4 w-4" />
-              <span className="text-white font-medium">Blogs</span>
-            </nav>
-
-            <div className="grid md:grid-cols-2 gap-12 items-center">
-              <div className="space-y-6">
-                <div className="inline-flex items-center gap-2 px-4 py-2 bg-white/10 rounded-full text-sm text-blue-100">
-                  <TrendingUp className="h-4 w-4" />
-                  <span>Real Estate Insights</span>
-                </div>
-                <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold text-white leading-tight">
-                  Insights &<br />
-                  <span className="text-red-400">Property Tips</span>
-                </h1>
-                <p className="text-lg text-blue-100 max-w-lg leading-relaxed">
-                  Discover expert advice on luxury properties, investment strategies, and market trends in Gurugram&apos;s premium real estate.
-                </p>
-
-                {/* Search Bar */}
-                <form action="/blogs" method="GET" className="relative max-w-md">
-                  <input
-                    type="text"
-                    name="search"
-                    defaultValue={params.search || ""}
-                    placeholder="Search articles..."
-                    className="w-full pl-12 pr-4 py-4 rounded-xl bg-white/10 border border-white/20 text-white placeholder-blue-200 focus:outline-none focus:border-white/40 focus:bg-white/15 transition-all"
-                  />
-                  <Search className="absolute left-4 top-1/2 -translate-y-1/2 h-5 w-5 text-blue-200" />
-                  <button
-                    type="submit"
-                    className="absolute right-2 top-1/2 -translate-y-1/2 px-4 py-2 bg-red-500 hover:bg-red-600 text-white text-sm font-medium rounded-lg transition-colors"
-                  >
-                    Search
-                  </button>
-                </form>
-              </div>
-
-              {/* Stats Cards */}
-              <div className="grid grid-cols-2 gap-4">
-                <div className="bg-white/10 backdrop-blur-sm rounded-2xl p-6 border border-white/10">
-                  <div className="text-4xl font-bold text-white mb-2">{allPosts.length}+</div>
-                  <div className="text-sm text-blue-200">Articles Published</div>
-                </div>
-                <div className="bg-white/10 backdrop-blur-sm rounded-2xl p-6 border border-white/10">
-                  <div className="text-4xl font-bold text-white mb-2">{categories.length}</div>
-                  <div className="text-sm text-blue-200">Categories</div>
-                </div>
-                <div className="bg-white/10 backdrop-blur-sm rounded-2xl p-6 border border-white/10">
-                  <div className="text-4xl font-bold text-white mb-2">10K+</div>
-                  <div className="text-sm text-blue-200">Monthly Readers</div>
-                </div>
-                <div className="bg-white/10 backdrop-blur-sm rounded-2xl p-6 border border-white/10">
-                  <div className="text-4xl font-bold text-white mb-2">Expert</div>
-                  <div className="text-sm text-blue-200">Industry Insights</div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </section>
-
+      
         {/* Category Filter */}
         <section className="w-full py-6 px-4 bg-white border-b border-gray-100 sticky top-0 z-40">
           <div className="max-w-7xl mx-auto">
@@ -444,7 +373,6 @@ export default async function BlogsPage({
           </div>
         </section>
       </main>
-      <Footer />
     </>
   )
 }
