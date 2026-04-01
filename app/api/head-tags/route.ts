@@ -1,11 +1,10 @@
 import { NextResponse } from "next/server"
-import clientPromise from "@/lib/mongodb"
+import { connectDB } from "@/lib/mongodb"
 
 // GET active head tags (public route for frontend)
 export async function GET() {
   try {
-    const client = await clientPromise
-    const db = client.db()
+    const db = await connectDB()
     
     const tags = await db
       .collection("head_tags")
