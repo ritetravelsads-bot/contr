@@ -136,6 +136,13 @@ html {
   /* Sidebar */
   --sidebar: oklch(0.98 0 0);
   --sidebar-foreground: oklch(0.15 0 0);
+
+  /* Luxury Premium Colors */
+  --luxury-gold: #d4af37;
+  --luxury-navy: #002366;
+  --luxury-cream: #faf8f3;
+  --luxury-dark: #1a1a1a;
+  --luxury-border: #e8e6e1;
 }
 
 .dark {
@@ -308,6 +315,59 @@ html {
 
   .animate-scale-in {
     animation: scaleIn 0.4s ease-out forwards;
+  }
+
+  /* Luxury Premium Utilities */
+  .luxury-card {
+    @apply bg-white border border-[var(--luxury-border)] rounded-xl overflow-hidden shadow-sm transition-all duration-300 hover:shadow-xl hover:-translate-y-0.5;
+  }
+
+  .luxury-badge {
+    @apply inline-flex items-center gap-1 px-3 py-1 bg-[var(--luxury-gold)]/10 text-[var(--luxury-navy)] rounded-full text-xs font-semibold;
+  }
+
+  .luxury-text-gold {
+    @apply text-[var(--luxury-gold)];
+  }
+
+  .luxury-text-navy {
+    @apply text-[var(--luxury-navy)];
+  }
+
+  .luxury-hero-overlay {
+    @apply relative before:absolute before:inset-0 before:bg-gradient-to-r before:from-black/40 before:via-black/20 before:to-transparent;
+  }
+
+  .luxury-section {
+    @apply py-12 md:py-20 px-4 md:px-6;
+  }
+
+  .luxury-heading {
+    @apply text-3xl md:text-4xl lg:text-5xl font-bold text-[var(--luxury-navy)] tracking-tight;
+  }
+
+  .luxury-subheading {
+    @apply text-lg md:text-xl text-gray-600 font-light tracking-wide;
+  }
+
+  .luxury-divider {
+    @apply h-1 w-16 bg-gradient-to-r from-[var(--luxury-gold)] to-[var(--luxury-navy)] rounded-full;
+  }
+
+  .luxury-button {
+    @apply px-6 py-3 bg-[var(--luxury-navy)] text-white rounded-lg font-semibold transition-all duration-300 hover:shadow-lg hover:bg-[var(--luxury-navy)]/90;
+  }
+
+  .luxury-button-outline {
+    @apply px-6 py-3 border-2 border-[var(--luxury-navy)] text-[var(--luxury-navy)] rounded-lg font-semibold transition-all duration-300 hover:bg-[var(--luxury-navy)]/5;
+  }
+
+  .luxury-filter-chip {
+    @apply px-4 py-2 bg-white border border-[var(--luxury-border)] text-[var(--luxury-navy)] rounded-full text-sm font-medium cursor-pointer transition-all duration-200 hover:border-[var(--luxury-navy)] hover:shadow-md;
+  }
+
+  .luxury-filter-chip.active {
+    @apply bg-[var(--luxury-navy)] text-white border-[var(--luxury-navy)];
   }
 }
 

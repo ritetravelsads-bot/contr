@@ -24,22 +24,22 @@ interface CurrentUser {
 }
 
 const locations = [
-  { name: "Golf Course Road", href: "/properties?location=Golf%20Course%20Road" },
-  { name: "Golf Course Extn Road", href: "/properties?location=Golf%20Course%20Extn%20Road" },
-  { name: "Dwarka Expressway", href: "/properties?location=Dwarka%20Expressway" },
-  { name: "Southern Peripheral Road", href: "/properties?location=Southern%20Peripheral%20Road" },
-  { name: "Sohna", href: "/properties?location=Sohna" },
-  { name: "New Gurgaon", href: "/properties?location=New%20Gurgaon" },
-  { name: "NH-2", href: "/properties?location=NH-2" },
+  { name: "Gurgaon", href: "/location/gurgaon", slug: "gurgaon" },
+  { name: "Sohna", href: "/location/sohna", slug: "sohna" },
+  { name: "New Gurgaon", href: "/location/new-gurgaon", slug: "new-gurgaon" },
+  { name: "Golf Course Road", href: "/location/golf-course-road", slug: "golf-course-road" },
+  { name: "Dwarka Expressway", href: "/location/dwarka-expressway", slug: "dwarka-expressway" },
+  { name: "Southern Peripheral Road", href: "/location/southern-peripheral-road", slug: "southern-peripheral-road" },
+  { name: "NH-2", href: "/location/nh-2", slug: "nh-2" },
 ]
 
 const projects = [
-  { name: "Ready To Move", href: "/properties?status=Ready%20To%20Move" },
-  { name: "New Launch", href: "/properties?status=New%20Launch" },
-  { name: "Upcoming", href: "/properties?status=Upcoming" },
-  { name: "Luxury Apartments", href: "/properties?type=Apartment" },
-  { name: "Plots & Land", href: "/properties?type=Plot" },
-  { name: "Commercial", href: "/properties?type=Commercial" },
+  { name: "Ready To Move", href: "/properties/types/ready-to-move", icon: "🏠" },
+  { name: "New Launch", href: "/properties/types/new-launch", icon: "✨" },
+  { name: "Upcoming", href: "/properties/types/upcoming", icon: "🔨" },
+  { name: "Luxury Apartments", href: "/properties/types/luxury-apartments", icon: "💎" },
+  { name: "Plots & Land", href: "/properties/types/plots-land", icon: "🏞️" },
+  { name: "Commercial", href: "/properties/types/commercial-spaces", icon: "🏢" },
 ]
 
 export default function MegaMenuHeader() {
