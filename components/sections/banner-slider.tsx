@@ -1,7 +1,7 @@
 "use client"
 
 import { useState, useEffect, useCallback } from "react"
-import { ChevronLeft, ChevronRight, Play, Pause } from "lucide-react"
+import Image from "next/image"
 import { cn } from "@/lib/utils"
 
 const slides = [
@@ -43,18 +43,6 @@ export default function BannerSlider() {
   const [currentSlide, setCurrentSlide] = useState(0)
   const [isPaused, setIsPaused] = useState(false)
   const [progress, setProgress] = useState(0)
-  const [isMobile, setIsMobile] = useState(false)
-
-  // Detect mobile screen size
-  useEffect(() => {
-    const checkMobile = () => {
-      setIsMobile(window.innerWidth < 768)
-    }
-    
-    checkMobile()
-    window.addEventListener("resize", checkMobile)
-    return () => window.removeEventListener("resize", checkMobile)
-  }, [])
 
   const nextSlide = useCallback(() => {
     setCurrentSlide((prev) => (prev + 1) % slides.length)
@@ -83,10 +71,7 @@ export default function BannerSlider() {
   }, [isPaused, nextSlide])
 
   return (
-    <div className={cn(
-      "relative w-full overflow-hidden bg-gray-900",
-      isMobile ? "aspect-[3/4]" : "aspect-[10/3]"
-    )}>
+    <div className="relative w-full overflow-hidden bg-gray-900 aspect-[3/4] md:aspect-[10/3]">
       {/* Slides */}
       {slides.map((slide, index) => (
         <div
@@ -99,14 +84,34 @@ export default function BannerSlider() {
           )}
         >
           {/* Background Image - Different for mobile/desktop */}
-          <div className="absolute inset-0 flex items-center justify-center">
-            <img 
-              src={(isMobile ? slide.mobileImage : slide.image) || "/placeholder.svg"} 
+          <div className="absolute inset-0">
+            {/* Desktop Image */}
+            <Image 
+              src={slide.image || "/placeholder.svg"} 
               alt={slide.title || "Banner"} 
+              fill
+              priority={index === 0}
+              loading={index === 0 ? "eager" : "lazy"}
+              sizes="100vw"
+              quality={85}
               className={cn(
-                "w-full h-full",
-                isMobile ? "object-cover" : "object-contain"
-              )} 
+                "object-contain hidden md:block",
+                index !== currentSlide && "opacity-0"
+              )}
+            />
+            {/* Mobile Image */}
+            <Image 
+              src={slide.mobileImage || slide.image || "/placeholder.svg"} 
+              alt={slide.title || "Banner"} 
+              fill
+              priority={index === 0}
+              loading={index === 0 ? "eager" : "lazy"}
+              sizes="100vw"
+              quality={80}
+              className={cn(
+                "object-cover md:hidden",
+                index !== currentSlide && "opacity-0"
+              )}
             />
           </div>
           
