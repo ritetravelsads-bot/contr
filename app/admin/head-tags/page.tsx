@@ -12,8 +12,8 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
 import { useToast } from "@/hooks/use-toast"
 import PageHeader from "@/components/dashboard/page-header"
-import { 
-  Plus, Trash2, Code2, Eye, CheckCircle2, XCircle, 
+import {
+  Plus, Trash2, Code2, Eye, CheckCircle2, XCircle,
   AlertTriangle, Copy, RefreshCw, FileCode
 } from "lucide-react"
 
@@ -70,27 +70,27 @@ export default function HeadTagsManagementPage() {
 
   const validateTag = (content: string): string | null => {
     const trimmed = content.trim()
-    
+
     if (!trimmed) {
       return "Tag content is required"
     }
-    
+
     if (!trimmed.startsWith('<')) {
       return "Tag must start with <"
     }
-    
+
     if (!trimmed.endsWith('>')) {
       return "Tag must end with >"
     }
-    
+
     // Check for self-closing tags
     const selfClosingTags = ['meta', 'link', 'base', 'br', 'hr', 'img', 'input', 'col', 'area', 'embed', 'keygen', 'param', 'source', 'track', 'wbr']
     const tagNameMatch = trimmed.match(/<(\w+)/)
-    
+
     if (tagNameMatch) {
       const tagName = tagNameMatch[1].toLowerCase()
       const isSelfClosing = selfClosingTags.includes(tagName) || trimmed.endsWith('/>')
-      
+
       if (!isSelfClosing) {
         const hasClosing = trimmed.includes(`</${tagName}>`)
         if (!hasClosing) {
@@ -98,7 +98,7 @@ export default function HeadTagsManagementPage() {
         }
       }
     }
-    
+
     return null
   }
 
@@ -108,19 +108,19 @@ export default function HeadTagsManagementPage() {
       setValidationError(error)
       return
     }
-    
+
     setSaving(true)
     setValidationError(null)
-    
+
     try {
       const res = await fetch("/api/admin/head-tags", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(newTag),
       })
-      
+
       const data = await res.json()
-      
+
       if (res.ok) {
         setTags([data, ...tags])
         setNewTag({ tag_content: "", tag_type: "meta", description: "", is_active: true })
@@ -143,9 +143,9 @@ export default function HeadTagsManagementPage() {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ is_active: !currentStatus }),
       })
-      
+
       if (res.ok) {
-        setTags(tags.map(tag => 
+        setTags(tags.map(tag =>
           tag._id === id ? { ...tag, is_active: !currentStatus } : tag
         ))
         toast({ title: "Updated", description: `Tag ${!currentStatus ? 'activated' : 'deactivated'}` })
@@ -157,10 +157,10 @@ export default function HeadTagsManagementPage() {
 
   const handleDelete = async (id: string) => {
     if (!confirm("Are you sure you want to delete this tag?")) return
-    
+
     try {
       const res = await fetch(`/api/admin/head-tags/${id}`, { method: "DELETE" })
-      
+
       if (res.ok) {
         setTags(tags.filter(tag => tag._id !== id))
         toast({ title: "Deleted", description: "Head tag removed" })
@@ -257,7 +257,7 @@ export default function HeadTagsManagementPage() {
                 <Label htmlFor="tag_content" className="text-xs">Tag Content</Label>
                 <Textarea
                   id="tag_content"
-                  placeholder='<meta name="robots" content="noindex, nofollow" />'
+                  placeholder='<tag>'
                   value={newTag.tag_content}
                   onChange={(e) => {
                     setNewTag({ ...newTag, tag_content: e.target.value })
@@ -285,7 +285,7 @@ export default function HeadTagsManagementPage() {
                 </Select>
               </div>
             </div>
-            
+
             <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
               <div className="md:col-span-3">
                 <Label htmlFor="description" className="text-xs">Description (Optional)</Label>
