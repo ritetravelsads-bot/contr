@@ -7,6 +7,9 @@ import "@/styles/blog-content.css"
 import FrontendLayout from "@/components/layout/frontend-layout"
 import CustomHeadTags from "@/components/layout/custom-head-tags"
 
+// Disable caching for this layout to ensure custom head tags are always fresh
+export const revalidate = 0
+
 const geist = Geist({ 
   subsets: ["latin"],
   display: "swap",

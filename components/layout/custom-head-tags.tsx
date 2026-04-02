@@ -53,10 +53,17 @@ function shouldBlockTag(tagContent: string): boolean {
 export default async function CustomHeadTags() {
   const tags = await getActiveHeadTags()
   
+  console.log("[v0] CustomHeadTags - Fetched", tags.length, "active tags from database")
+  
   // Filter out any robots meta tags that contain noindex or nofollow
   const filteredTags = tags.filter((tag) => !shouldBlockTag(tag.tag_content))
   
-  if (filteredTags.length === 0) return null
+  console.log("[v0] CustomHeadTags - After filtering:", filteredTags.length, "tags will be rendered")
+  
+  if (filteredTags.length === 0) {
+    console.log("[v0] CustomHeadTags - No tags to render, returning null")
+    return null
+  }
   
   return (
     <>
