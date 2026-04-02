@@ -40,9 +40,20 @@ const nextConfig = {
     removeConsole: process.env.NODE_ENV === "production" ? { exclude: ["error", "warn"] } : false,
   },
   reactStrictMode: true,
-  // Redirect www to non-www
+  // Redirect www to non-www for both .in and .com domains
   async redirects() {
     return [
+      {
+        source: "/:path*",
+        has: [
+          {
+            type: "host",
+            value: "www.countryroof.in",
+          },
+        ],
+        destination: "https://countryroof.in/:path*",
+        permanent: true,
+      },
       {
         source: "/:path*",
         has: [
