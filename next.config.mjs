@@ -32,6 +32,12 @@ const nextConfig = {
   },
   experimental: {
     optimizePackageImports: ["@radix-ui", "lucide-react"],
+    // Enable partial prerendering for faster page loads
+    ppr: false,
+  },
+  // Enable compiler optimizations
+  compiler: {
+    removeConsole: process.env.NODE_ENV === "production" ? { exclude: ["error", "warn"] } : false,
   },
   reactStrictMode: true,
   // Redirect www to non-www

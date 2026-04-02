@@ -1,6 +1,7 @@
 "use client"
 
-import { useState, useEffect } from "react"
+import { useState, useEffect, use } from "react"
+import useSWR from "swr"
 import {
   MapPin, Bed, Bath, Square, Building2,
   ChevronLeft, ChevronRight, Car, Compass, Layers,
@@ -45,47 +46,48 @@ function getAmenityIcon(amenity: string) {
   return Check
 }
 
+// SWR fetcher
+const fetcher = (url: string) => fetch(url).then(res => res.json())
+
 export default function PropertyDetailPage({ params }: { params: Promise<{ id: string }> }) {
-  const [property, setProperty] = useState<any>(null)
-  const [developer, setDeveloper] = useState<any>(null)
-  const [loading, setLoading] = useState(true)
+  const { id } = use(params)
   const [activeImage, setActiveImage] = useState(0)
   const [showFullscreen, setShowFullscreen] = useState(false)
   const [isLiked, setIsLiked] = useState(false)
   const { addProperty: addToRecentlyViewed } = useRecentlyViewed()
 
-  useEffect(() => {
-    const loadProperty = async () => {
-      try {
-        const { id } = await params
-        const res = await fetch(`/api/properties/${id}`)
-        const data = await res.json()
-        setProperty(data.property)
-
-        // Track as recently viewed
-        if (data.property) {
-          addToRecentlyViewed({
-            id: data.property._id || id,
-            slug: data.property.slug || id,
-            name: data.property.property_name || "Property",
-            thumbnail: data.property.main_thumbnail || "",
-            price: formatPriceToIndian(data.property.lowest_price) || "",
-            address: `${data.property.address || ""}, ${data.property.city || ""}`.replace(/^, |, $/g, ""),
-          })
-        }
-
-        if (data.property?.developer_id) {
-          const devRes = await fetch(`/api/admin/developers/${data.property.developer_id}`)
-          if (devRes.ok) setDeveloper(await devRes.json())
-        }
-      } catch (error) {
-        console.error("Error loading property:", error)
-      } finally {
-        setLoading(false)
-      }
+  // Use SWR for caching and faster loads
+  const { data, isLoading: loading } = useSWR(
+    `/api/properties/${id}`,
+    fetcher,
+    {
+      revalidateOnFocus: false,
+      dedupingInterval: 10000,
     }
-    loadProperty()
-  }, [params, addToRecentlyViewed])
+  )
+
+  const property = data?.property || null
+
+  // Fetch developer info
+  const { data: developer } = useSWR(
+    property?.developer_id ? `/api/admin/developers/${property.developer_id}` : null,
+    fetcher,
+    { revalidateOnFocus: false }
+  )
+
+  // Track as recently viewed
+  useEffect(() => {
+    if (property) {
+      addToRecentlyViewed({
+        id: property._id || id,
+        slug: property.slug || id,
+        name: property.property_name || "Property",
+        thumbnail: property.main_thumbnail || "",
+        price: formatPriceToIndian(property.lowest_price) || "",
+        address: `${property.address || ""}, ${property.city || ""}`.replace(/^, |, $/g, ""),
+      })
+    }
+  }, [property, id, addToRecentlyViewed])
 
   if (loading) {
     return (
