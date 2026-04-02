@@ -121,7 +121,7 @@ export default function SlugPage() {
   const [pagination, setPagination] = useState<Pagination | null>(null)
   const [loading, setLoading] = useState(true)
   const [viewLayout, setViewLayout] = useState<'grid' | 'list'>(viewMode as 'grid' | 'list')
-  const [pageType, setPageType] = useState<'location' | 'type'>('location')
+  const [pageType, setPageType] = useState<'location' | 'type' | 'invalid'>('location')
 
   // Determine if this is a location or property type
   useEffect(() => {
@@ -129,6 +129,10 @@ export default function SlugPage() {
       setPageType('location')
     } else if (TYPE_SLUG_MAP[slug]) {
       setPageType('type')
+    } else {
+      // Invalid slug, show 404
+      setPageType('invalid')
+      setLoading(false)
     }
   }, [slug])
 
@@ -195,6 +199,30 @@ export default function SlugPage() {
   // Get display info
   const displayName = pageType === 'type' ? TYPE_DISPLAY_NAMES[slug] : location?.name
   const description = pageType === 'type' ? TYPE_DESCRIPTIONS[slug] : location?.description
+
+  // Show 404 for invalid slug
+  if (pageType === 'invalid') {
+    return (
+      <>
+        <Header />
+        <main className="min-h-screen bg-gradient-to-b from-white to-[var(--luxury-cream)] flex items-center justify-center">
+          <div className="text-center space-y-6">
+            <div>
+              <h1 className="text-6xl font-bold text-[var(--luxury-navy)] mb-2">404</h1>
+              <p className="text-2xl font-semibold text-gray-600 mb-4">Page Not Found</p>
+              <p className="text-gray-500 mb-8">
+                The page you&apos;re looking for doesn&apos;t exist or has been moved.
+              </p>
+            </div>
+            <Link href="/" className="luxury-button inline-block">
+              Back to Home
+            </Link>
+          </div>
+        </main>
+        <Footer />
+      </>
+    )
+  }
 
   // Show location page
   if (pageType === 'location') {
