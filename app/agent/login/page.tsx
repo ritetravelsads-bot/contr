@@ -7,7 +7,6 @@ import Link from "next/link"
 export const metadata: Metadata = {
   title: "Agent Login | CountyRoof",
   description: "Login for real estate agents and property sellers.",
-  robots: { index: false },
 }
 
 export default function AgentLoginPage() {

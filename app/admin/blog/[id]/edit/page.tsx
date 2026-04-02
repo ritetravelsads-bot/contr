@@ -6,7 +6,6 @@ import WordPressBlogEditor from "@/components/admin/wordpress-blog-editor"
 
 export const metadata: Metadata = {
   title: "Edit Blog Post | CountryRoof Admin",
-  robots: { index: false },
 }
 
 export default async function EditBlogPostPage({
