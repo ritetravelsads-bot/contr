@@ -7,7 +7,6 @@ import Link from "next/link"
 export const metadata: Metadata = {
   title: "Create Account | CountyRoof",
   description: "Join CountyRoof to buy, sell, or rent properties. Create your account to get started.",
-  robots: { index: false },
 }
 
 export default function RegisterPage() {

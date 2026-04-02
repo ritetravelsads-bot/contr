@@ -7,7 +7,6 @@ import Link from "next/link"
 export const metadata: Metadata = {
   title: "Login | CountyRoof Property Marketplace",
   description: "Login to your CountyRoof account to manage properties, find your home, or connect with agents.",
-  robots: { index: false },
 }
 
 export default function LoginPage() {

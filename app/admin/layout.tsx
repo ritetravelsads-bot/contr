@@ -7,7 +7,6 @@ import DashboardLayoutWrapper from "@/components/dashboard/dashboard-layout-wrap
 export const metadata: Metadata = {
   title: "Admin Panel | CountryRoof",
   description: "Admin dashboard for managing platform",
-  robots: { index: false },
 }
 
 export default async function AdminLayout({ children }: { children: React.ReactNode }) {

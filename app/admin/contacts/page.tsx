@@ -5,7 +5,6 @@ import ContactsList from "@/components/admin/contacts-list"
 
 export const metadata: Metadata = {
   title: "Manage Contacts | CountryRoof Admin",
-  robots: { index: false },
 }
 
 export default async function ContactsPage() {

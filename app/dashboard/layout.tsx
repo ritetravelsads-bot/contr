@@ -7,7 +7,6 @@ import DashboardLayoutWrapper from "@/components/dashboard/dashboard-layout-wrap
 export const metadata: Metadata = {
   title: "Dashboard | CountryRoof",
   description: "Manage your properties and quotes",
-  robots: { index: false },
 }
 
 export default async function DashboardLayout({ children }: { children: React.ReactNode }) {
