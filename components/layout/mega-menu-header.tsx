@@ -24,13 +24,14 @@ interface CurrentUser {
 }
 
 const locations = [
-  { name: "Gurgaon", href: "/location/gurgaon", slug: "gurgaon" },
-  { name: "Sohna", href: "/location/sohna", slug: "sohna" },
-  { name: "New Gurgaon", href: "/location/new-gurgaon", slug: "new-gurgaon" },
-  { name: "Golf Course Road", href: "/location/golf-course-road", slug: "golf-course-road" },
-  { name: "Dwarka Expressway", href: "/location/dwarka-expressway", slug: "dwarka-expressway" },
-  { name: "Southern Peripheral Road", href: "/location/southern-peripheral-road", slug: "southern-peripheral-road" },
-  { name: "NH-2", href: "/location/nh-2", slug: "nh-2" },
+  { name: "Golf Course Road", href: "/golf-course-road", slug: "golf-course-road" },
+  { name: "Golf Course Extn Road", href: "/golf-course-extn-road", slug: "golf-course-extn-road" },
+  { name: "Dwarka Expressway", href: "/dwarka-expressway", slug: "dwarka-expressway" },
+  { name: "Southern Peripheral Road", href: "/southern-peripheral-road", slug: "southern-peripheral-road" },
+  { name: "Sohna", href: "/sohna", slug: "sohna" },
+  { name: "New Gurgaon", href: "/new-gurgaon", slug: "new-gurgaon" },
+  { name: "NH-48", href: "/nh-48", slug: "nh-48" },
+  { name: "Manesar", href: "/manesar", slug: "manesar" },
 ]
 
 const projects = [

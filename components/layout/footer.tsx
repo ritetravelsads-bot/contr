@@ -63,12 +63,12 @@ export default function Footer() {
   ]
 
   const primeLocations = [
-    { name: "Properties on Golf Course Road", href: "/properties?location=golf-course-road" },
-    { name: "Projects on Dwarka Expressway", href: "/properties?location=dwarka-expressway" },
-    { name: "Luxury Homes in New Gurugram", href: "/properties?location=new-gurugram" },
-    { name: "Apartments on SPR", href: "/properties?location=spr" },
-    { name: "Golf Course Extension Road", href: "/properties?location=golf-course-extension" },
-    { name: "Properties on Sohna Road", href: "/properties?location=sohna-road" },
+    { name: "Golf Course Road", href: "/golf-course-road" },
+    { name: "Golf Course Extn Road", href: "/golf-course-extn-road" },
+    { name: "Dwarka Expressway", href: "/dwarka-expressway" },
+    { name: "Southern Peripheral Road", href: "/southern-peripheral-road" },
+    { name: "Sohna", href: "/sohna" },
+    { name: "New Gurgaon", href: "/new-gurgaon" },
   ]
 
   const propertyTypes = [

@@ -9,49 +9,49 @@ const trendingLocations = [
     name: "Golf Course Road",
     properties: "200+ Properties",
     image: "/locations/golf-course-road.jpg",
-    searchParam: "Golf Course Road",
+    slug: "golf-course-road",
   },
   {
     name: "Golf Course Extn Road",
     properties: "160+ Properties",
     image: "/locations/golf-course-extension.jpg",
-    searchParam: "Golf Course Extension",
+    slug: "golf-course-extn-road",
   },
   {
     name: "Dwarka Expressway",
     properties: "180+ Properties",
     image: "/locations/dwarka-expressway.jpg",
-    searchParam: "Dwarka Expressway",
+    slug: "dwarka-expressway",
   },
   {
     name: "Southern Peripheral Road",
     properties: "90+ Properties",
     image: "/locations/southern-peripheral-road.jpg",
-    searchParam: "Southern Peripheral Road",
+    slug: "southern-peripheral-road",
   },
   {
     name: "Sohna",
     properties: "150+ Properties",
     image: "/locations/sohna.jpg",
-    searchParam: "Sohna",
+    slug: "sohna",
   },
   {
     name: "New Gurgaon",
     properties: "120+ Properties",
     image: "/locations/new-gurgaon.jpg",
-    searchParam: "New Gurgaon",
+    slug: "new-gurgaon",
   },
   {
     name: "NH-48",
     properties: "110+ Properties",
     image: "/locations/nh-48.jpg",
-    searchParam: "NH-48",
+    slug: "nh-48",
   },
   {
     name: "Manesar",
     properties: "80+ Properties",
     image: "/locations/manesar.jpg",
-    searchParam: "Manesar",
+    slug: "manesar",
   },
 ]
 
@@ -71,7 +71,7 @@ export default function TrendingLocations() {
           {trendingLocations.map((location) => (
             <Link
               key={location.name}
-              href={`/properties?location=${encodeURIComponent(location.searchParam)}`}
+              href={`/${location.slug}`}
               className="relative overflow-hidden rounded-lg shadow-md hover:shadow-xl transition-all duration-300 bg-white"
             >
               <div className="relative h-48 overflow-hidden bg-slate-200">
