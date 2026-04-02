@@ -27,14 +27,47 @@ async function getActiveHeadTags(): Promise<HeadTag[]> {
   }
 }
 
+// Function to check if a tag contains robots noindex/nofollow that should be blocked
+function shouldBlockTag(tagContent: string): boolean {
+  const lower = tagContent.toLowerCase()
+  
+  // Block any meta tag with robots name attribute that contains noindex or nofollow
+  if (lower.includes('name="robots"') || lower.includes("name='robots'")) {
+    if (lower.includes('noindex') || lower.includes('nofollow')) {
+      console.log("[v0] Blocking robots meta tag:", tagContent)
+      return true
+    }
+  }
+  
+  // Also block meta robots tags with property attribute (edge case)
+  if (lower.includes('property="robots"') || lower.includes("property='robots'")) {
+    if (lower.includes('noindex') || lower.includes('nofollow')) {
+      console.log("[v0] Blocking robots meta property tag:", tagContent)
+      return true
+    }
+  }
+  
+  return false
+}
+
 export default async function CustomHeadTags() {
   const tags = await getActiveHeadTags()
   
-  if (tags.length === 0) return null
+  console.log("[v0] CustomHeadTags - Fetched", tags.length, "active tags from database")
+  
+  // Filter out any robots meta tags that contain noindex or nofollow
+  const filteredTags = tags.filter((tag) => !shouldBlockTag(tag.tag_content))
+  
+  console.log("[v0] CustomHeadTags - After filtering:", filteredTags.length, "tags will be rendered")
+  
+  if (filteredTags.length === 0) {
+    console.log("[v0] CustomHeadTags - No tags to render, returning null")
+    return null
+  }
   
   return (
     <>
-      {tags.map((tag) => (
+      {filteredTags.map((tag) => (
         <div
           key={tag._id}
           dangerouslySetInnerHTML={{ __html: tag.tag_content }}

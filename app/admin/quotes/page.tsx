@@ -5,7 +5,6 @@ import QuotesList from "@/components/admin/quotes-list"
 
 export const metadata: Metadata = {
   title: "Manage Quotes | CountryRoof Admin",
-  robots: { index: false },
 }
 
 export default async function QuotesPage() {

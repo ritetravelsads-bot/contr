@@ -5,7 +5,6 @@ import BlogPostsList from "@/components/admin/blog-posts-list"
 
 export const metadata: Metadata = {
   title: "Manage Blog | CountryRoof Admin",
-  robots: { index: false },
 }
 
 export default async function AdminBlogPage() {

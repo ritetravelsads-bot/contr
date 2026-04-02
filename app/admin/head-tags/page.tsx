@@ -257,7 +257,7 @@ export default function HeadTagsManagementPage() {
                 <Label htmlFor="tag_content" className="text-xs">Tag Content</Label>
                 <Textarea
                   id="tag_content"
-                  placeholder='<meta name="robots" content="noindex, nofollow" />'
+                  placeholder='<tag>'
                   value={newTag.tag_content}
                   onChange={(e) => {
                     setNewTag({ ...newTag, tag_content: e.target.value })

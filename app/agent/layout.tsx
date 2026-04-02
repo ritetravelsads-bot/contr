@@ -7,7 +7,6 @@ import DashboardLayoutWrapper from "@/components/dashboard/dashboard-layout-wrap
 export const metadata: Metadata = {
   title: "Agent Dashboard | CountryRoof",
   description: "Manage your property listings",
-  robots: { index: false },
 }
 
 export default async function AgentLayout({ children }: { children: React.ReactNode }) {

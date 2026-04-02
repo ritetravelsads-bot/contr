@@ -7,7 +7,6 @@ import DashboardLayoutWrapper from "@/components/dashboard/dashboard-layout-wrap
 export const metadata: Metadata = {
   title: "Buyer Dashboard | CountryRoof",
   description: "Manage your properties and inquiries",
-  robots: { index: false },
 }
 
 export default async function BuyerLayout({ children }: { children: React.ReactNode }) {
