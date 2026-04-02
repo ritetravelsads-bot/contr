@@ -109,12 +109,16 @@ const PropertyVideoCard = memo(function PropertyVideoCard({ property, index }: {
           muted
           playsInline
           preload="none"
+          aria-label={`${property.name} property showcase video`}
           className={cn(
             "absolute inset-0 w-full h-full object-cover",
             "transition-transform duration-700 ease-out",
             isHovered ? "scale-110" : "scale-100"
           )}
-        />
+        >
+          {/* Decorative video - no captions needed as content is visual only with no audio dialogue */}
+          <track kind="descriptions" label="Visual description" srcLang="en" default />
+        </video>
       )}
 
       {/* Gradient Overlay - Always visible */}

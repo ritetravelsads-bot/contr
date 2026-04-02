@@ -41,7 +41,7 @@ const CTA = dynamic(() => import("@/components/sections/cta"), {
 
 export default function Home() {
   return (
-    <>
+    <main>
       {/* Critical above-the-fold content - loads immediately */}
       <BannerSlider />
       <AdvancedSearch />
@@ -68,6 +68,6 @@ export default function Home() {
       <Suspense fallback={<div className="h-48 bg-slate-50 animate-pulse" />}>
         <CTA />
       </Suspense>
-    </>
+    </main>
   )
 }

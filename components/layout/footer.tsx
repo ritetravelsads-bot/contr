@@ -199,10 +199,10 @@ export default function Footer() {
                 <button
                   type="submit"
                   disabled={formLoading}
-                  className="w-full bg-red-500 hover:bg-red-600 disabled:opacity-70 disabled:cursor-not-allowed text-white font-semibold py-3 rounded-lg transition-all duration-300 transform hover:scale-105 disabled:hover:scale-100 flex items-center justify-center gap-2"
+                  className="w-full bg-white hover:bg-gray-100 disabled:opacity-70 disabled:cursor-not-allowed text-[#002366] font-semibold py-3 rounded-lg transition-all duration-300 transform hover:scale-105 disabled:hover:scale-100 flex items-center justify-center gap-2"
                 >
                   <span>{formLoading ? "Submitting..." : "Get Callback"}</span>
-                  {!formLoading && <Send size={16} />}
+                  {!formLoading && <Send size={16} aria-hidden="true" />}
                 </button>
                 {formError && (
                   <p className="text-xs text-red-300 text-center">{formError}</p>
