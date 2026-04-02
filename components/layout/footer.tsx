@@ -122,7 +122,15 @@ export default function Footer() {
   }
 
   return (
-    <footer className="w-full bg-gradient-to-b from-gray-50 to-white border-t border-gray-200">
+    <footer 
+      className="w-full bg-gradient-to-b from-gray-50 to-white border-t border-gray-200"
+      style={{ 
+        contain: "layout style", 
+        minHeight: "600px",
+        contentVisibility: "auto",
+        containIntrinsicSize: "auto 600px"
+      }}
+    >
       <div className="max-w-7xl mx-auto px-4 md:px-6 py-12 md:py-16">
 
         {/* Top Section: Contact & Unique Form */}

@@ -24,6 +24,14 @@ header {
   contain: layout;
 }
 
+/* Footer - prevent massive CLS by reserving space */
+footer {
+  min-height: 600px;
+  contain: layout style;
+  content-visibility: auto;
+  contain-intrinsic-size: auto 600px;
+}
+
 /* Image containers - prevent CLS */
 img {
   content-visibility: auto;
