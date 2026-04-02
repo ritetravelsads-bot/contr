@@ -16,17 +16,42 @@ export default function LocationHero({
   featured_image,
   propertyCount,
 }: LocationHeroProps) {
+  // Validate and process image URL
+  const getImageUrl = () => {
+    if (!featured_image) return null
+    
+    // If it's a full URL (http/https), use it directly
+    if (featured_image.startsWith('http://') || featured_image.startsWith('https://')) {
+      return featured_image
+    }
+    
+    // If it's a relative path without leading slash, add one
+    if (!featured_image.startsWith('/')) {
+      return `/${featured_image}`
+    }
+    
+    return featured_image
+  }
+  
+  const imageUrl = getImageUrl()
   return (
     <div className="relative w-full h-96 md:h-[500px] lg:h-[600px] overflow-hidden">
+      {/* Fallback Background Gradient */}
+      <div className="absolute inset-0 bg-gradient-to-br from-[var(--luxury-navy)] to-[var(--luxury-dark)]" />
+      
       {/* Background Image */}
-      {featured_image ? (
+      {imageUrl ? (
         <Image
-          src={featured_image}
+          src={imageUrl}
           alt={name}
           fill
           className="object-cover"
           priority
           sizes="100vw"
+          onError={(e) => {
+            const img = e.currentTarget as HTMLImageElement
+            img.style.display = 'none'
+          }}
         />
       ) : (
         <div className="absolute inset-0 bg-gradient-to-br from-[var(--luxury-navy)] to-[var(--luxury-dark)]" />

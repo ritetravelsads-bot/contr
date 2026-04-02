@@ -95,3 +95,20 @@ export function parseBudgetRange(budgetValue: string): { min: number | null; max
     max: maxStr ? parseInt(maxStr) : null
   }
 }
+
+// Process and validate image URLs from database
+export function getValidImageUrl(imageUrl?: string | null, fallback: string = '/images/placeholder.jpg'): string {
+  if (!imageUrl) return fallback
+  
+  // If it's a full URL (http/https), use it directly
+  if (imageUrl.startsWith('http://') || imageUrl.startsWith('https://')) {
+    return imageUrl
+  }
+  
+  // If it's a relative path without leading slash, add one
+  if (!imageUrl.startsWith('/')) {
+    return `/${imageUrl}`
+  }
+  
+  return imageUrl
+}

@@ -35,6 +35,26 @@ interface Section {
 function PropertyCardEnhanced({ property, index }: { property: Property; index: number }) {
   const [isLiked, setIsLiked] = useState(false)
   const [isHovered, setIsHovered] = useState(false)
+  const [imageLoaded, setImageLoaded] = useState(true)
+
+  // Validate and process image URL
+  const getImageUrl = () => {
+    if (!property.main_thumbnail) return "/placeholder.jpg"
+    
+    // If it's a full URL (http/https), use it directly
+    if (property.main_thumbnail.startsWith('http://') || property.main_thumbnail.startsWith('https://')) {
+      return property.main_thumbnail
+    }
+    
+    // If it's a relative path without leading slash, add one
+    if (!property.main_thumbnail.startsWith('/')) {
+      return `/${property.main_thumbnail}`
+    }
+    
+    return property.main_thumbnail
+  }
+
+  const imageUrl = getImageUrl()
 
   return (
     <Link 
@@ -54,7 +74,7 @@ function PropertyCardEnhanced({ property, index }: { property: Property; index: 
       {/* Image Container */}
       <div className="relative h-48 md:h-52 overflow-hidden bg-muted">
         <Image
-          src={property.main_thumbnail || "/placeholder.jpg"}
+          src={imageUrl}
           alt={property.property_name}
           fill
           sizes="(max-width: 768px) 100vw, (max-width: 1024px) 50vw, 25vw"
@@ -64,6 +84,7 @@ function PropertyCardEnhanced({ property, index }: { property: Property; index: 
             "transition-transform duration-700 ease-out",
             "group-hover:scale-110"
           )}
+          onError={() => setImageLoaded(false)}
         />
         
         {/* Gradient Overlay */}

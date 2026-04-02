@@ -51,6 +51,23 @@ export default function LuxuryPropertyCard({
   const area = carpet_area || super_area || area_sqft
   const priceDisplay = price_range || (lowest_price ? formatPriceToIndian(lowest_price) : 'POA')
   
+  // Validate and process image URL
+  const getImageUrl = () => {
+    if (!main_thumbnail) return '/images/placeholder.jpg'
+    
+    // If it's a full URL (http/https), use it directly
+    if (main_thumbnail.startsWith('http://') || main_thumbnail.startsWith('https://')) {
+      return main_thumbnail
+    }
+    
+    // If it's a relative path without leading slash, add one
+    if (!main_thumbnail.startsWith('/')) {
+      return `/${main_thumbnail}`
+    }
+    
+    return main_thumbnail
+  }
+  
   const getStatusBadge = () => {
     if (project_status === 'ready_to_move') return 'Ready to Move'
     if (listing_type === 'new') return 'New Launch'
@@ -59,6 +76,7 @@ export default function LuxuryPropertyCard({
   }
 
   const statusBadge = getStatusBadge()
+  const imageUrl = getImageUrl()
 
   return (
     <Link href={`/properties/${slug}`}>
@@ -66,11 +84,15 @@ export default function LuxuryPropertyCard({
         {/* Image Container */}
         <div className="relative overflow-hidden h-64 md:h-72 bg-gray-100">
           <Image
-            src={main_thumbnail || '/images/placeholder.jpg'}
+            src={imageUrl}
             alt={property_name}
             fill
             className="object-cover group-hover:scale-110 transition-transform duration-500"
             sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+            onError={(e) => {
+              const img = e.currentTarget as HTMLImageElement
+              img.src = '/images/placeholder.jpg'
+            }}
           />
           
           {/* Overlay gradient */}
