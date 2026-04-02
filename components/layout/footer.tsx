@@ -72,12 +72,13 @@ export default function Footer() {
   ]
 
   const propertyTypes = [
-    { name: "Luxury Apartments", href: "/properties?category=luxury" },
-    { name: "Premium Penthouses", href: "/properties?category=penthouse" },
-    { name: "SCO Plots", href: "/properties?category=sco" },
-    { name: "Commercial Properties", href: "/properties?category=commercial" },
-    { name: "Residential Plots", href: "/properties?category=plots" },
-    { name: "Furnished Flats", href: "/properties?category=furnished" },
+    { name: "Ready To Move", href: "/ready-to-move" },
+    { name: "New Launch", href: "/new-launch" },
+    { name: "Upcoming", href: "/upcoming" },
+    { name: "Luxury Apartments", href: "/luxury-apartments" },
+    { name: "Plots and Lands", href: "/plots-and-lands" },
+    { name: "Commercial Properties", href: "/commercial-properties" },
+    { name: "Furnished Flats", href: "/furnished-flats" },
   ]
 
   const toolsServices = [

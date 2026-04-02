@@ -35,12 +35,13 @@ const locations = [
 ]
 
 const projects = [
-  { name: "Ready To Move", href: "/properties/types/ready-to-move", icon: "🏠" },
-  { name: "New Launch", href: "/properties/types/new-launch", icon: "✨" },
-  { name: "Upcoming", href: "/properties/types/upcoming", icon: "🔨" },
-  { name: "Luxury Apartments", href: "/properties/types/luxury-apartments", icon: "💎" },
-  { name: "Plots & Land", href: "/properties/types/plots-land", icon: "🏞️" },
-  { name: "Commercial", href: "/properties/types/commercial-spaces", icon: "🏢" },
+  { name: "Ready To Move", href: "/ready-to-move", icon: "🏠" },
+  { name: "New Launch", href: "/new-launch", icon: "✨" },
+  { name: "Upcoming", href: "/upcoming", icon: "🔨" },
+  { name: "Luxury Apartments", href: "/luxury-apartments", icon: "💎" },
+  { name: "Plots and Lands", href: "/plots-and-lands", icon: "🏞️" },
+  { name: "Commercial Properties", href: "/commercial-properties", icon: "🏢" },
+  { name: "Furnished Flats", href: "/furnished-flats", icon: "🛋️" },
 ]
 
 export default function MegaMenuHeader() {
