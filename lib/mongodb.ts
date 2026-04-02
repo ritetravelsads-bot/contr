@@ -8,8 +8,8 @@ export async function connectToDatabase() {
   console.log("[v0] MONGODB_URI exists:", !!process.env.MONGODB_URI)
   
   if (!process.env.MONGODB_URI) {
-    console.error("[v0] MONGODB_URI not found in environment variables")
-    throw new Error("MONGODB_URI is not defined in environment variables")
+    console.warn("[v0] MONGODB_URI not found in environment variables. Database features will be unavailable.")
+    throw new Error("MONGODB_URI is not defined in environment variables. Please set it in your environment variables.")
   }
 
   const uri = process.env.MONGODB_URI
