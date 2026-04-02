@@ -75,6 +75,27 @@ export default function RootLayout({
   return (
     <html lang="en">
       <head>
+        {/* Preload critical LCP images */}
+        <link
+          rel="preload"
+          as="image"
+          href="/home-banner-1.jpg"
+          imageSrcSet="/home-banner-1.jpg"
+          fetchPriority="high"
+        />
+        <link
+          rel="preload"
+          as="image"
+          href="/banners/home-mob-banner-1.jpg"
+          media="(max-width: 767px)"
+          fetchPriority="high"
+        />
+        <link
+          rel="preload"
+          as="image"
+          href="/images/logo.png"
+          fetchPriority="high"
+        />
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{
