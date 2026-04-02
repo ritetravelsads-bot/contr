@@ -63,21 +63,22 @@ export default function Footer() {
   ]
 
   const primeLocations = [
-    { name: "Properties on Golf Course Road", href: "/properties?location=golf-course-road" },
-    { name: "Projects on Dwarka Expressway", href: "/properties?location=dwarka-expressway" },
-    { name: "Luxury Homes in New Gurugram", href: "/properties?location=new-gurugram" },
-    { name: "Apartments on SPR", href: "/properties?location=spr" },
-    { name: "Golf Course Extension Road", href: "/properties?location=golf-course-extension" },
-    { name: "Properties on Sohna Road", href: "/properties?location=sohna-road" },
+    { name: "Golf Course Road", href: "/golf-course-road" },
+    { name: "Golf Course Extn Road", href: "/golf-course-extn-road" },
+    { name: "Dwarka Expressway", href: "/dwarka-expressway" },
+    { name: "Southern Peripheral Road", href: "/southern-peripheral-road" },
+    { name: "Sohna", href: "/sohna" },
+    { name: "New Gurgaon", href: "/new-gurgaon" },
   ]
 
   const propertyTypes = [
-    { name: "Luxury Apartments", href: "/properties?category=luxury" },
-    { name: "Premium Penthouses", href: "/properties?category=penthouse" },
-    { name: "SCO Plots", href: "/properties?category=sco" },
-    { name: "Commercial Properties", href: "/properties?category=commercial" },
-    { name: "Residential Plots", href: "/properties?category=plots" },
-    { name: "Furnished Flats", href: "/properties?category=furnished" },
+    { name: "Ready To Move", href: "/ready-to-move" },
+    { name: "New Launch", href: "/new-launch" },
+    { name: "Upcoming", href: "/upcoming" },
+    { name: "Luxury Apartments", href: "/luxury-apartments" },
+    { name: "Plots and Lands", href: "/plots-and-lands" },
+    { name: "Commercial Properties", href: "/commercial-properties" },
+    { name: "Furnished Flats", href: "/furnished-flats" },
   ]
 
   const toolsServices = [

@@ -24,22 +24,24 @@ interface CurrentUser {
 }
 
 const locations = [
-  { name: "Golf Course Road", href: "/properties?location=Golf%20Course%20Road" },
-  { name: "Golf Course Extn Road", href: "/properties?location=Golf%20Course%20Extn%20Road" },
-  { name: "Dwarka Expressway", href: "/properties?location=Dwarka%20Expressway" },
-  { name: "Southern Peripheral Road", href: "/properties?location=Southern%20Peripheral%20Road" },
-  { name: "Sohna", href: "/properties?location=Sohna" },
-  { name: "New Gurgaon", href: "/properties?location=New%20Gurgaon" },
-  { name: "NH-2", href: "/properties?location=NH-2" },
+  { name: "Golf Course Road", href: "/golf-course-road", slug: "golf-course-road" },
+  { name: "Golf Course Extn Road", href: "/golf-course-extn-road", slug: "golf-course-extn-road" },
+  { name: "Dwarka Expressway", href: "/dwarka-expressway", slug: "dwarka-expressway" },
+  { name: "Southern Peripheral Road", href: "/southern-peripheral-road", slug: "southern-peripheral-road" },
+  { name: "Sohna", href: "/sohna", slug: "sohna" },
+  { name: "New Gurgaon", href: "/new-gurgaon", slug: "new-gurgaon" },
+  { name: "NH-48", href: "/nh-48", slug: "nh-48" },
+  { name: "Manesar", href: "/manesar", slug: "manesar" },
 ]
 
 const projects = [
-  { name: "Ready To Move", href: "/properties?status=Ready%20To%20Move" },
-  { name: "New Launch", href: "/properties?status=New%20Launch" },
-  { name: "Upcoming", href: "/properties?status=Upcoming" },
-  { name: "Luxury Apartments", href: "/properties?type=Apartment" },
-  { name: "Plots & Land", href: "/properties?type=Plot" },
-  { name: "Commercial", href: "/properties?type=Commercial" },
+  { name: "Ready To Move", href: "/ready-to-move", icon: "🏠" },
+  { name: "New Launch", href: "/new-launch", icon: "✨" },
+  { name: "Upcoming", href: "/upcoming", icon: "🔨" },
+  { name: "Luxury Apartments", href: "/luxury-apartments", icon: "💎" },
+  { name: "Plots and Lands", href: "/plots-and-lands", icon: "🏞️" },
+  { name: "Commercial Properties", href: "/commercial-properties", icon: "🏢" },
+  { name: "Furnished Flats", href: "/furnished-flats", icon: "🛋️" },
 ]
 
 export default function MegaMenuHeader() {
