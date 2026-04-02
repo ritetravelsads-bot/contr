@@ -94,13 +94,14 @@ function PropertyCardEnhanced({ property, index }: { property: Property; index: 
               e.preventDefault()
               setIsLiked(!isLiked)
             }}
+            aria-label={isLiked ? "Remove from favorites" : "Add to favorites"}
             className={cn(
               "p-2 rounded-full backdrop-blur-md shadow-lg",
               "transition-all duration-200",
               isLiked ? "bg-rose-500 text-white" : "bg-white/90 text-foreground hover:bg-white"
             )}
           >
-            <Heart className={cn("h-4 w-4", isLiked && "fill-current")} />
+            <Heart className={cn("h-4 w-4", isLiked && "fill-current")} aria-hidden="true" />
           </button>
         </div>
 
