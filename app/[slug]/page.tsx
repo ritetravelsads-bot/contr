@@ -35,7 +35,7 @@ const TYPE_SLUG_MAP: Record<string, { field: string; value: string | string[] }>
   'luxury-apartments': { field: 'property_type', value: ['apartment', 'penthouse'] },
   'plots-and-lands': { field: 'property_type', value: 'plot' },
   'commercial-properties': { field: 'property_type', value: ['office', 'shop', 'commercial'] },
-  'furnished-flats': { field: 'is_furnished', value: true },
+  'furnished-flats': { field: 'is_furnished', value: 'true' },
 }
 
 // Nice display names for property types
@@ -282,9 +282,8 @@ export default function SlugPage() {
                       query.set('view', 'grid')
                       router.push(`/${slug}?${query.toString()}`)
                     }}
-                    className={`p-1.5 rounded transition-colors ${
-                      viewLayout === 'grid' ? 'bg-[var(--luxury-navy)] text-white' : 'text-gray-600 hover:bg-gray-100'
-                    }`}
+                    className={`p-1.5 rounded transition-colors ${viewLayout === 'grid' ? 'bg-[var(--luxury-navy)] text-white' : 'text-gray-600 hover:bg-gray-100'
+                      }`}
                   >
                     <Grid3X3 className="h-4 w-4" />
                   </button>
@@ -295,9 +294,8 @@ export default function SlugPage() {
                       query.set('view', 'list')
                       router.push(`/${slug}?${query.toString()}`)
                     }}
-                    className={`p-1.5 rounded transition-colors ${
-                      viewLayout === 'list' ? 'bg-[var(--luxury-navy)] text-white' : 'text-gray-600 hover:bg-gray-100'
-                    }`}
+                    className={`p-1.5 rounded transition-colors ${viewLayout === 'list' ? 'bg-[var(--luxury-navy)] text-white' : 'text-gray-600 hover:bg-gray-100'
+                      }`}
                   >
                     <List className="h-4 w-4" />
                   </button>
@@ -493,11 +491,10 @@ export default function SlugPage() {
                       query.set('view', 'grid')
                       router.push(`/${slug}?${query.toString()}`)
                     }}
-                    className={`p-1.5 rounded transition-colors ${
-                      viewLayout === 'grid'
+                    className={`p-1.5 rounded transition-colors ${viewLayout === 'grid'
                         ? 'bg-[var(--luxury-navy)] text-white'
                         : 'text-gray-600 hover:bg-gray-100'
-                    }`}
+                      }`}
                   >
                     <Grid3X3 className="h-4 w-4" />
                   </button>
@@ -508,11 +505,10 @@ export default function SlugPage() {
                       query.set('view', 'list')
                       router.push(`/${slug}?${query.toString()}`)
                     }}
-                    className={`p-1.5 rounded transition-colors ${
-                      viewLayout === 'list'
+                    className={`p-1.5 rounded transition-colors ${viewLayout === 'list'
                         ? 'bg-[var(--luxury-navy)] text-white'
                         : 'text-gray-600 hover:bg-gray-100'
-                    }`}
+                      }`}
                   >
                     <List className="h-4 w-4" />
                   </button>

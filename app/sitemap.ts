@@ -203,6 +203,17 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     },
   ]
 
+  // Property Type pages at root level
+  const propertyTypePages: MetadataRoute.Sitemap = [
+    { url: `${baseUrl}/ready-to-move`, lastModified: new Date(), changeFrequency: "weekly", priority: 0.8 },
+    { url: `${baseUrl}/new-launch`, lastModified: new Date(), changeFrequency: "weekly", priority: 0.8 },
+    { url: `${baseUrl}/upcoming`, lastModified: new Date(), changeFrequency: "weekly", priority: 0.7 },
+    { url: `${baseUrl}/luxury-apartments`, lastModified: new Date(), changeFrequency: "weekly", priority: 0.7 },
+    { url: `${baseUrl}/plots-and-lands`, lastModified: new Date(), changeFrequency: "weekly", priority: 0.7 },
+    { url: `${baseUrl}/commercial-properties`, lastModified: new Date(), changeFrequency: "weekly", priority: 0.7 },
+    { url: `${baseUrl}/furnished-flats`, lastModified: new Date(), changeFrequency: "weekly", priority: 0.7 },
+  ]
+
   // Fetch all dynamic content in parallel
   const [properties, blogs, developers, locations, news] = await Promise.all([
     getProperties(),
@@ -246,10 +257,10 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const locationPages: MetadataRoute.Sitemap = locations
     .filter((loc: any) => loc.slug)
     .map((loc: any) => ({
-      url: `${baseUrl}/location/${sanitizeSlug(loc.slug)}`,
+      url: `${baseUrl}/${sanitizeSlug(loc.slug)}`,
       lastModified: loc.updated_at ? new Date(loc.updated_at) : new Date(),
       changeFrequency: "weekly" as const,
-      priority: 0.6,
+      priority: 0.8,
     }))
 
   // Dynamic news pages - using slug (title-based URL)
@@ -264,6 +275,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
 
   return [
     ...staticPages,
+    ...propertyTypePages,
     ...propertyPages,
     ...blogPages,
     ...developerPages,
