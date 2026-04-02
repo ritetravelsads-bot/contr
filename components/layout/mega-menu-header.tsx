@@ -109,7 +109,9 @@ export default function MegaMenuHeader() {
               width={200}
               height={50}
               priority
+              fetchPriority="high"
               className="h-10 w-auto md:h-12"
+              style={{ width: "auto", height: "auto", maxHeight: "48px" }}
             />
           </Link>
 

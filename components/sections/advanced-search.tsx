@@ -110,18 +110,27 @@ export default function AdvancedSearch() {
     return () => clearInterval(typeInterval)
   }, [placeholderIndex, searchTerm])
 
+  // Defer property fetching to not block initial render - only fetch when user focuses on search
   useEffect(() => {
+    if (!showSuggestions || properties.length > 0) return
+    
     const fetchProperties = async () => {
       try {
-        const response = await fetch("/api/properties?limit=100")
+        const response = await fetch("/api/properties?limit=50&fields=property_name,address,neighborhood")
         const data = await response.json()
         setProperties(data.properties || [])
       } catch (error) {
-        console.error("[v0] Error fetching properties:", error)
+        // Silently fail - suggestions will work with static data
       }
     }
-    fetchProperties()
-  }, [])
+    
+    // Use requestIdleCallback to not block main thread
+    if ("requestIdleCallback" in window) {
+      window.requestIdleCallback(fetchProperties)
+    } else {
+      setTimeout(fetchProperties, 200)
+    }
+  }, [showSuggestions, properties.length])
 
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
@@ -170,8 +179,9 @@ export default function AdvancedSearch() {
 
   return (
     <div className="relative -mt-10 z-10 max-w-5xl mx-auto px-4">
+      {/* Fixed min-height to prevent CLS */}
       <div 
-        className="bg-white rounded-2xl shadow-2xl overflow-hidden animate-in fade-in slide-in-from-bottom-4 duration-700" 
+        className="bg-white rounded-2xl shadow-2xl overflow-hidden min-h-[220px] md:min-h-[200px]" 
         ref={searchRef}
       >
         {/* Main Search Area */}

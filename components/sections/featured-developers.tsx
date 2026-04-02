@@ -198,7 +198,10 @@ function DeveloperCard({ developer }: { developer: Developer }) {
         <img
           src={developer.logo_url}
           alt={developer.name}
+          width={180}
+          height={80}
           loading="lazy"
+          decoding="async"
           className="max-w-full max-h-full object-contain opacity-90 hover:opacity-100 transition-opacity duration-200"
         />
       ) : (

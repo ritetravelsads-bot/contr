@@ -1,7 +1,7 @@
 "use client"
 
-import { useState } from "react"
-import { Play, MapPin, Home, Sparkles, ArrowRight } from "lucide-react"
+import { useState, useRef, useEffect, memo } from "react"
+import { MapPin, Home, Sparkles, ArrowRight } from "lucide-react"
 import { cn } from "@/lib/utils"
 import Link from "next/link"
 
@@ -60,15 +60,38 @@ const FEATURED_PROPERTIES = [
   },
 ]
 
-function PropertyVideoCard({ property, index }: { property: typeof FEATURED_PROPERTIES[0]; index: number }) {
+const PropertyVideoCard = memo(function PropertyVideoCard({ property, index }: { property: typeof FEATURED_PROPERTIES[0]; index: number }) {
   const [isHovered, setIsHovered] = useState(false)
+  const [isVisible, setIsVisible] = useState(false)
+  const cardRef = useRef<HTMLDivElement>(null)
+  const videoRef = useRef<HTMLVideoElement>(null)
+
+  // Lazy load video when card becomes visible
+  useEffect(() => {
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting) {
+          setIsVisible(true)
+          observer.disconnect()
+        }
+      },
+      { rootMargin: "100px" }
+    )
+    
+    if (cardRef.current) {
+      observer.observe(cardRef.current)
+    }
+    
+    return () => observer.disconnect()
+  }, [])
 
   return (
     <div
+      ref={cardRef}
       className={cn(
         "group relative rounded-2xl overflow-hidden cursor-pointer",
         "h-[380px] md:h-[420px]",
-        "shadow-lg hover:shadow-2xl",
+        "shadow-lg hover:shadow-2xl bg-slate-200",
         "transition-all duration-500 ease-out",
         "hover:scale-[1.02] hover:-translate-y-1"
       )}
@@ -76,19 +99,23 @@ function PropertyVideoCard({ property, index }: { property: typeof FEATURED_PROP
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
     >
-      {/* Video Background */}
-      <video
-        src={property.video}
-        autoPlay
-        loop
-        muted
-        playsInline
-        className={cn(
-          "absolute inset-0 w-full h-full object-cover",
-          "transition-transform duration-700 ease-out",
-          isHovered ? "scale-110" : "scale-100"
-        )}
-      />
+      {/* Video Background - Only load when visible */}
+      {isVisible && (
+        <video
+          ref={videoRef}
+          src={property.video}
+          autoPlay
+          loop
+          muted
+          playsInline
+          preload="none"
+          className={cn(
+            "absolute inset-0 w-full h-full object-cover",
+            "transition-transform duration-700 ease-out",
+            isHovered ? "scale-110" : "scale-100"
+          )}
+        />
+      )}
 
       {/* Gradient Overlay - Always visible */}
       <div className={cn(
@@ -202,7 +229,7 @@ function PropertyVideoCard({ property, index }: { property: typeof FEATURED_PROP
       )} />
     </div>
   )
-}
+})
 
 export default function FeaturedVideoProperties() {
   return (

@@ -73,10 +73,14 @@ export default function TrendingLocations() {
               href={`/properties?location=${encodeURIComponent(location.searchParam)}`}
               className="relative overflow-hidden rounded-lg shadow-md hover:shadow-xl transition-all duration-300 bg-white"
             >
-              <div className="relative h-48 overflow-hidden">
+              <div className="relative h-48 overflow-hidden bg-slate-200">
                 <img
                   src={location.image || "/placeholder.svg"}
                   alt={location.name}
+                  width={400}
+                  height={192}
+                  loading="lazy"
+                  decoding="async"
                   className="w-full h-full object-cover transition-transform duration-500 hover:scale-110"
                 />
                 <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/30 to-transparent" />

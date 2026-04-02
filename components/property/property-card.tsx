@@ -33,13 +33,16 @@ export default function PropertyCard({ property }: PropertyCardProps) {
   return (
     <Link href={`/properties/${property.slug || property._id}`}>
       <div className="bento-card hover:shadow-lg cursor-pointer group">
-        {/* Image with badges */}
-        <div className="relative mb-2.5 overflow-hidden rounded bg-muted h-40 hover:shadow-md transition-shadow">
+        {/* Image with badges - fixed dimensions to prevent CLS */}
+        <div className="relative mb-2.5 overflow-hidden rounded bg-muted aspect-[4/3] hover:shadow-md transition-shadow">
           <img
             src={imageUrl || "/placeholder.svg"}
             alt={property.property_name || "Property"}
+            width={320}
+            height={240}
             className="w-full h-full object-cover hover:scale-105 transition-transform duration-300"
             loading="lazy"
+            decoding="async"
             onError={(e) => {
               e.currentTarget.src = "/placeholder.jpg"
             }}

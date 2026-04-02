@@ -44,13 +44,16 @@ export default function RecentlyViewed() {
               href={`/properties/${item.slug || item.id}`}
               className="flex-shrink-0 w-[220px] bg-card border border-border rounded-xl overflow-hidden hover:shadow-lg hover:-translate-y-0.5 transition-all duration-300 group"
             >
-              {/* Thumbnail */}
+              {/* Thumbnail - fixed dimensions to prevent CLS */}
               <div className="relative h-32 bg-muted overflow-hidden">
                 <img
                   src={item.thumbnail || "/placeholder.jpg"}
                   alt={item.name}
+                  width={220}
+                  height={128}
                   className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
                   loading="lazy"
+                  decoding="async"
                   onError={(e) => {
                     e.currentTarget.src = "/placeholder.jpg"
                   }}
