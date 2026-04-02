@@ -30,11 +30,18 @@ async function getActiveHeadTags(): Promise<HeadTag[]> {
 export default async function CustomHeadTags() {
   const tags = await getActiveHeadTags()
   
-  if (tags.length === 0) return null
+  // Filter out robots meta tags that contain noindex or nofollow
+  const filteredTags = tags.filter((tag) => {
+    const isRobotsMeta = tag.tag_content.includes('name="robots"') && 
+                         (tag.tag_content.includes('noindex') || tag.tag_content.includes('nofollow'))
+    return !isRobotsMeta
+  })
+  
+  if (filteredTags.length === 0) return null
   
   return (
     <>
-      {tags.map((tag) => (
+      {filteredTags.map((tag) => (
         <div
           key={tag._id}
           dangerouslySetInnerHTML={{ __html: tag.tag_content }}
