@@ -1,6 +1,7 @@
 "use client"
 
 import Link from "next/link"
+import Image from "next/image"
 import { MapPin, TrendingUp } from "lucide-react"
 
 const trendingLocations = [
@@ -74,14 +75,13 @@ export default function TrendingLocations() {
               className="relative overflow-hidden rounded-lg shadow-md hover:shadow-xl transition-all duration-300 bg-white"
             >
               <div className="relative h-48 overflow-hidden bg-slate-200">
-                <img
+                <Image
                   src={location.image || "/placeholder.svg"}
                   alt={location.name}
-                  width={400}
-                  height={192}
-                  loading="lazy"
-                  decoding="async"
-                  className="w-full h-full object-cover transition-transform duration-500 hover:scale-110"
+                  fill
+                  sizes="(max-width: 768px) 100vw, (max-width: 1024px) 50vw, (max-width: 1280px) 33vw, 25vw"
+                  quality={75}
+                  className="object-cover transition-transform duration-500 hover:scale-110"
                 />
                 <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/30 to-transparent" />
               </div>

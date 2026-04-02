@@ -3,6 +3,7 @@
 import { useRecentlyViewed } from "@/hooks/use-recently-viewed"
 import { MapPin, Clock, X, ArrowRight } from "lucide-react"
 import Link from "next/link"
+import Image from "next/image"
 import { Button } from "@/components/ui/button"
 
 export default function RecentlyViewed() {
@@ -46,17 +47,13 @@ export default function RecentlyViewed() {
             >
               {/* Thumbnail - fixed dimensions to prevent CLS */}
               <div className="relative h-32 bg-muted overflow-hidden">
-                <img
+                <Image
                   src={item.thumbnail || "/placeholder.jpg"}
                   alt={item.name}
-                  width={220}
-                  height={128}
-                  className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
-                  loading="lazy"
-                  decoding="async"
-                  onError={(e) => {
-                    e.currentTarget.src = "/placeholder.jpg"
-                  }}
+                  fill
+                  sizes="220px"
+                  quality={75}
+                  className="object-cover group-hover:scale-105 transition-transform duration-300"
                 />
               </div>
 

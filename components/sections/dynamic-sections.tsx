@@ -2,7 +2,8 @@
 
 import { useEffect, useState, useRef } from "react"
 import Link from "next/link"
-import { MapPin, Bed, Bath, Maximize2, ArrowRight, Heart, Eye } from "lucide-react"
+import Image from "next/image"
+import { MapPin, Bed, Bath, Maximize2, ArrowRight, Heart } from "lucide-react"
 import { cn, formatPriceToIndian } from "@/lib/utils"
 
 interface Property {
@@ -51,19 +52,18 @@ function PropertyCardEnhanced({ property, index }: { property: Property; index: 
       onMouseLeave={() => setIsHovered(false)}
     >
       {/* Image Container */}
-      <div className="relative h-48 md:h-52 overflow-hidden">
-        <img
+      <div className="relative h-48 md:h-52 overflow-hidden bg-muted">
+        <Image
           src={property.main_thumbnail || "/placeholder.jpg"}
           alt={property.property_name}
+          fill
+          sizes="(max-width: 768px) 100vw, (max-width: 1024px) 50vw, 25vw"
+          quality={75}
           className={cn(
-            "w-full h-full object-cover",
+            "object-cover",
             "transition-transform duration-700 ease-out",
             "group-hover:scale-110"
           )}
-          loading="lazy"
-          onError={(e) => {
-            e.currentTarget.src = "/placeholder.jpg"
-          }}
         />
         
         {/* Gradient Overlay */}

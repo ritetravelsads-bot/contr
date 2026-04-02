@@ -1,4 +1,5 @@
 import Link from "next/link"
+import Image from "next/image"
 import { MapPin, Bed, Bath, Maximize2 } from "lucide-react"
 import { Badge } from "@/components/ui/badge"
 import { formatPriceRange } from "@/lib/utils"
@@ -35,17 +36,13 @@ export default function PropertyCard({ property }: PropertyCardProps) {
       <div className="bento-card hover:shadow-lg cursor-pointer group">
         {/* Image with badges - fixed dimensions to prevent CLS */}
         <div className="relative mb-2.5 overflow-hidden rounded bg-muted aspect-[4/3] hover:shadow-md transition-shadow">
-          <img
+          <Image
             src={imageUrl || "/placeholder.svg"}
             alt={property.property_name || "Property"}
-            width={320}
-            height={240}
-            className="w-full h-full object-cover hover:scale-105 transition-transform duration-300"
-            loading="lazy"
-            decoding="async"
-            onError={(e) => {
-              e.currentTarget.src = "/placeholder.jpg"
-            }}
+            fill
+            sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, (max-width: 1280px) 33vw, 25vw"
+            quality={75}
+            className="object-cover group-hover:scale-105 transition-transform duration-300"
           />
           <div className="absolute top-2 left-2 flex gap-1.5">
             {property.is_featured && <Badge className="text-xs bg-primary">Featured</Badge>}
