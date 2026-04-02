@@ -2,7 +2,8 @@
 
 import { useEffect, useState, useRef } from "react"
 import Link from "next/link"
-import { MapPin, Bed, Bath, Maximize2, ArrowRight, Heart, Eye } from "lucide-react"
+import Image from "next/image"
+import { MapPin, Bed, Bath, Maximize2, ArrowRight, Heart } from "lucide-react"
 import { cn, formatPriceToIndian } from "@/lib/utils"
 
 interface Property {
@@ -51,19 +52,18 @@ function PropertyCardEnhanced({ property, index }: { property: Property; index: 
       onMouseLeave={() => setIsHovered(false)}
     >
       {/* Image Container */}
-      <div className="relative h-48 md:h-52 overflow-hidden">
-        <img
+      <div className="relative h-48 md:h-52 overflow-hidden bg-muted">
+        <Image
           src={property.main_thumbnail || "/placeholder.jpg"}
           alt={property.property_name}
+          fill
+          sizes="(max-width: 768px) 100vw, (max-width: 1024px) 50vw, 25vw"
+          quality={75}
           className={cn(
-            "w-full h-full object-cover",
+            "object-cover",
             "transition-transform duration-700 ease-out",
             "group-hover:scale-110"
           )}
-          loading="lazy"
-          onError={(e) => {
-            e.currentTarget.src = "/placeholder.jpg"
-          }}
         />
         
         {/* Gradient Overlay */}
@@ -94,13 +94,14 @@ function PropertyCardEnhanced({ property, index }: { property: Property; index: 
               e.preventDefault()
               setIsLiked(!isLiked)
             }}
+            aria-label={isLiked ? "Remove from favorites" : "Add to favorites"}
             className={cn(
               "p-2 rounded-full backdrop-blur-md shadow-lg",
               "transition-all duration-200",
               isLiked ? "bg-rose-500 text-white" : "bg-white/90 text-foreground hover:bg-white"
             )}
           >
-            <Heart className={cn("h-4 w-4", isLiked && "fill-current")} />
+            <Heart className={cn("h-4 w-4", isLiked && "fill-current")} aria-hidden="true" />
           </button>
         </div>
 

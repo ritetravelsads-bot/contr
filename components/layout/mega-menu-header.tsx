@@ -51,9 +51,14 @@ export default function MegaMenuHeader() {
   useEffect(() => {
     setMounted(true)
 
+    // Defer auth check to not block initial render
     const checkAuth = async () => {
       try {
-        const response = await fetch("/api/auth/me", { credentials: "include" })
+        const response = await fetch("/api/auth/me", { 
+          credentials: "include",
+          // Add cache to speed up repeated requests
+          next: { revalidate: 60 }
+        })
         if (response.ok) {
           const data = await response.json()
           setCurrentUser(data.user)
@@ -63,7 +68,12 @@ export default function MegaMenuHeader() {
       }
     }
 
-    checkAuth()
+    // Use requestIdleCallback to not block main thread
+    if ("requestIdleCallback" in window) {
+      window.requestIdleCallback(checkAuth)
+    } else {
+      setTimeout(checkAuth, 100)
+    }
   }, [])
 
 
@@ -99,7 +109,9 @@ export default function MegaMenuHeader() {
               width={200}
               height={50}
               priority
+              fetchPriority="high"
               className="h-10 w-auto md:h-12"
+              style={{ width: "auto", height: "auto", maxHeight: "48px" }}
             />
           </Link>
 

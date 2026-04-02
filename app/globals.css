@@ -3,6 +3,93 @@
 
 @custom-variant dark (&:is(.dark *));
 
+/* Critical CSS for CLS Prevention */
+/* Reserve space for common UI elements to prevent layout shift */
+
+/* Banner/Hero section - reserve fixed height */
+.banner-container {
+  min-height: 75vh;
+  contain: layout style;
+}
+
+@media (min-width: 768px) {
+  .banner-container {
+    min-height: 30vw;
+  }
+}
+
+/* Header - fixed height to prevent CLS */
+header {
+  min-height: 64px;
+  contain: layout;
+}
+
+/* Footer - prevent massive CLS by reserving space */
+footer {
+  min-height: 600px;
+  contain: layout style;
+  content-visibility: auto;
+  contain-intrinsic-size: auto 600px;
+}
+
+/* Image containers - prevent CLS */
+img {
+  content-visibility: auto;
+}
+
+/* Prevent cumulative layout shift for below-fold sections */
+section {
+  contain-intrinsic-size: auto 300px;
+}
+
+/* Optimize paint performance */
+.bento-card,
+.bg-card {
+  will-change: transform;
+  contain: layout style paint;
+}
+
+/* Prevent font swap layout shift */
+@font-face {
+  font-family: 'Geist Fallback';
+  src: local('Arial');
+  ascent-override: 90%;
+  descent-override: 22%;
+  line-gap-override: 0%;
+  size-adjust: 107%;
+}
+
+@font-face {
+  font-family: 'Geist Mono Fallback';
+  src: local('Courier New');
+  ascent-override: 77%;
+  descent-override: 20%;
+  line-gap-override: 0%;
+  size-adjust: 112%;
+}
+
+/* Critical render performance */
+html {
+  scroll-behavior: smooth;
+}
+
+/* Reduce rendering complexity on mobile */
+@media (max-width: 767px) {
+  /* Simplify animations on mobile for better performance */
+  .hover-lift,
+  .interactive-element {
+    transition-duration: 150ms;
+  }
+  
+  /* Disable complex hover effects on touch devices */
+  @media (hover: none) {
+    .hover-lift:hover,
+    .hover\:scale-105:hover {
+      transform: none;
+    }
+  }
+}
+
 :root {
   /* Updated color system to use exact #002366 navy blue as requested */
   /* Professional Navy Blue (#002366) & Clean White/Black Color System */

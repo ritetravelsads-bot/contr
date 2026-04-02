@@ -7,8 +7,18 @@ import "@/styles/blog-content.css"
 import FrontendLayout from "@/components/layout/frontend-layout"
 import CustomHeadTags from "@/components/layout/custom-head-tags"
 
-const geist = Geist({ subsets: ["latin"] })
-const geistMono = Geist_Mono({ subsets: ["latin"] })
+const geist = Geist({ 
+  subsets: ["latin"],
+  display: "swap",
+  preload: true,
+  adjustFontFallback: true,
+})
+const geistMono = Geist_Mono({ 
+  subsets: ["latin"],
+  display: "swap",
+  preload: true,
+  adjustFontFallback: true,
+})
 
 export const metadata: Metadata = {
   title: "Country Roof Real Estate | Buy & Sell Property in Gurgaon",
@@ -75,20 +85,26 @@ export default function RootLayout({
   return (
     <html lang="en">
       <head>
-        {/* Preload critical LCP images */}
-        <link
-          rel="preload"
-          as="image"
-          href="/home-banner-1.jpg"
-          imageSrcSet="/home-banner-1.jpg"
-          fetchPriority="high"
-        />
+        {/* DNS prefetch for external resources */}
+        <link rel="dns-prefetch" href="//ik.imagekit.io" />
+        <link rel="preconnect" href="https://ik.imagekit.io" crossOrigin="anonymous" />
+        
+        {/* Preload critical LCP images - mobile first */}
         <link
           rel="preload"
           as="image"
           href="/banners/home-mob-banner-1.jpg"
           media="(max-width: 767px)"
           fetchPriority="high"
+          type="image/jpeg"
+        />
+        <link
+          rel="preload"
+          as="image"
+          href="/home-banner-1.jpg"
+          media="(min-width: 768px)"
+          fetchPriority="high"
+          type="image/jpeg"
         />
         <link
           rel="preload"

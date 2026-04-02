@@ -8,10 +8,14 @@ import {
   ArrowUpDown, Grid3X3, List
 } from "lucide-react"
 import { Button } from "@/components/ui/button"
-import { useState, useEffect, useCallback, Suspense } from "react"
+import { useState, useCallback, Suspense } from "react"
+import useSWR from "swr"
 import Header from "@/components/layout/header"
 import Footer from "@/components/layout/footer"
 import { cn, formatPriceToIndian, formatPriceRange, BUDGET_RANGES, parseBudgetRange } from "@/lib/utils"
+
+// SWR fetcher function
+const fetcher = (url: string) => fetch(url).then(res => res.json())
 
 const PROPERTY_TYPES = [
   { value: "apartment", label: "Apartment" },
@@ -188,9 +192,7 @@ function PropertiesContent() {
   const searchParams = useSearchParams()
   const router = useRouter()
 
-  const [properties, setProperties] = useState<Property[]>([])
-  const [loading, setLoading] = useState(true)
-  const [pagination, setPagination] = useState({ page: 1, total: 0, pages: 1 })
+  
   const [showAdvanced, setShowAdvanced] = useState(false)
   const [viewMode, setViewMode] = useState<"grid" | "list">("grid")
 
@@ -226,23 +228,19 @@ function PropertiesContent() {
     return params.toString()
   }, [filters, page])
 
-  useEffect(() => {
-    const loadProperties = async () => {
-      setLoading(true)
-      try {
-        const res = await fetch(`/api/properties?${buildQueryString()}`)
-        const data = await res.json()
-        setProperties(data.properties || [])
-        setPagination(data.pagination || { page: 1, total: 0, pages: 1 })
-      } catch (error) {
-        console.error("[v0] Error loading properties:", error)
-      } finally {
-        setLoading(false)
-      }
+  // Use SWR for caching and faster subsequent loads
+  const { data, isLoading: loading } = useSWR(
+    `/api/properties?${buildQueryString()}`,
+    fetcher,
+    {
+      revalidateOnFocus: false,
+      keepPreviousData: true,
+      dedupingInterval: 5000,
     }
+  )
 
-    loadProperties()
-  }, [buildQueryString])
+  const properties = data?.properties || []
+  const pagination = data?.pagination || { page: 1, total: 0, pages: 1 }
 
   const updateFilter = (key: string, value: string) => {
     const newFilters = { ...filters, [key]: value }

@@ -1,6 +1,6 @@
 "use client"
 
-import { useState, useEffect, useCallback } from "react"
+import { useState, useEffect, useCallback, memo } from "react"
 import Image from "next/image"
 import { cn } from "@/lib/utils"
 
@@ -39,79 +39,106 @@ const slides = [
   },
 ]
 
-export default function BannerSlider() {
+// Memoized slide component to prevent unnecessary re-renders
+const SlideImage = memo(function SlideImage({ 
+  slide, 
+  index, 
+  isActive 
+}: { 
+  slide: typeof slides[0]
+  index: number
+  isActive: boolean 
+}) {
+  // Only render the first slide initially, others load on demand
+  const shouldRender = index === 0 || isActive || index === 1
+
+  if (!shouldRender) return null
+
+  return (
+    <>
+      {/* Desktop Image */}
+      <Image 
+        src={slide.image || "/placeholder.svg"} 
+        alt={slide.title || "Banner"} 
+        fill
+        priority={index === 0}
+        loading={index === 0 ? "eager" : "lazy"}
+        sizes="(max-width: 767px) 1px, 100vw"
+        quality={index === 0 ? 85 : 75}
+        fetchPriority={index === 0 ? "high" : "low"}
+        className={cn(
+          "object-contain hidden md:block",
+          !isActive && "opacity-0"
+        )}
+      />
+      {/* Mobile Image - Explicit dimensions to prevent CLS */}
+      <Image 
+        src={slide.mobileImage || slide.image || "/placeholder.svg"} 
+        alt={slide.title || "Banner"} 
+        fill
+        priority={index === 0}
+        loading={index === 0 ? "eager" : "lazy"}
+        sizes="(min-width: 768px) 1px, 100vw"
+        quality={index === 0 ? 80 : 70}
+        fetchPriority={index === 0 ? "high" : "low"}
+        className={cn(
+          "object-cover md:hidden",
+          !isActive && "opacity-0"
+        )}
+      />
+    </>
+  )
+})
+
+function BannerSlider() {
   const [currentSlide, setCurrentSlide] = useState(0)
   const [isPaused, setIsPaused] = useState(false)
-  const [progress, setProgress] = useState(0)
 
   const nextSlide = useCallback(() => {
     setCurrentSlide((prev) => (prev + 1) % slides.length)
-    setProgress(0)
-  }, [])
-
-  const prevSlide = useCallback(() => {
-    setCurrentSlide((prev) => (prev - 1 + slides.length) % slides.length)
-    setProgress(0)
   }, [])
 
   useEffect(() => {
     if (isPaused) return
 
-    const progressInterval = setInterval(() => {
-      setProgress((prev) => {
-        if (prev >= 100) {
-          nextSlide()
-          return 0
-        }
-        return prev + 2
-      })
-    }, 100)
-
-    return () => clearInterval(progressInterval)
+    const timer = setInterval(nextSlide, 5000)
+    return () => clearInterval(timer)
   }, [isPaused, nextSlide])
 
   return (
-    <div className="relative w-full overflow-hidden bg-gray-900 aspect-[3/4] md:aspect-[10/3]">
+    <div 
+      className="relative w-full overflow-hidden bg-gray-100"
+      // Fixed aspect ratio container to prevent CLS
+      style={{ 
+        aspectRatio: "3/4",
+      }}
+    >
+      {/* CSS media query for desktop aspect ratio */}
+      <style jsx>{`
+        @media (min-width: 768px) {
+          div {
+            aspect-ratio: 10/3 !important;
+          }
+        }
+      `}</style>
+      
       {/* Slides */}
       {slides.map((slide, index) => (
         <div
           key={slide.id}
           className={cn(
-            "absolute inset-0 transition-all duration-1000 ease-out",
+            "absolute inset-0 transition-opacity duration-700 ease-out",
             index === currentSlide 
-              ? "opacity-100 scale-100" 
-              : "opacity-0 scale-105"
+              ? "opacity-100 z-10" 
+              : "opacity-0 z-0"
           )}
         >
           {/* Background Image - Different for mobile/desktop */}
           <div className="absolute inset-0">
-            {/* Desktop Image */}
-            <Image 
-              src={slide.image || "/placeholder.svg"} 
-              alt={slide.title || "Banner"} 
-              fill
-              priority={index === 0}
-              loading={index === 0 ? "eager" : "lazy"}
-              sizes="100vw"
-              quality={85}
-              className={cn(
-                "object-contain hidden md:block",
-                index !== currentSlide && "opacity-0"
-              )}
-            />
-            {/* Mobile Image */}
-            <Image 
-              src={slide.mobileImage || slide.image || "/placeholder.svg"} 
-              alt={slide.title || "Banner"} 
-              fill
-              priority={index === 0}
-              loading={index === 0 ? "eager" : "lazy"}
-              sizes="100vw"
-              quality={80}
-              className={cn(
-                "object-cover md:hidden",
-                index !== currentSlide && "opacity-0"
-              )}
+            <SlideImage 
+              slide={slide} 
+              index={index} 
+              isActive={index === currentSlide} 
             />
           </div>
           
@@ -158,3 +185,5 @@ export default function BannerSlider() {
     </div>
   )
 }
+
+export default memo(BannerSlider)

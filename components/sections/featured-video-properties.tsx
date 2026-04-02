@@ -1,7 +1,7 @@
 "use client"
 
-import { useState } from "react"
-import { Play, MapPin, Home, Sparkles, ArrowRight } from "lucide-react"
+import { useState, useRef, useEffect, memo } from "react"
+import { MapPin, Home, Sparkles, ArrowRight } from "lucide-react"
 import { cn } from "@/lib/utils"
 import Link from "next/link"
 
@@ -30,7 +30,7 @@ const FEATURED_PROPERTIES = [
     video: "https://hebbkx1anhila5yf.public.blob.vercel-storage.com/elan-the-presidential-R93g7zWSOf9ON0aaUBWYf5Kmy7Og6j.mp4",
     gradient: "from-emerald-500/80 to-teal-600/80",
     accent: "bg-emerald-500",
-    url: "elan-the-presidential"
+    url: "elan-presidential"
   },
   {
     id: 3,
@@ -43,7 +43,7 @@ const FEATURED_PROPERTIES = [
     video: "https://hebbkx1anhila5yf.public.blob.vercel-storage.com/whiteland-westin-if18bh7XqgAFCqVf8jLaHcjcEaUBs5.mp4",
     gradient: "from-violet-500/80 to-purple-600/80",
     accent: "bg-violet-500",
-    url: "whiteland-westin-residences"
+    url: "westin-residences-whiteland"
   },
   {
     id: 4,
@@ -60,15 +60,38 @@ const FEATURED_PROPERTIES = [
   },
 ]
 
-function PropertyVideoCard({ property, index }: { property: typeof FEATURED_PROPERTIES[0]; index: number }) {
+const PropertyVideoCard = memo(function PropertyVideoCard({ property, index }: { property: typeof FEATURED_PROPERTIES[0]; index: number }) {
   const [isHovered, setIsHovered] = useState(false)
+  const [isVisible, setIsVisible] = useState(false)
+  const cardRef = useRef<HTMLDivElement>(null)
+  const videoRef = useRef<HTMLVideoElement>(null)
+
+  // Lazy load video when card becomes visible
+  useEffect(() => {
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting) {
+          setIsVisible(true)
+          observer.disconnect()
+        }
+      },
+      { rootMargin: "100px" }
+    )
+
+    if (cardRef.current) {
+      observer.observe(cardRef.current)
+    }
+
+    return () => observer.disconnect()
+  }, [])
 
   return (
     <div
+      ref={cardRef}
       className={cn(
         "group relative rounded-2xl overflow-hidden cursor-pointer",
         "h-[380px] md:h-[420px]",
-        "shadow-lg hover:shadow-2xl",
+        "shadow-lg hover:shadow-2xl bg-slate-200",
         "transition-all duration-500 ease-out",
         "hover:scale-[1.02] hover:-translate-y-1"
       )}
@@ -76,19 +99,27 @@ function PropertyVideoCard({ property, index }: { property: typeof FEATURED_PROP
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
     >
-      {/* Video Background */}
-      <video
-        src={property.video}
-        autoPlay
-        loop
-        muted
-        playsInline
-        className={cn(
-          "absolute inset-0 w-full h-full object-cover",
-          "transition-transform duration-700 ease-out",
-          isHovered ? "scale-110" : "scale-100"
-        )}
-      />
+      {/* Video Background - Only load when visible */}
+      {isVisible && (
+        <video
+          ref={videoRef}
+          src={property.video}
+          autoPlay
+          loop
+          muted
+          playsInline
+          preload="none"
+          aria-label={`${property.name} property showcase video`}
+          className={cn(
+            "absolute inset-0 w-full h-full object-cover",
+            "transition-transform duration-700 ease-out",
+            isHovered ? "scale-110" : "scale-100"
+          )}
+        >
+          {/* Decorative video - no captions needed as content is visual only with no audio dialogue */}
+          <track kind="descriptions" label="Visual description" srcLang="en" default />
+        </video>
+      )}
 
       {/* Gradient Overlay - Always visible */}
       <div className={cn(
@@ -202,7 +233,7 @@ function PropertyVideoCard({ property, index }: { property: typeof FEATURED_PROP
       )} />
     </div>
   )
-}
+})
 
 export default function FeaturedVideoProperties() {
   return (
@@ -226,8 +257,8 @@ export default function FeaturedVideoProperties() {
               Experience premium living with our exclusive collection of luxury residences
             </p>
           </div>
-          
-          <Link 
+
+          <Link
             href="/properties?segment=luxury"
             className={cn(
               "inline-flex items-center gap-2 px-4 py-2 rounded-full",
