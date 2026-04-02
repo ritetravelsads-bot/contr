@@ -2,7 +2,6 @@
 
 import { useState, useEffect } from "react"
 import Link from "next/link"
-import Image from "next/image"
 import { Building2, Star } from "lucide-react"
 import { cn } from "@/lib/utils"
 
@@ -196,14 +195,14 @@ function DeveloperCard({ developer }: { developer: Developer }) {
       )}
     >
       {developer.logo_url ? (
-        <Image
+        <img
           src={developer.logo_url}
           alt={developer.name}
           width={180}
           height={80}
-          quality={75}
+          loading="lazy"
+          decoding="async"
           className="max-w-full max-h-full object-contain opacity-90 hover:opacity-100 transition-opacity duration-200"
-          style={{ width: "auto", height: "auto" }}
         />
       ) : (
         <div className="flex flex-col items-center gap-2">
