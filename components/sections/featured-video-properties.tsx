@@ -30,7 +30,7 @@ const FEATURED_PROPERTIES = [
     video: "https://hebbkx1anhila5yf.public.blob.vercel-storage.com/elan-the-presidential-R93g7zWSOf9ON0aaUBWYf5Kmy7Og6j.mp4",
     gradient: "from-emerald-500/80 to-teal-600/80",
     accent: "bg-emerald-500",
-    url: "elan-the-presidential"
+    url: "elan-presidential"
   },
   {
     id: 3,
@@ -43,7 +43,7 @@ const FEATURED_PROPERTIES = [
     video: "https://hebbkx1anhila5yf.public.blob.vercel-storage.com/whiteland-westin-if18bh7XqgAFCqVf8jLaHcjcEaUBs5.mp4",
     gradient: "from-violet-500/80 to-purple-600/80",
     accent: "bg-violet-500",
-    url: "whiteland-westin-residences"
+    url: "westin-residences-whiteland"
   },
   {
     id: 4,
@@ -77,11 +77,11 @@ const PropertyVideoCard = memo(function PropertyVideoCard({ property, index }: {
       },
       { rootMargin: "100px" }
     )
-    
+
     if (cardRef.current) {
       observer.observe(cardRef.current)
     }
-    
+
     return () => observer.disconnect()
   }, [])
 
@@ -257,8 +257,8 @@ export default function FeaturedVideoProperties() {
               Experience premium living with our exclusive collection of luxury residences
             </p>
           </div>
-          
-          <Link 
+
+          <Link
             href="/properties?segment=luxury"
             className={cn(
               "inline-flex items-center gap-2 px-4 py-2 rounded-full",
