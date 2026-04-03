@@ -6,6 +6,7 @@ import "./globals.css"
 import "@/styles/blog-content.css"
 import FrontendLayout from "@/components/layout/frontend-layout"
 import CustomHeadTags from "@/components/layout/custom-head-tags"
+import HeadTagsInjector from "@/components/layout/head-tags-injector"
 
 // Disable caching for this layout to ensure custom head tags are always fresh
 export const revalidate = 0
@@ -88,7 +89,7 @@ export default function RootLayout({
         <link rel="dns-prefetch" href="//ik.imagekit.io" />
         <link rel="preconnect" href="https://ik.imagekit.io" crossOrigin="anonymous" />
         
-        {/* Preload critical LCP images - mobile first */}
+        {/* Preload critical LCP images - using direct image URLs for faster preload discovery */}
         <link
           rel="preload"
           as="image"
@@ -104,12 +105,6 @@ export default function RootLayout({
           media="(min-width: 768px)"
           fetchPriority="high"
           type="image/jpeg"
-        />
-        <link
-          rel="preload"
-          as="image"
-          href="/images/logo.png"
-          fetchPriority="high"
         />
         <script
           type="application/ld+json"
@@ -129,6 +124,7 @@ export default function RootLayout({
         <CustomHeadTags />
       </head>
       <body className={`${geist.className} antialiased`}>
+        <HeadTagsInjector />
         <FrontendLayout>
           {children}
         </FrontendLayout>

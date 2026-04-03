@@ -36,10 +36,15 @@ const nextConfig = {
     // Enable partial prerendering for faster page loads
     ppr: false,
   },
+  // Target modern browsers to avoid legacy polyfills (saves ~14KB)
+  // This tells SWC to not transpile modern JS features that are already supported
+  transpilePackages: [],
   // Enable compiler optimizations
   compiler: {
     removeConsole: process.env.NODE_ENV === "production" ? { exclude: ["error", "warn"] } : false,
   },
+  // Use SWC minifier for smaller bundles
+  swcMinify: true,
   reactStrictMode: true,
   // Redirect www to non-www for both .in and .com domains
   async redirects() {

@@ -38,15 +38,24 @@ img {
 }
 
 /* Prevent cumulative layout shift for below-fold sections */
+/* Use content-visibility to defer rendering of off-screen sections */
 section {
   contain-intrinsic-size: auto 300px;
 }
 
-/* Optimize paint performance */
+/* Defer rendering of below-fold content for faster Speed Index */
+section:not(:first-of-type) {
+  content-visibility: auto;
+  contain-intrinsic-block-size: 400px;
+}
+
+/* Optimize paint performance - GPU compositing for cards */
 .bento-card,
 .bg-card {
   will-change: transform;
   contain: layout style paint;
+  transform: translateZ(0);
+  backface-visibility: hidden;
 }
 
 /* Prevent font swap layout shift */
@@ -285,9 +294,11 @@ html {
     @apply relative before:absolute before:inset-0 before:bg-gradient-to-t before:from-black/60 before:to-transparent;
   }
 
-  /* Modern card hover effect */
+  /* Modern card hover effect - GPU accelerated */
   .hover-lift {
-    @apply transition-all duration-300 hover:shadow-xl hover:-translate-y-1;
+    @apply transition-[transform,box-shadow] duration-300 hover:shadow-xl hover:-translate-y-1;
+    will-change: transform;
+    transform: translateZ(0);
   }
 
   /* Professional section spacing */
@@ -317,9 +328,12 @@ html {
     animation: scaleIn 0.4s ease-out forwards;
   }
 
-  /* Luxury Premium Utilities */
+  /* Luxury Premium Utilities - GPU accelerated */
   .luxury-card {
-    @apply bg-white border border-[var(--luxury-border)] rounded-xl overflow-hidden shadow-sm transition-all duration-300 hover:shadow-xl hover:-translate-y-0.5;
+    @apply bg-white border border-[var(--luxury-border)] rounded-xl overflow-hidden shadow-sm hover:shadow-xl hover:-translate-y-0.5;
+    transition: transform 0.3s ease-out, box-shadow 0.3s ease-out;
+    will-change: transform;
+    transform: translateZ(0);
   }
 
   .luxury-badge {
@@ -371,7 +385,7 @@ html {
   }
 }
 
-/* Custom keyframes */
+/* Custom keyframes - GPU composited properties only (transform, opacity) */
 @keyframes fadeIn {
   from {
     opacity: 0;
@@ -384,22 +398,22 @@ html {
 @keyframes slideUp {
   from {
     opacity: 0;
-    transform: translateY(20px);
+    transform: translate3d(0, 20px, 0);
   }
   to {
     opacity: 1;
-    transform: translateY(0);
+    transform: translate3d(0, 0, 0);
   }
 }
 
 @keyframes scaleIn {
   from {
     opacity: 0;
-    transform: scale(0.95);
+    transform: scale3d(0.95, 0.95, 1);
   }
   to {
     opacity: 1;
-    transform: scale(1);
+    transform: scale3d(1, 1, 1);
   }
 }
 
@@ -435,13 +449,21 @@ html {
   animation: voicePulse 1.5s ease-in-out infinite;
 }
 
-/* Staggered animation delay utilities */
+/* Staggered animation delay utilities - using GPU-composited properties only */
+/* These use opacity and transform only to avoid layout thrashing */
 .stagger-1 { animation-delay: 0.1s; }
 .stagger-2 { animation-delay: 0.2s; }
 .stagger-3 { animation-delay: 0.3s; }
 .stagger-4 { animation-delay: 0.4s; }
 .stagger-5 { animation-delay: 0.5s; }
 .stagger-6 { animation-delay: 0.6s; }
+
+/* GPU-accelerated property card animations */
+.property-card-animate {
+  will-change: transform, opacity;
+  transform: translateZ(0);
+  backface-visibility: hidden;
+}
 
 /* Bottom tab navigation for mobile-first design */
 @layer components {

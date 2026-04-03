@@ -49,8 +49,9 @@ const SlideImage = memo(function SlideImage({
   index: number
   isActive: boolean 
 }) {
-  // Only render the first slide initially, others load on demand
-  const shouldRender = index === 0 || isActive || index === 1
+  // First slide always renders for LCP, others load on demand
+  const isFirstSlide = index === 0
+  const shouldRender = isFirstSlide || isActive || index === 1
 
   if (!shouldRender) return null
 
@@ -61,26 +62,28 @@ const SlideImage = memo(function SlideImage({
         src={slide.image || "/placeholder.svg"} 
         alt={slide.title || "Banner"} 
         fill
-        priority={index === 0}
-        loading={index === 0 ? "eager" : "lazy"}
+        priority={isFirstSlide}
+        loading={isFirstSlide ? "eager" : "lazy"}
         sizes="(max-width: 767px) 1px, 100vw"
-        quality={index === 0 ? 85 : 75}
-        fetchPriority={index === 0 ? "high" : "low"}
+        quality={isFirstSlide ? 85 : 75}
+        fetchPriority={isFirstSlide ? "high" : "low"}
+        decoding={isFirstSlide ? "sync" : "async"}
         className={cn(
           "object-contain hidden md:block",
           !isActive && "opacity-0"
         )}
       />
-      {/* Mobile Image - Explicit dimensions to prevent CLS */}
+      {/* Mobile Image - LCP element */}
       <Image 
         src={slide.mobileImage || slide.image || "/placeholder.svg"} 
         alt={slide.title || "Banner"} 
         fill
-        priority={index === 0}
-        loading={index === 0 ? "eager" : "lazy"}
+        priority={isFirstSlide}
+        loading={isFirstSlide ? "eager" : "lazy"}
         sizes="(min-width: 768px) 1px, 100vw"
-        quality={index === 0 ? 80 : 70}
-        fetchPriority={index === 0 ? "high" : "low"}
+        quality={isFirstSlide ? 80 : 70}
+        fetchPriority={isFirstSlide ? "high" : "low"}
+        decoding={isFirstSlide ? "sync" : "async"}
         className={cn(
           "object-cover md:hidden",
           !isActive && "opacity-0"
@@ -107,21 +110,8 @@ function BannerSlider() {
 
   return (
     <div 
-      className="relative w-full overflow-hidden bg-gray-100"
-      // Fixed aspect ratio container to prevent CLS
-      style={{ 
-        aspectRatio: "3/4",
-      }}
+      className="relative w-full overflow-hidden bg-gray-100 aspect-[3/4] md:aspect-[10/3]"
     >
-      {/* CSS media query for desktop aspect ratio */}
-      <style jsx>{`
-        @media (min-width: 768px) {
-          div {
-            aspect-ratio: 10/3 !important;
-          }
-        }
-      `}</style>
-      
       {/* Slides */}
       {slides.map((slide, index) => (
         <div

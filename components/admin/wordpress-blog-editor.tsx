@@ -802,10 +802,25 @@ function BlockSettingsPanel({
                   <button
                     key={color}
                     type="button"
-                    className="w-6 h-6 rounded border border-border"
+                    onClick={() => editor?.chain().focus().setColor(color).run()}
+                    className={cn(
+                      "w-6 h-6 rounded border-2 transition-all hover:scale-110",
+                      editor?.getAttributes("textStyle").color === color
+                        ? "border-primary ring-2 ring-primary/30"
+                        : "border-border"
+                    )}
                     style={{ backgroundColor: color }}
+                    title={`Set text color to ${color}`}
                   />
                 ))}
+                <button
+                  type="button"
+                  onClick={() => editor?.chain().focus().unsetColor().run()}
+                  className="w-6 h-6 rounded border-2 border-border flex items-center justify-center text-xs hover:bg-muted"
+                  title="Remove text color"
+                >
+                  <X className="h-3 w-3" />
+                </button>
               </div>
             </div>
             <div>
@@ -815,8 +830,22 @@ function BlockSettingsPanel({
                   <button
                     key={color}
                     type="button"
-                    className="w-6 h-6 rounded border border-border"
+                    onClick={() => {
+                      if (color === "transparent") {
+                        editor?.chain().focus().unsetHighlight().run()
+                      } else {
+                        editor?.chain().focus().setHighlight({ color }).run()
+                      }
+                    }}
+                    className={cn(
+                      "w-6 h-6 rounded border-2 transition-all hover:scale-110",
+                      (color === "transparent" && !editor?.getAttributes("highlight").color) ||
+                      editor?.getAttributes("highlight").color === color
+                        ? "border-primary ring-2 ring-primary/30"
+                        : "border-border"
+                    )}
                     style={{ backgroundColor: color === "transparent" ? "white" : color }}
+                    title={color === "transparent" ? "Remove background color" : `Set background to ${color}`}
                   />
                 ))}
               </div>

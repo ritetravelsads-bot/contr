@@ -132,45 +132,29 @@ export default function SlugPage() {
     }
   }, [slug])
 
-  // Fetch location data
+  // Fetch location data and properties together
   useEffect(() => {
     if (pageType !== 'location') return
 
-    const fetchLocation = async () => {
+    const fetchLocationData = async () => {
       try {
         setLoading(true)
-        const response = await fetch(`/api/locations/${slug}`)
+        // The API returns both location and properties in a single response
+        const response = await fetch(`/api/locations/${slug}?page=${currentPage}&limit=12`)
         if (!response.ok) throw new Error('Failed to fetch location')
         const data = await response.json()
-        setLocation(data)
-      } catch (error) {
-        console.error('Error fetching location:', error)
-      }
-    }
-
-    fetchLocation()
-  }, [slug, pageType])
-
-  // Fetch location properties
-  useEffect(() => {
-    if (pageType !== 'location') return
-
-    const fetchProperties = async () => {
-      try {
-        const response = await fetch(`/api/locations/${slug}/properties?page=${currentPage}&sort=${sortBy}`)
-        if (!response.ok) throw new Error('Failed to fetch properties')
-        const data = await response.json()
-        setProperties(data.properties)
+        setLocation(data.location)
+        setProperties(data.properties || [])
         setPagination(data.pagination)
-        setLoading(false)
       } catch (error) {
-        console.error('Error fetching properties:', error)
+        console.error('[v0] Error fetching location:', error)
+      } finally {
         setLoading(false)
       }
     }
 
-    fetchProperties()
-  }, [slug, currentPage, sortBy, pageType])
+    fetchLocationData()
+  }, [slug, currentPage, pageType])
 
   // Build query string from type slug
   const buildTypeQueryString = () => {
@@ -254,9 +238,8 @@ export default function SlugPage() {
                       query.set('view', 'grid')
                       router.push(`/${slug}?${query.toString()}`)
                     }}
-                    className={`p-1.5 rounded transition-colors ${
-                      viewLayout === 'grid' ? 'bg-[var(--luxury-navy)] text-white' : 'text-gray-600 hover:bg-gray-100'
-                    }`}
+                    className={`p-1.5 rounded transition-colors ${viewLayout === 'grid' ? 'bg-[var(--luxury-navy)] text-white' : 'text-gray-600 hover:bg-gray-100'
+                      }`}
                   >
                     <Grid3X3 className="h-4 w-4" />
                   </button>
@@ -267,9 +250,8 @@ export default function SlugPage() {
                       query.set('view', 'list')
                       router.push(`/${slug}?${query.toString()}`)
                     }}
-                    className={`p-1.5 rounded transition-colors ${
-                      viewLayout === 'list' ? 'bg-[var(--luxury-navy)] text-white' : 'text-gray-600 hover:bg-gray-100'
-                    }`}
+                    className={`p-1.5 rounded transition-colors ${viewLayout === 'list' ? 'bg-[var(--luxury-navy)] text-white' : 'text-gray-600 hover:bg-gray-100'
+                      }`}
                   >
                     <List className="h-4 w-4" />
                   </button>
@@ -395,7 +377,6 @@ export default function SlugPage() {
             )}
           </div>
         </main>
-        <Footer />
       </>
     )
   }
@@ -465,11 +446,10 @@ export default function SlugPage() {
                       query.set('view', 'grid')
                       router.push(`/${slug}?${query.toString()}`)
                     }}
-                    className={`p-1.5 rounded transition-colors ${
-                      viewLayout === 'grid'
+                    className={`p-1.5 rounded transition-colors ${viewLayout === 'grid'
                         ? 'bg-[var(--luxury-navy)] text-white'
                         : 'text-gray-600 hover:bg-gray-100'
-                    }`}
+                      }`}
                   >
                     <Grid3X3 className="h-4 w-4" />
                   </button>
@@ -480,11 +460,10 @@ export default function SlugPage() {
                       query.set('view', 'list')
                       router.push(`/${slug}?${query.toString()}`)
                     }}
-                    className={`p-1.5 rounded transition-colors ${
-                      viewLayout === 'list'
+                    className={`p-1.5 rounded transition-colors ${viewLayout === 'list'
                         ? 'bg-[var(--luxury-navy)] text-white'
                         : 'text-gray-600 hover:bg-gray-100'
-                    }`}
+                      }`}
                   >
                     <List className="h-4 w-4" />
                   </button>
@@ -567,7 +546,6 @@ export default function SlugPage() {
           )}
         </div>
       </main>
-      <Footer />
     </>
   )
 }

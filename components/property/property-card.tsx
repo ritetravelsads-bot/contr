@@ -32,10 +32,10 @@ export default function PropertyCard({ property }: PropertyCardProps) {
   const priceDisplay = property.price_range || formatPriceRange(property.lowest_price, property.max_price)
   
   return (
-    <Link href={`/properties/${property.slug || property._id}`}>
-      <div className="bento-card hover:shadow-lg cursor-pointer group">
+    <Link href={`/properties/${property.slug || property._id}`} className="block min-h-[200px]">
+      <div className="bento-card hover:shadow-lg cursor-pointer group h-full">
         {/* Image with badges - fixed dimensions to prevent CLS */}
-        <div className="relative mb-2.5 overflow-hidden rounded bg-muted aspect-[4/3] hover:shadow-md transition-shadow">
+        <div className="relative mb-2.5 overflow-hidden rounded bg-muted aspect-[4/3] min-h-[120px] hover:shadow-md transition-shadow">
           <Image
             src={imageUrl || "/placeholder.svg"}
             alt={property.property_name || "Property"}
