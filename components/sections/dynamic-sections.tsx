@@ -40,25 +40,25 @@ function PropertyCardEnhanced({ property, index }: { property: Property; index: 
   // Validate and process image URL
   const getImageUrl = () => {
     if (!property.main_thumbnail) return "/placeholder.jpg"
-    
+
     // If it's a full URL (http/https), use it directly
     if (property.main_thumbnail.startsWith('http://') || property.main_thumbnail.startsWith('https://')) {
       return property.main_thumbnail
     }
-    
+
     // If it's a relative path without leading slash, add one
     if (!property.main_thumbnail.startsWith('/')) {
       return `/${property.main_thumbnail}`
     }
-    
+
     return property.main_thumbnail
   }
 
   const imageUrl = getImageUrl()
 
   return (
-    <Link 
-      href={`/properties/${property.slug || property._id}`} 
+    <Link
+      href={`/properties/${property.slug || property._id}`}
       className={cn(
         "group relative bg-card rounded-2xl overflow-hidden",
         "border border-border/50 hover:border-primary/20",
@@ -86,10 +86,10 @@ function PropertyCardEnhanced({ property, index }: { property: Property; index: 
           )}
           onError={() => setImageLoaded(false)}
         />
-        
+
         {/* Gradient Overlay */}
         <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
-        
+
         {/* Badges */}
         <div className="absolute top-3 left-3 flex gap-2">
           {property.is_featured && (
@@ -103,7 +103,7 @@ function PropertyCardEnhanced({ property, index }: { property: Property; index: 
             </span>
           )}
         </div>
-        
+
         {/* Action Buttons */}
         <div className={cn(
           "absolute top-3 right-3 flex flex-col gap-2",
@@ -240,8 +240,8 @@ export default function DynamicSections() {
   return (
     <div className="space-y-0">
       {sections.map((section, sectionIndex) => (
-        <section 
-          key={section._id} 
+        <section
+          key={section._id}
           id={`section-${section._id}`}
           ref={(el) => { if (el) sectionRefs.current.set(section._id, el) }}
           className={cn(
@@ -254,8 +254,8 @@ export default function DynamicSections() {
             <div className={cn(
               "flex flex-col sm:flex-row sm:items-end sm:justify-between gap-4 mb-8",
               "transition-all duration-700",
-              visibleSections.has(`section-${section._id}`) 
-                ? "opacity-100 translate-y-0" 
+              visibleSections.has(`section-${section._id}`)
+                ? "opacity-100 translate-y-0"
                 : "opacity-0 translate-y-4"
             )}>
               <div className="space-y-2">
@@ -268,13 +268,13 @@ export default function DynamicSections() {
                   </p>
                 )}
               </div>
-              
-              <Link 
+
+              <Link
                 href={`/properties${section.filterParams ? `?${section.filterParams}` : ""}`}
                 className={cn(
                   "inline-flex items-center gap-2 px-5 py-2.5 rounded-full",
-                  "bg-primary/5 hover:bg-primary/10 border border-primary/20",
-                  "text-primary font-medium text-sm",
+                  "bg-primary/5 hover:bg-primary/10 border border-primary/20 text-primary",
+                  "text-white bg-primary font-medium text-sm",
                   "transition-all duration-300",
                   "hover:gap-3 group"
                 )}
@@ -288,8 +288,8 @@ export default function DynamicSections() {
             {section.properties && section.properties.length > 0 ? (
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-5 md:gap-6">
                 {section.properties.slice(0, section.display_limit).map((property, index) => (
-                  <PropertyCardEnhanced 
-                    key={property._id} 
+                  <PropertyCardEnhanced
+                    key={property._id}
                     property={property}
                     index={index}
                   />
