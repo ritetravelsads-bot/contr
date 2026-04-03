@@ -65,14 +65,14 @@ function PropertyCardEnhanced({ property, index }: { property: Property; index: 
         "shadow-sm hover:shadow-xl",
         "transition-[transform,box-shadow,border-color] duration-300 ease-out",
         "hover:-translate-y-1",
-        // Use transform-based animations instead of filter-based for GPU acceleration
-        "will-change-transform"
+        // Minimum touch target size of 48px, GPU acceleration
+        "min-h-[200px] will-change-transform"
       )}
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
     >
       {/* Image Container */}
-      <div className="relative h-48 md:h-52 overflow-hidden bg-muted">
+      <div className="relative h-40 md:h-52 overflow-hidden bg-muted">
         <Image
           src={imageUrl}
           alt={property.property_name}
@@ -117,12 +117,13 @@ function PropertyCardEnhanced({ property, index }: { property: Property; index: 
             }}
             aria-label={isLiked ? "Remove from favorites" : "Add to favorites"}
             className={cn(
-              "p-2 rounded-full backdrop-blur-md shadow-lg",
+              // Minimum 44x44px touch target for accessibility
+              "p-3 rounded-full backdrop-blur-md shadow-lg min-w-[44px] min-h-[44px] flex items-center justify-center",
               "transition-all duration-200",
               isLiked ? "bg-rose-500 text-white" : "bg-white/90 text-foreground hover:bg-white"
             )}
           >
-            <Heart className={cn("h-4 w-4", isLiked && "fill-current")} aria-hidden="true" />
+            <Heart className={cn("h-5 w-5", isLiked && "fill-current")} aria-hidden="true" />
           </button>
         </div>
 

@@ -92,7 +92,8 @@ export function PropertyWhatsAppLink({ propertyName }: { propertyName: string })
       onClick={(e) => e.stopPropagation()}
       className={cn(
         "flex items-center justify-center",
-        "w-8 h-8 rounded-full",
+        // Minimum 44x44px touch target for accessibility
+        "w-10 h-10 min-w-[44px] min-h-[44px] rounded-full",
         "bg-[#25D366] hover:bg-[#20BD5A] text-white",
         "shadow-md hover:shadow-lg",
         "transition-all duration-200 hover:scale-110",
@@ -101,7 +102,7 @@ export function PropertyWhatsAppLink({ propertyName }: { propertyName: string })
       aria-label={`Chat about ${propertyName} on WhatsApp`}
       title="Enquire on WhatsApp"
     >
-      <MessageCircle className="h-4 w-4" />
+      <MessageCircle className="h-5 w-5" />
     </a>
   )
 }
