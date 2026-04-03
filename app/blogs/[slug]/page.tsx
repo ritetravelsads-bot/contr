@@ -320,14 +320,14 @@ export default async function BlogPostPage({
                           className="group border border-border rounded-lg bg-card overflow-hidden"
                         >
                           <summary className="flex items-center justify-between cursor-pointer px-5 py-4 font-medium text-foreground hover:bg-muted/50 transition-colors">
-                            <span className="flex items-center gap-3">
+                            <h3 className="flex items-center gap-3 text-base font-medium m-0">
                               <span className="flex-shrink-0 w-6 h-6 rounded-full bg-primary/10 text-primary text-sm font-semibold flex items-center justify-center">
                                 {index + 1}
                               </span>
                               {faq.question}
-                            </span>
+                            </h3>
                             <svg
-                              className="h-5 w-5 text-muted-foreground transition-transform group-open:rotate-180"
+                              className="h-5 w-5 text-muted-foreground transition-transform group-open:rotate-180 flex-shrink-0"
                               fill="none"
                               viewBox="0 0 24 24"
                               stroke="currentColor"
@@ -335,8 +335,10 @@ export default async function BlogPostPage({
                               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
                             </svg>
                           </summary>
-                          <div className="px-5 pb-4 pt-2 text-muted-foreground leading-relaxed border-t border-border bg-muted/30">
-                            {faq.answer}
+                          <div className="px-5 pb-4 pt-2 border-t border-border bg-muted/30">
+                            <p className="text-muted-foreground leading-relaxed m-0">
+                              {faq.answer}
+                            </p>
                           </div>
                         </details>
                       ))}
