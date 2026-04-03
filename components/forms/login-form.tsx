@@ -5,12 +5,14 @@ import { useState } from "react"
 import { useRouter } from "next/navigation"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
+import GoogleSignInButton from "@/components/auth/google-sign-in-button"
 
 export default function LoginForm() {
   const router = useRouter()
   const [formData, setFormData] = useState({ email: "", password: "" })
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState("")
+  const [googleError, setGoogleError] = useState("")
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target
@@ -86,10 +88,28 @@ export default function LoginForm() {
       </div>
 
       {error && <p className="text-xs text-red-600 bg-red-50 p-2 rounded">{error}</p>}
+      {googleError && <p className="text-xs text-red-600 bg-red-50 p-2 rounded">{googleError}</p>}
 
       <Button type="submit" disabled={loading} className="w-full h-8 text-xs">
         {loading ? "Signing in..." : "Sign In"}
       </Button>
+
+      <div className="relative my-4">
+        <div className="absolute inset-0 flex items-center">
+          <span className="w-full border-t border-border" />
+        </div>
+        <div className="relative flex justify-center text-xs">
+          <span className="bg-background px-2 text-muted-foreground">Or continue with</span>
+        </div>
+      </div>
+
+      <GoogleSignInButton 
+        mode="login" 
+        onError={(err) => {
+          setGoogleError(err)
+          setError("")
+        }}
+      />
     </form>
   )
 }

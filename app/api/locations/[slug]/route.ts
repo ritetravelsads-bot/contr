@@ -22,20 +22,40 @@ export async function GET(req: NextRequest, { params }: { params: Promise<{ slug
     // Build property query based on location
     const propertyQuery: Record<string, any> = { status: "active" }
     
-    // Match properties by city, neighborhood, or address containing the location name
-    propertyQuery.$or = [
-      { city: { $regex: location.name, $options: "i" } },
-      { neighborhood: { $regex: location.name, $options: "i" } },
-      { address: { $regex: location.name, $options: "i" } },
-    ]
+    // Build search terms from location name (e.g., "new-gurgaon" -> ["new", "gurgaon", "new-gurgaon", "new gurgaon"])
+    const locationName = location.name
+    const locationSlug = location.slug || slug
+    const searchTerms = [
+      locationName,
+      locationSlug,
+      locationSlug.replace(/-/g, " "), // Convert slug to space-separated
+      locationSlug.replace(/-/g, ""), // Remove hyphens entirely
+    ].filter(Boolean)
+    
+    // Create regex patterns for all search terms
+    const searchPatterns = searchTerms.map(term => ({ $regex: term, $options: "i" }))
+    
+    // Match properties by searching in address and neighborhood (locality) fields
+    const searchConditions: any[] = []
+    
+    for (const pattern of searchPatterns) {
+      // Search in address field
+      searchConditions.push({ address: pattern })
+      // Search in neighborhood/locality field
+      searchConditions.push({ neighborhood: pattern })
+      // Also search in city for broader matches
+      searchConditions.push({ city: pattern })
+    }
 
-    // If location has specific city/state, use those
+    // If location has specific city/state, add those to search conditions
     if (location.city) {
-      propertyQuery.$or.push({ city: { $regex: location.city, $options: "i" } })
+      searchConditions.push({ city: { $regex: location.city, $options: "i" } })
     }
     if (location.state) {
-      propertyQuery.$or.push({ state: { $regex: location.state, $options: "i" } })
+      searchConditions.push({ state: { $regex: location.state, $options: "i" } })
     }
+    
+    propertyQuery.$or = searchConditions
 
     // Get total count
     const totalProperties = await db.collection("properties").countDocuments(propertyQuery)
