@@ -63,10 +63,13 @@ export default function MegaMenuHeader() {
         })
         if (response.ok) {
           const data = await response.json()
-          setCurrentUser(data.user)
+          // API returns user: null for unauthenticated users
+          if (data.user) {
+            setCurrentUser(data.user)
+          }
         }
       } catch {
-        // User not logged in
+        // Network error - user not logged in
       }
     }
 

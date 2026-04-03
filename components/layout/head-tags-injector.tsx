@@ -39,8 +39,18 @@ export default function HeadTagsInjector() {
         
         if (tagName === "script") {
           const src = child.getAttribute("src")
-          // Skip if script with same src already exists
           if (src) {
+            // Skip broken/invalid script URLs to avoid 404 errors
+            // Filter out known problematic patterns
+            if (
+              src.includes("insights/script") ||
+              src.includes("undefined") ||
+              src.includes("null") ||
+              !src.startsWith("http") && !src.startsWith("/") && !src.startsWith("//")
+            ) {
+              return
+            }
+            // Skip if script with same src already exists
             const existing = document.head.querySelector(`script[src="${src}"]`)
             if (existing) return
           }
