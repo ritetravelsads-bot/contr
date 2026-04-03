@@ -273,7 +273,7 @@ export default function DynamicSections() {
                 href={`/properties${section.filterParams ? `?${section.filterParams}` : ""}`}
                 className={cn(
                   "inline-flex items-center gap-2 px-5 py-2.5 rounded-full",
-                  "bg-primary/5 hover:bg-primary/10 border border-primary/20 text-primary",
+                  "bg-primary/5 hover:bg-primary/10 hover:text-primary border border-primary/20 text-primary",
                   "text-white bg-primary font-medium text-sm",
                   "transition-all duration-300",
                   "hover:gap-3 group"
