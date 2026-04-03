@@ -6,6 +6,7 @@ import "./globals.css"
 import "@/styles/blog-content.css"
 import FrontendLayout from "@/components/layout/frontend-layout"
 import CustomHeadTags from "@/components/layout/custom-head-tags"
+import HeadTagsInjector from "@/components/layout/head-tags-injector"
 
 // Disable caching for this layout to ensure custom head tags are always fresh
 export const revalidate = 0
@@ -123,6 +124,7 @@ export default function RootLayout({
         <CustomHeadTags />
       </head>
       <body className={`${geist.className} antialiased`}>
+        <HeadTagsInjector />
         <FrontendLayout>
           {children}
         </FrontendLayout>
