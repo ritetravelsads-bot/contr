@@ -107,21 +107,8 @@ function BannerSlider() {
 
   return (
     <div 
-      className="relative w-full overflow-hidden bg-gray-100"
-      // Fixed aspect ratio container to prevent CLS
-      style={{ 
-        aspectRatio: "3/4",
-      }}
+      className="relative w-full overflow-hidden bg-gray-100 aspect-[3/4] md:aspect-[10/3]"
     >
-      {/* CSS media query for desktop aspect ratio */}
-      <style jsx>{`
-        @media (min-width: 768px) {
-          div {
-            aspect-ratio: 10/3 !important;
-          }
-        }
-      `}</style>
-      
       {/* Slides */}
       {slides.map((slide, index) => (
         <div

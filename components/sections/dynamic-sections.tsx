@@ -63,11 +63,11 @@ function PropertyCardEnhanced({ property, index }: { property: Property; index: 
         "group relative bg-card rounded-2xl overflow-hidden",
         "border border-border/50 hover:border-primary/20",
         "shadow-sm hover:shadow-xl",
-        "transition-all duration-500 ease-out",
+        "transition-[transform,box-shadow,border-color] duration-300 ease-out",
         "hover:-translate-y-1",
-        "animate-in fade-in slide-in-from-bottom-4",
+        // Use transform-based animations instead of filter-based for GPU acceleration
+        "will-change-transform"
       )}
-      style={{ animationDelay: `${index * 100}ms`, animationFillMode: "backwards" }}
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
     >

@@ -81,8 +81,7 @@ export default function RecommendedProperty() {
             <Link
               key={property._id}
               href={`/properties/${property._id}`}
-              className="relative block hover:shadow-2xl transition-shadow"
-              style={{ animationDelay: `${index * 100}ms` }}
+              className="relative block transition-[transform,box-shadow] duration-300 ease-out hover:shadow-2xl will-change-transform"
             >
               <div className="relative h-[450px] rounded-2xl overflow-hidden bg-white shadow-lg transition-all duration-500 hover:shadow-2xl hover:-translate-y-2">
                 {/* Image Container with Parallax Effect */}
