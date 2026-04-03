@@ -108,7 +108,8 @@
     "vaul": "^1.1.2",
     "ws": "latest",
     "xlsx": "0.18.5",
-    "zod": "3.25.76"
+    "zod": "3.25.76",
+    "firebase": "^11.9.0"
   },
   "devDependencies": {
     "@radix-ui/react-context-menu": "2.2.4",
