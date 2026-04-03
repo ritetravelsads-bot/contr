@@ -12,16 +12,21 @@ export async function GET(req: NextRequest, { params }: { params: Promise<{ slug
     
     const db = await getDatabase()
 
-    // Find location by slug
-    const location = await db.collection("locations").findOne({ slug })
+    // Find location by slug from database
+    const dbLocation = await db.collection("locations").findOne({ slug })
 
-    if (!location) {
-      return NextResponse.json({ error: "Location not found" }, { status: 404 })
+    // If location doesn't exist in DB, create a virtual location from the slug
+    // This allows location pages to work even if not all locations are in the database
+    const location = dbLocation || {
+      _id: slug,
+      name: slug.split('-').map(word => word.charAt(0).toUpperCase() + word.slice(1)).join(' '),
+      slug: slug,
+      type: 'locality',
+      city: 'Gurgaon',
+      state: 'Haryana',
     }
 
     // Build property query based on location
-    // First, check if there are properties that don't have "active" status
-    // to understand what statuses exist in the database
     const propertyQuery: Record<string, any> = {}
     
     // Build search terms from location name (e.g., "golf-course-road" -> ["golf course road", "golf-course-road"])
@@ -92,10 +97,10 @@ export async function GET(req: NextRequest, { params }: { params: Promise<{ slug
       .limit(limit)
       .toArray()
 
-    // Serialize
+    // Serialize - handle both database locations (with ObjectId) and virtual locations
     const serializedLocation = {
       ...location,
-      _id: location._id.toString(),
+      _id: typeof location._id === 'object' ? location._id.toString() : location._id,
     }
 
     const serializedProperties = properties.map((p) => ({
