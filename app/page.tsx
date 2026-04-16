@@ -1,7 +1,30 @@
 import { Suspense } from "react"
 import dynamic from "next/dynamic"
 import BannerSlider from "@/components/sections/banner-slider"
-import AdvancedSearch from "@/components/sections/advanced-search"
+
+// Lazy load AdvancedSearch but keep it visible above fold with SSR
+const AdvancedSearch = dynamic(() => import("@/components/sections/advanced-search"), {
+  ssr: true,
+  loading: () => (
+    <div className="relative -mt-10 z-10 max-w-5xl mx-auto px-4">
+      <div className="bg-white rounded-2xl shadow-2xl overflow-hidden min-h-[220px] md:min-h-[200px] animate-pulse">
+        <div className="p-6 md:p-8">
+          <div className="flex items-center gap-2 mb-4">
+            <div className="w-9 h-9 bg-gray-200 rounded-lg" />
+            <div>
+              <div className="h-5 w-48 bg-gray-200 rounded mb-1" />
+              <div className="h-3 w-36 bg-gray-100 rounded" />
+            </div>
+          </div>
+          <div className="flex flex-col sm:flex-row gap-3">
+            <div className="flex-1 h-14 bg-gray-100 rounded-xl" />
+            <div className="h-14 w-32 bg-primary/20 rounded-xl" />
+          </div>
+        </div>
+      </div>
+    </div>
+  ),
+})
 
 // Force dynamic rendering to ensure fresh data on every page load
 export const revalidate = 0

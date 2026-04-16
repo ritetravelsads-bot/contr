@@ -4,14 +4,14 @@ import type React from "react"
 import { Suspense, lazy } from "react"
 import { usePathname } from "next/navigation"
 import MegaMenuHeader from "./mega-menu-header"
-import BottomNav from "./bottom-nav"
-import WhatsAppButton from "@/components/ui/whatsapp-button"
 import NavigationProgress from "./navigation-progress"
 import RoutePrefetcher from "./route-prefetcher"
 import { Toaster } from "@/components/ui/sonner"
 
-// Lazy load footer to reduce initial bundle and prevent CLS
+// Lazy load non-critical layout components to reduce initial bundle
 const Footer = lazy(() => import("./footer"))
+const BottomNav = lazy(() => import("./bottom-nav"))
+const WhatsAppButton = lazy(() => import("@/components/ui/whatsapp-button"))
 
 export default function FrontendLayout({ children }: { children: React.ReactNode }) {
   const pathname = usePathname()
@@ -39,8 +39,12 @@ export default function FrontendLayout({ children }: { children: React.ReactNode
       <Suspense fallback={<div className="min-h-[600px] bg-gradient-to-b from-gray-50 to-white" />}>
         <Footer />
       </Suspense>
-      <BottomNav />
-      <WhatsAppButton />
+      <Suspense fallback={null}>
+        <BottomNav />
+      </Suspense>
+      <Suspense fallback={null}>
+        <WhatsAppButton />
+      </Suspense>
       <Toaster position="top-center" richColors closeButton />
     </>
   )

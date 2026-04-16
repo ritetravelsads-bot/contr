@@ -4,7 +4,28 @@ import { useState, useEffect, useRef, useCallback } from "react"
 import { Search, X, Mic, MicOff, ArrowRight } from "lucide-react"
 import { useRouter } from "next/navigation"
 import { cn } from "@/lib/utils"
-import { useVoiceSearch } from "@/hooks/use-voice-search"
+
+// Lazy load voice search hook to reduce initial bundle size
+const useVoiceSearchLazy = () => {
+  const [voiceModule, setVoiceModule] = useState<any>(null)
+  
+  useEffect(() => {
+    // Only load voice search when search is opened
+    const loadVoiceSearch = () => {
+      import("@/hooks/use-voice-search").then((mod) => {
+        setVoiceModule(() => mod.useVoiceSearch)
+      })
+    }
+    
+    if ('requestIdleCallback' in window) {
+      window.requestIdleCallback(loadVoiceSearch, { timeout: 4000 })
+    } else {
+      setTimeout(loadVoiceSearch, 2000)
+    }
+  }, [])
+  
+  return voiceModule
+}
 
 interface SearchResult {
   property_name: string
@@ -23,13 +44,20 @@ export default function HeaderSearch() {
   const router = useRouter()
   const debounceRef = useRef<ReturnType<typeof setTimeout> | null>(null)
 
-  const { isListening, isSupported: voiceSupported, startListening, stopListening } = useVoiceSearch({
+  // Use lazy-loaded voice search
+  const useVoiceSearchHook = useVoiceSearchLazy()
+  const voiceSearch = useVoiceSearchHook?.({
     lang: "en-US",
-    onResult: (text) => {
+    onResult: (text: string) => {
       setQuery(text)
       fetchResults(text)
     },
   })
+  
+  const isListening = voiceSearch?.isListening ?? false
+  const voiceSupported = voiceSearch?.isSupported ?? false
+  const startListening = voiceSearch?.startListening ?? (() => {})
+  const stopListening = voiceSearch?.stopListening ?? (() => {})
 
   const fetchResults = useCallback(async (searchTerm: string) => {
     if (searchTerm.length < 2) {

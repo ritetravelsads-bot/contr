@@ -97,6 +97,7 @@ export default function RootLayout({
 
         {/* Preload critical LCP images - must exactly match srcset in banner-slider.tsx */}
         {/* Using native picture with /_next/image URLs eliminates both resource load delay and render delay */}
+        {/* Note: crossOrigin="anonymous" is required for preload to be used by the img element */}
         <link
           rel="preload"
           as="image"
