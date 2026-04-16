@@ -80,229 +80,115 @@ export function MasterPlanSection({ masterPlan, propertyName }: MasterPlanSectio
 
   if (!masterPlan) return null
 
-  // Lightbox component rendered via portal
+  // Lightbox component rendered via portal - Mobile optimized
   const lightboxContent = showLightbox && mounted ? (
     <div 
-      style={{
-        position: 'fixed',
-        top: 0,
-        left: 0,
-        right: 0,
-        bottom: 0,
-        width: '100vw',
-        height: '100vh',
-        zIndex: 99999,
-        backgroundColor: 'rgba(0, 0, 0, 0.97)',
-        display: 'flex',
-        flexDirection: 'column',
-      }}
+      className="fixed inset-0 w-screen h-screen bg-black/98 flex flex-col"
+      style={{ zIndex: 99999 }}
       onClick={closeLightbox}
     >
-      {/* Top Controls Bar */}
+      {/* Top Bar - Responsive */}
       <div 
-        style={{
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'space-between',
-          padding: '16px 20px',
-          backgroundColor: 'rgba(0, 0, 0, 0.8)',
-          borderBottom: '1px solid rgba(255, 255, 255, 0.15)',
-        }}
+        className="flex items-center justify-between px-3 py-2 md:px-5 md:py-3 bg-black/80 border-b border-white/10 shrink-0"
         onClick={(e) => e.stopPropagation()}
       >
         {/* Left: Image info */}
-        <div>
-          <p style={{ color: 'white', fontWeight: 600, fontSize: '16px', margin: 0 }}>
+        <div className="min-w-0">
+          <p className="text-white font-semibold text-sm md:text-base truncate">
             Master Plan
           </p>
-          <p style={{ color: 'rgba(255, 255, 255, 0.6)', fontSize: '14px', margin: '4px 0 0 0' }}>
+          <p className="text-white/60 text-xs md:text-sm hidden sm:block">
             {propertyName || "Project"} - Complete Layout
           </p>
         </div>
 
-        {/* Center: Zoom Controls */}
-        <div 
-          style={{
-            display: 'flex',
-            alignItems: 'center',
-            gap: '4px',
-            backgroundColor: 'rgba(255, 255, 255, 0.15)',
-            borderRadius: '12px',
-            padding: '6px',
-          }}
-        >
+        {/* Center: Zoom Controls - Compact on mobile */}
+        <div className="flex items-center gap-1 bg-white/10 rounded-lg p-1">
           <button
             onClick={zoomOutHandler}
             disabled={zoomLevel <= 0.5}
-            style={{
-              padding: '10px',
-              borderRadius: '8px',
-              background: 'transparent',
-              border: 'none',
-              color: 'white',
-              cursor: zoomLevel <= 0.5 ? 'not-allowed' : 'pointer',
-              opacity: zoomLevel <= 0.5 ? 0.4 : 1,
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-            }}
-            title="Zoom out (-)"
+            className="p-2 md:p-2.5 rounded-md text-white disabled:opacity-40 disabled:cursor-not-allowed hover:bg-white/10 transition-colors"
+            title="Zoom out"
           >
-            <ZoomOut style={{ width: '22px', height: '22px' }} />
+            <ZoomOut className="w-4 h-4 md:w-5 md:h-5" />
           </button>
-          <span 
-            style={{
-              padding: '8px 16px',
-              color: 'white',
-              fontSize: '14px',
-              fontWeight: 600,
-              minWidth: '70px',
-              textAlign: 'center',
-            }}
-          >
+          <span className="px-2 md:px-3 text-white text-xs md:text-sm font-semibold min-w-[50px] md:min-w-[60px] text-center">
             {Math.round(zoomLevel * 100)}%
           </span>
           <button
             onClick={zoomInHandler}
             disabled={zoomLevel >= 3}
-            style={{
-              padding: '10px',
-              borderRadius: '8px',
-              background: 'transparent',
-              border: 'none',
-              color: 'white',
-              cursor: zoomLevel >= 3 ? 'not-allowed' : 'pointer',
-              opacity: zoomLevel >= 3 ? 0.4 : 1,
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-            }}
-            title="Zoom in (+)"
+            className="p-2 md:p-2.5 rounded-md text-white disabled:opacity-40 disabled:cursor-not-allowed hover:bg-white/10 transition-colors"
+            title="Zoom in"
           >
-            <ZoomIn style={{ width: '22px', height: '22px' }} />
+            <ZoomIn className="w-4 h-4 md:w-5 md:h-5" />
           </button>
           <button
             onClick={resetZoom}
-            style={{
-              padding: '10px',
-              borderRadius: '8px',
-              background: 'transparent',
-              border: 'none',
-              color: 'white',
-              cursor: 'pointer',
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-            }}
-            title="Reset zoom (0)"
+            className="p-2 md:p-2.5 rounded-md text-white hover:bg-white/10 transition-colors"
+            title="Reset zoom"
           >
-            <RotateCcw style={{ width: '22px', height: '22px' }} />
+            <RotateCcw className="w-4 h-4 md:w-5 md:h-5" />
           </button>
         </div>
 
         {/* Right: Close button */}
         <button
           onClick={closeLightbox}
-          style={{
-            padding: '12px',
-            borderRadius: '10px',
-            backgroundColor: 'rgba(255, 255, 255, 0.15)',
-            border: 'none',
-            color: 'white',
-            cursor: 'pointer',
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-          }}
+          className="p-2 md:p-2.5 rounded-lg bg-white/10 text-white hover:bg-white/20 transition-colors"
           aria-label="Close lightbox"
         >
-          <X style={{ width: '26px', height: '26px' }} />
+          <X className="w-5 h-5 md:w-6 md:h-6" />
         </button>
       </div>
 
       {/* Main Image Area */}
       <div 
-        style={{
-          flex: 1,
-          position: 'relative',
-          overflow: 'auto',
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'center',
-          padding: '20px',
-        }}
+        className="flex-1 relative overflow-auto flex items-center justify-center p-2 md:p-5"
         onClick={(e) => e.stopPropagation()}
       >
         {/* Image Container with zoom */}
         <div 
-          style={{ 
-            position: 'relative',
-            transition: 'transform 0.2s ease-out',
-            transform: `scale(${zoomLevel})`,
-            width: '75vw',
-            height: '70vh',
-            maxWidth: '1100px',
-          }}
+          className="relative transition-transform duration-200 ease-out w-full h-full max-w-[95vw] md:max-w-[80vw] max-h-[75vh] md:max-h-[80vh]"
+          style={{ transform: `scale(${zoomLevel})` }}
         >
           <Image
             src={masterPlan}
             alt={`Master Plan - ${propertyName || "Project"}`}
             fill
-            style={{ objectFit: 'contain' }}
-            sizes="85vw"
+            className="object-contain"
+            sizes="(max-width: 768px) 95vw, 80vw"
             priority
           />
         </div>
       </div>
 
-      {/* Bottom Info Bar */}
+      {/* Bottom Info Bar - Mobile Friendly */}
       <div 
-        style={{
-          backgroundColor: 'rgba(0, 0, 0, 0.8)',
-          borderTop: '1px solid rgba(255, 255, 255, 0.15)',
-          padding: '16px 20px',
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'center',
-        }}
+        className="bg-black/80 border-t border-white/10 px-3 py-2 md:px-5 md:py-3 shrink-0"
         onClick={(e) => e.stopPropagation()}
       >
-        <a
-          href={masterPlan}
-          target="_blank"
-          rel="noopener noreferrer"
-          style={{
-            display: 'flex',
-            alignItems: 'center',
-            gap: '8px',
-            padding: '10px 20px',
-            backgroundColor: 'rgba(255, 255, 255, 0.15)',
-            border: 'none',
-            borderRadius: '10px',
-            color: 'white',
-            fontSize: '14px',
-            fontWeight: 500,
-            textDecoration: 'none',
-            cursor: 'pointer',
-          }}
-          onClick={(e) => e.stopPropagation()}
-        >
-          <Maximize2 style={{ width: '18px', height: '18px' }} />
-          Open Full Size
-        </a>
-      </div>
-
-      {/* Keyboard hint */}
-      <div 
-        style={{
-          position: 'absolute',
-          bottom: '85px',
-          left: '20px',
-          color: 'rgba(255, 255, 255, 0.5)',
-          fontSize: '12px',
-        }}
-      >
-        +/-: zoom | 0: reset | ESC: close
+        <div className="flex items-center justify-between gap-2">
+          <div className="min-w-0">
+            <p className="text-white text-xs md:text-sm font-medium truncate">
+              {propertyName || "Project"} Master Plan
+            </p>
+            <p className="text-white/50 text-[10px] md:text-xs hidden sm:block">
+              Pinch to zoom on touch devices
+            </p>
+          </div>
+          <a
+            href={masterPlan}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="flex items-center gap-1.5 md:gap-2 px-3 py-1.5 md:px-4 md:py-2 bg-white/10 hover:bg-white/20 rounded-lg text-white text-xs md:text-sm font-medium transition-colors shrink-0"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <Maximize2 className="w-3.5 h-3.5 md:w-4 md:h-4" />
+            <span className="hidden sm:inline">Open Full Size</span>
+            <span className="sm:hidden">Full</span>
+          </a>
+        </div>
       </div>
     </div>
   ) : null
@@ -326,15 +212,14 @@ export function MasterPlanSection({ masterPlan, propertyName }: MasterPlanSectio
         <div className="relative bg-card border border-border rounded-2xl overflow-hidden shadow-lg" style={{ maxHeight: "550px" }}>
           {/* Image Container */}
           <div 
-            className="relative bg-muted/50 cursor-zoom-in group"
-            style={{ height: "450px" }}
+            className="relative bg-muted/50 cursor-zoom-in group h-[300px] md:h-[450px]"
             onClick={openLightbox}
           >
             <Image
               src={masterPlan}
               alt={`Master Plan - ${propertyName || "Project"}`}
               fill
-              className="object-contain p-4"
+              className="object-contain p-3 md:p-4"
               sizes="(max-width: 768px) 100vw, 1200px"
               priority
             />
@@ -343,39 +228,40 @@ export function MasterPlanSection({ masterPlan, propertyName }: MasterPlanSectio
             <div className="absolute inset-0 bg-black/0 group-hover:bg-black/10 transition-colors duration-300 pointer-events-none" />
             
             {/* Action buttons - always visible on mobile */}
-            <div className="absolute top-3 right-3 flex items-center gap-2 md:opacity-0 md:group-hover:opacity-100 transition-opacity duration-300">
+            <div className="absolute top-2 right-2 md:top-3 md:right-3 flex items-center gap-2">
               <button
                 onClick={(e) => {
                   e.stopPropagation()
                   openLightbox()
                 }}
-                className="p-2.5 bg-black/70 hover:bg-black/90 backdrop-blur-sm rounded-lg text-white transition-colors"
+                className="p-2 md:p-2.5 bg-black/70 hover:bg-black/90 backdrop-blur-sm rounded-lg text-white transition-colors"
                 title="View fullscreen"
               >
-                <Maximize2 className="h-5 w-5" />
+                <Maximize2 className="h-4 w-4 md:h-5 md:w-5" />
               </button>
             </div>
 
             {/* Corner label */}
-            <div className="absolute top-3 left-3 px-3 py-1.5 bg-blue-500/90 rounded-lg text-white text-xs font-semibold">
+            <div className="absolute top-2 left-2 md:top-3 md:left-3 px-2 py-1 md:px-3 md:py-1.5 bg-blue-500/90 rounded-lg text-white text-[10px] md:text-xs font-semibold">
               Master Layout
             </div>
           </div>
 
           {/* Footer */}
-          <div className="px-4 py-2.5 border-t border-border bg-muted/30 flex items-center justify-between">
+          <div className="px-3 md:px-4 py-2 md:py-2.5 border-t border-border bg-muted/30 flex items-center justify-between">
             <div>
-              <p className="text-sm font-semibold text-foreground">Project Master Plan</p>
-              <p className="text-xs text-muted-foreground">
-                Overall project layout and amenities placement
+              <p className="text-xs md:text-sm font-semibold text-foreground">Project Master Plan</p>
+              <p className="text-[10px] md:text-xs text-muted-foreground">
+                Overall project layout and amenities
               </p>
             </div>
             <button
               onClick={openLightbox}
-              className="flex items-center gap-2 px-3 py-1.5 bg-blue-500/10 hover:bg-blue-500/20 border border-blue-500/20 rounded-lg text-blue-600 dark:text-blue-400 text-xs font-medium transition-colors"
+              className="flex items-center gap-1.5 md:gap-2 px-2.5 py-1 md:px-3 md:py-1.5 bg-blue-500/10 hover:bg-blue-500/20 border border-blue-500/20 rounded-lg text-blue-600 dark:text-blue-400 text-[10px] md:text-xs font-medium transition-colors"
             >
-              <ZoomIn className="h-3.5 w-3.5" />
-              View Full Size
+              <ZoomIn className="h-3 w-3 md:h-3.5 md:w-3.5" />
+              <span className="hidden sm:inline">View Full Size</span>
+              <span className="sm:hidden">View</span>
             </button>
           </div>
         </div>
