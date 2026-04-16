@@ -6,12 +6,13 @@ import { usePathname } from "next/navigation"
 import MegaMenuHeader from "./mega-menu-header"
 import NavigationProgress from "./navigation-progress"
 import RoutePrefetcher from "./route-prefetcher"
-import { Toaster } from "@/components/ui/sonner"
 
 // Lazy load non-critical layout components to reduce initial bundle
 const Footer = lazy(() => import("./footer"))
 const BottomNav = lazy(() => import("./bottom-nav"))
 const WhatsAppButton = lazy(() => import("@/components/ui/whatsapp-button"))
+// Lazy load Toaster to defer next-themes loading
+const LazyToaster = lazy(() => import("@/components/ui/sonner").then(mod => ({ default: mod.Toaster })))
 
 export default function FrontendLayout({ children }: { children: React.ReactNode }) {
   const pathname = usePathname()
@@ -45,7 +46,9 @@ export default function FrontendLayout({ children }: { children: React.ReactNode
       <Suspense fallback={null}>
         <WhatsAppButton />
       </Suspense>
-      <Toaster position="top-center" richColors closeButton />
+      <Suspense fallback={null}>
+        <LazyToaster position="top-center" richColors closeButton />
+      </Suspense>
     </>
   )
 }

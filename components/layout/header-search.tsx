@@ -1,10 +1,8 @@
 "use client"
 
 import { useState, useEffect, useRef, useCallback } from "react"
-import { Search, X, Mic, MicOff, ArrowRight } from "lucide-react"
+import { Search, X, ArrowRight } from "lucide-react"
 import { useRouter } from "next/navigation"
-import { cn } from "@/lib/utils"
-import { useVoiceSearch } from "@/hooks/use-voice-search"
 
 interface SearchResult {
   property_name: string
@@ -22,14 +20,6 @@ export default function HeaderSearch() {
   const containerRef = useRef<HTMLDivElement>(null)
   const router = useRouter()
   const debounceRef = useRef<ReturnType<typeof setTimeout> | null>(null)
-
-  const { isListening, isSupported: voiceSupported, startListening, stopListening } = useVoiceSearch({
-    lang: "en-US",
-    onResult: (text) => {
-      setQuery(text)
-      fetchResults(text)
-    },
-  })
 
   const fetchResults = useCallback(async (searchTerm: string) => {
     if (searchTerm.length < 2) {
@@ -139,23 +129,6 @@ export default function HeaderSearch() {
               }}
               className="flex-1 text-sm bg-transparent outline-none placeholder:text-muted-foreground/60 text-foreground"
             />
-
-            {/* Voice Search */}
-            {voiceSupported && (
-              <button
-                type="button"
-                onClick={isListening ? stopListening : startListening}
-                className={cn(
-                  "p-1 rounded-md transition-all",
-                  isListening
-                    ? "text-destructive voice-pulse"
-                    : "text-muted-foreground hover:text-primary"
-                )}
-                aria-label={isListening ? "Stop voice search" : "Search by voice"}
-              >
-                {isListening ? <MicOff className="h-4 w-4" /> : <Mic className="h-4 w-4" />}
-              </button>
-            )}
 
             <button
               onClick={() => {
