@@ -22,11 +22,11 @@ export default function FeaturedDevelopers() {
       try {
         const response = await fetch("/api/developers")
         const data = await response.json()
-        
+
         const developersWithProperties = (Array.isArray(data) ? data : [])
           .filter((dev: Developer) => dev.property_count > 0)
           .sort((a: Developer, b: Developer) => b.property_count - a.property_count)
-        
+
         setDevelopers(developersWithProperties)
       } catch (error) {
         console.error("Error fetching developers:", error)
@@ -70,7 +70,7 @@ export default function FeaturedDevelopers() {
   const duplicateRow = (row: Developer[]) => [...row, ...row]
 
   return (
-    <section 
+    <section
       className={cn(
         "w-full py-20 md:py-28 border-y border-slate-200 overflow-hidden",
         "bg-[#fcfcfc]",
@@ -94,7 +94,7 @@ export default function FeaturedDevelopers() {
             Builders
           </span>
         </h2>
-        
+
         <p className="text-slate-600 max-w-2xl mx-auto text-lg font-medium mt-6">
           The visionary architectural firms and developers shaping tomorrow&apos;s skylines.
         </p>
@@ -145,16 +145,16 @@ export default function FeaturedDevelopers() {
 }
 
 // Marquee Row Component
-function MarqueeRow({ 
-  developers, 
-  direction 
-}: { 
+function MarqueeRow({
+  developers,
+  direction
+}: {
   developers: Developer[]
-  direction: "left" | "right" 
+  direction: "left" | "right"
 }) {
   return (
     <div className="flex w-full overflow-hidden group/row">
-      <div 
+      <div
         className={cn(
           "flex gap-8 pr-8 w-max",
           direction === "right" ? "animate-scroll-right" : "animate-scroll-left",
@@ -178,7 +178,7 @@ function DeveloperCard({ developer }: { developer: Developer }) {
       className={cn(
         "flex-shrink-0 w-[220px] h-[110px]",
         "bg-white rounded-[4px]",
-        "flex items-center justify-center p-6",
+        "flex items-center justify-center",
         "border-2 border-slate-200",
         "shadow-[4px_4px_0px_0px_#cbd5e1]",
         "transition-all duration-200 ease-out",
