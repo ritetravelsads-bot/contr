@@ -21,7 +21,7 @@ const nextConfig = {
     minimumCacheTTL: 31536000,
   },
   experimental: {
-    optimizePackageImports: ["@radix-ui", "lucide-react"],
+    optimizePackageImports: ["@radix-ui", "lucide-react", "date-fns", "recharts"],
     ppr: false,
   },
   transpilePackages: [],
@@ -29,6 +29,25 @@ const nextConfig = {
     removeConsole: process.env.NODE_ENV === "production" ? { exclude: ["error", "warn"] } : false,
   },
   reactStrictMode: true,
+  
+  // Remove legacy polyfills for modern browsers only (saves ~14KB)
+  // Using Turbopack alias to replace polyfill module with empty file
+  turbopack: {
+    resolveAlias: {
+      '../build/polyfills/polyfill-module': './lib/modern-polyfill.js',
+      'next/dist/build/polyfills/polyfill-module': './lib/modern-polyfill.js',
+    },
+  },
+  
+  // Webpack fallback for when not using Turbopack
+  webpack(config) {
+    config.resolve.alias = {
+      ...config.resolve.alias,
+      '../build/polyfills/polyfill-module': false,
+      'next/dist/build/polyfills/polyfill-module': false,
+    };
+    return config;
+  },
   
   // Disable caching for API routes and pages to ensure fresh data
   async headers() {

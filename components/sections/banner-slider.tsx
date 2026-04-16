@@ -40,36 +40,45 @@ const slides = [
 ]
 
 // Static first slide rendered immediately without JS - critical for LCP
+// Using native <picture> element instead of Next.js Image to eliminate:
+// 1. Resource load delay from /_next/image processing
+// 2. Element render delay from JavaScript hydration
 function FirstSlideStatic() {
   return (
     <div className="absolute inset-0 z-10">
       <div className="absolute inset-0">
-        {/* Desktop Image */}
-        <Image 
-          src="/home-banner-1.jpg"
-          alt="Banner"
-          fill
-          priority
-          loading="eager"
-          sizes="(max-width: 767px) 1px, 100vw"
-          quality={85}
-          fetchPriority="high"
-          decoding="sync"
-          className="object-contain hidden md:block"
-        />
-        {/* Mobile Image - LCP element */}
-        <Image 
-          src="/banners/home-mob-banner-1.jpg"
-          alt="Banner"
-          fill
-          priority
-          loading="eager"
-          sizes="(min-width: 768px) 1px, 100vw"
-          quality={80}
-          fetchPriority="high"
-          decoding="sync"
-          className="object-cover md:hidden"
-        />
+        {/* Native picture element for fastest possible LCP - no Next.js Image overhead */}
+        <picture>
+          {/* Desktop source - served for screens 768px and wider */}
+          <source 
+            media="(min-width: 768px)" 
+            srcSet="/home-banner-1.jpg"
+            type="image/jpeg"
+          />
+          {/* Mobile source - served for screens below 768px */}
+          <source 
+            media="(max-width: 767px)" 
+            srcSet="/banners/home-mob-banner-1.jpg"
+            type="image/jpeg"
+          />
+          {/* Fallback img with mobile image as default (mobile-first) */}
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img 
+            src="/banners/home-mob-banner-1.jpg"
+            alt="Country Roof Real Estate - Premium Properties in Gurgaon"
+            fetchPriority="high"
+            decoding="sync"
+            loading="eager"
+            style={{
+              position: 'absolute',
+              height: '100%',
+              width: '100%',
+              inset: 0,
+              objectFit: 'cover',
+            }}
+            className="md:!object-contain"
+          />
+        </picture>
       </div>
     </div>
   )
