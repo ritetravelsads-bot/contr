@@ -1,7 +1,7 @@
 "use client"
 
-import { useState } from "react"
-import { Layers, ZoomIn, X } from "lucide-react"
+import { useState, useEffect, useCallback } from "react"
+import { Layers, ZoomIn, X, ChevronLeft, ChevronRight, Download, Maximize2 } from "lucide-react"
 import { cn } from "@/lib/utils"
 
 interface FloorPlanTabsProps {
@@ -10,18 +10,34 @@ interface FloorPlanTabsProps {
     type: string
     floor_plan_image?: string
   }>
+  units?: Array<{
+    type: string
+    floor_plan_image?: string
+  }>
 }
 
-export function FloorPlanTabs({ floorPlans, configurations }: FloorPlanTabsProps) {
+export function FloorPlanTabs({ floorPlans, configurations, units }: FloorPlanTabsProps) {
   const [activeTab, setActiveTab] = useState(0)
   const [showLightbox, setShowLightbox] = useState(false)
+  const [lightboxIndex, setLightboxIndex] = useState(0)
+  const [imageLoaded, setImageLoaded] = useState<Record<number, boolean>>({})
 
-  // Combine floor plans from both sources
+  // Combine floor plans from all sources (units, configurations, and standalone)
   const plans: Array<{ label: string; image: string }> = []
+
+  // Add unit floor plans with labels (priority)
+  units?.forEach(unit => {
+    if (unit.floor_plan_image) {
+      plans.push({
+        label: unit.type || "Unit",
+        image: unit.floor_plan_image
+      })
+    }
+  })
 
   // Add configuration floor plans with labels
   configurations?.forEach(config => {
-    if (config.floor_plan_image) {
+    if (config.floor_plan_image && !plans.some(p => p.image === config.floor_plan_image)) {
       plans.push({
         label: config.type,
         image: config.floor_plan_image
@@ -34,34 +50,79 @@ export function FloorPlanTabs({ floorPlans, configurations }: FloorPlanTabsProps
     // Avoid duplicates
     if (!plans.some(p => p.image === plan)) {
       plans.push({
-        label: `Plan ${plans.length + 1}`,
+        label: plans.length === 0 ? "Floor Plan" : `Plan ${plans.length + 1}`,
         image: plan
       })
     }
   })
 
+  // Keyboard navigation for lightbox
+  const handleKeyDown = useCallback((e: KeyboardEvent) => {
+    if (!showLightbox) return
+    
+    if (e.key === "Escape") {
+      setShowLightbox(false)
+    } else if (e.key === "ArrowLeft") {
+      setLightboxIndex(prev => (prev - 1 + plans.length) % plans.length)
+    } else if (e.key === "ArrowRight") {
+      setLightboxIndex(prev => (prev + 1) % plans.length)
+    }
+  }, [showLightbox, plans.length])
+
+  useEffect(() => {
+    window.addEventListener("keydown", handleKeyDown)
+    return () => window.removeEventListener("keydown", handleKeyDown)
+  }, [handleKeyDown])
+
+  // Prevent body scroll when lightbox is open
+  useEffect(() => {
+    if (showLightbox) {
+      document.body.style.overflow = "hidden"
+    } else {
+      document.body.style.overflow = ""
+    }
+    return () => {
+      document.body.style.overflow = ""
+    }
+  }, [showLightbox])
+
+  const openLightbox = (index: number) => {
+    setLightboxIndex(index)
+    setShowLightbox(true)
+  }
+
+  const nextImage = () => setLightboxIndex(prev => (prev + 1) % plans.length)
+  const prevImage = () => setLightboxIndex(prev => (prev - 1 + plans.length) % plans.length)
+
   if (plans.length === 0) return null
 
   return (
-    <section className="py-8 md:py-12">
+    <section className="py-10 md:py-14 bg-gradient-to-b from-background to-muted/30">
       <div className="max-w-6xl mx-auto px-4">
-        <div className="flex items-center gap-2 mb-6">
-          <Layers className="h-5 w-5 text-primary" />
-          <h2 className="text-xl md:text-2xl font-bold text-foreground">Floor Plans</h2>
+        {/* Section Header */}
+        <div className="flex flex-col items-center text-center mb-8">
+          <div className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-primary/10 border border-primary/20 rounded-full text-primary text-xs font-semibold mb-3 tracking-wide">
+            <Layers className="h-3 w-3" />
+            FLOOR PLANS
+          </div>
+          <h2 className="text-lg md:text-xl font-bold text-foreground">Explore Floor Plans</h2>
+          <p className="text-muted-foreground text-xs mt-1">
+            {plans.length} floor plan{plans.length !== 1 ? "s" : ""} available
+          </p>
         </div>
 
         {/* Tab Navigation */}
         {plans.length > 1 && (
-          <div className="flex flex-wrap gap-2 mb-6">
+          <div className="flex flex-wrap justify-center gap-2 mb-6">
             {plans.map((plan, index) => (
               <button
                 key={index}
                 onClick={() => setActiveTab(index)}
                 className={cn(
-                  "px-4 py-2 text-sm font-medium rounded-lg transition-colors",
+                  "px-4 py-2 text-sm font-medium rounded-full transition-all duration-200",
                   activeTab === index
-                    ? "bg-primary text-primary-foreground"
-                    : "bg-muted text-muted-foreground hover:bg-muted/80"
+                    ? "bg-primary text-primary-foreground shadow-md shadow-primary/20"
+                    : "bg-card border border-border text-muted-foreground hover:border-primary/50 hover:text-foreground"
                 )}
               >
                 {plan.label}
@@ -70,73 +131,209 @@ export function FloorPlanTabs({ floorPlans, configurations }: FloorPlanTabsProps
           </div>
         )}
 
-        {/* Active Floor Plan */}
-        <div className="relative bg-card border border-border rounded-xl overflow-hidden">
-          <div className="aspect-[4/3] md:aspect-[16/9] relative">
+        {/* Active Floor Plan Display */}
+        <div className="relative bg-card border border-border rounded-2xl overflow-hidden shadow-lg">
+          {/* Main Image Container */}
+          <div 
+            className="relative aspect-[4/3] md:aspect-[16/10] bg-muted/50 cursor-zoom-in group"
+            onClick={() => openLightbox(activeTab)}
+          >
+            {!imageLoaded[activeTab] && (
+              <div className="absolute inset-0 flex items-center justify-center">
+                <div className="w-8 h-8 border-2 border-primary border-t-transparent rounded-full animate-spin" />
+              </div>
+            )}
             <img
               src={plans[activeTab].image}
               alt={`Floor Plan - ${plans[activeTab].label}`}
-              className="w-full h-full object-contain p-4"
+              className={cn(
+                "w-full h-full object-contain p-4 md:p-8 transition-opacity duration-300",
+                imageLoaded[activeTab] ? "opacity-100" : "opacity-0"
+              )}
+              onLoad={() => setImageLoaded(prev => ({ ...prev, [activeTab]: true }))}
             />
             
-            {/* Zoom Button */}
-            <button
-              onClick={() => setShowLightbox(true)}
-              className="absolute top-4 right-4 p-2 bg-black/50 hover:bg-black/70 rounded-lg text-white transition-colors"
-            >
-              <ZoomIn className="h-5 w-5" />
-            </button>
+            {/* Overlay with actions */}
+            <div className="absolute inset-0 bg-black/0 group-hover:bg-black/10 transition-colors duration-300" />
+            
+            {/* Zoom indicator */}
+            <div className="absolute top-4 right-4 flex items-center gap-2 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+              <button
+                onClick={(e) => {
+                  e.stopPropagation()
+                  openLightbox(activeTab)
+                }}
+                className="p-2.5 bg-black/60 hover:bg-black/80 backdrop-blur-sm rounded-xl text-white transition-colors"
+                title="View fullscreen"
+              >
+                <Maximize2 className="h-5 w-5" />
+              </button>
+            </div>
+            
+            {/* Click hint */}
+            <div className="absolute bottom-4 left-1/2 -translate-x-1/2 px-4 py-2 bg-black/60 backdrop-blur-sm rounded-full text-white text-xs font-medium opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+              Click to enlarge
+            </div>
           </div>
 
-          {/* Plan Label */}
-          <div className="px-4 py-3 border-t border-border bg-muted/30">
-            <p className="text-sm font-medium text-foreground">{plans[activeTab].label}</p>
+          {/* Footer with label and navigation */}
+          <div className="px-4 py-3 border-t border-border bg-muted/30 flex items-center justify-between">
+            <div>
+              <p className="text-sm font-semibold text-foreground">{plans[activeTab].label}</p>
+              <p className="text-xs text-muted-foreground">
+                {activeTab + 1} of {plans.length}
+              </p>
+            </div>
+            
+            {/* Quick navigation arrows */}
+            {plans.length > 1 && (
+              <div className="flex items-center gap-2">
+                <button
+                  onClick={() => setActiveTab(prev => (prev - 1 + plans.length) % plans.length)}
+                  className="p-2 rounded-lg bg-card border border-border hover:border-primary/50 transition-colors"
+                >
+                  <ChevronLeft className="h-4 w-4" />
+                </button>
+                <button
+                  onClick={() => setActiveTab(prev => (prev + 1) % plans.length)}
+                  className="p-2 rounded-lg bg-card border border-border hover:border-primary/50 transition-colors"
+                >
+                  <ChevronRight className="h-4 w-4" />
+                </button>
+              </div>
+            )}
           </div>
         </div>
 
         {/* Thumbnail Navigation */}
         {plans.length > 1 && (
-          <div className="flex gap-2 mt-4 overflow-x-auto pb-2">
+          <div className="flex justify-center gap-3 mt-6 overflow-x-auto pb-2 px-4">
             {plans.map((plan, index) => (
               <button
                 key={index}
                 onClick={() => setActiveTab(index)}
                 className={cn(
-                  "flex-shrink-0 w-20 h-16 rounded-lg overflow-hidden border-2 transition-all",
+                  "group flex-shrink-0 w-24 rounded-xl overflow-hidden border-2 transition-all duration-200",
                   activeTab === index
-                    ? "border-primary"
-                    : "border-transparent opacity-60 hover:opacity-100"
+                    ? "border-primary shadow-md shadow-primary/20 scale-105"
+                    : "border-border hover:border-primary/50 opacity-70 hover:opacity-100"
                 )}
               >
-                <img
-                  src={plan.image}
-                  alt={plan.label}
-                  className="w-full h-full object-cover"
-                />
+                <div className="relative aspect-[4/3] bg-muted">
+                  <img
+                    src={plan.image}
+                    alt={plan.label}
+                    className="w-full h-full object-cover"
+                  />
+                  {activeTab === index && (
+                    <div className="absolute inset-0 bg-primary/10" />
+                  )}
+                </div>
+                <div className="px-2 py-1.5 bg-card text-center">
+                  <p className="text-[10px] font-medium text-foreground truncate">{plan.label}</p>
+                </div>
               </button>
             ))}
           </div>
         )}
       </div>
 
-      {/* Lightbox */}
+      {/* Enhanced Lightbox */}
       {showLightbox && (
-        <div
-          className="fixed inset-0 z-50 bg-black/90 flex items-center justify-center p-4"
+        <div 
+          className="fixed inset-0 z-50 bg-black/95 flex items-center justify-center"
           onClick={() => setShowLightbox(false)}
         >
+          {/* Close button */}
           <button
             onClick={() => setShowLightbox(false)}
-            className="absolute top-4 right-4 p-2 bg-white/10 hover:bg-white/20 rounded-full text-white"
+            className="absolute top-4 right-4 p-3 bg-white/10 hover:bg-white/20 rounded-full text-white transition-colors z-10"
           >
             <X className="h-6 w-6" />
           </button>
-          <img
-            src={plans[activeTab].image}
-            alt={`Floor Plan - ${plans[activeTab].label}`}
-            className="max-w-full max-h-full object-contain"
+
+          {/* Navigation - Previous */}
+          {plans.length > 1 && (
+            <button
+              onClick={(e) => {
+                e.stopPropagation()
+                prevImage()
+              }}
+              className="absolute left-4 top-1/2 -translate-y-1/2 p-3 bg-white/10 hover:bg-white/20 rounded-full text-white transition-colors z-10"
+            >
+              <ChevronLeft className="h-6 w-6" />
+            </button>
+          )}
+
+          {/* Navigation - Next */}
+          {plans.length > 1 && (
+            <button
+              onClick={(e) => {
+                e.stopPropagation()
+                nextImage()
+              }}
+              className="absolute right-4 top-1/2 -translate-y-1/2 p-3 bg-white/10 hover:bg-white/20 rounded-full text-white transition-colors z-10"
+            >
+              <ChevronRight className="h-6 w-6" />
+            </button>
+          )}
+
+          {/* Main Image */}
+          <div 
+            className="relative max-w-[90vw] max-h-[85vh] w-full h-full flex items-center justify-center"
             onClick={(e) => e.stopPropagation()}
-          />
+          >
+            <img
+              src={plans[lightboxIndex].image}
+              alt={`Floor Plan - ${plans[lightboxIndex].label}`}
+              className="max-w-full max-h-full object-contain select-none"
+              draggable={false}
+            />
+          </div>
+
+          {/* Bottom info bar */}
+          <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/80 to-transparent py-6 px-4">
+            <div className="max-w-6xl mx-auto flex items-center justify-between">
+              <div>
+                <p className="text-white font-semibold">{plans[lightboxIndex].label}</p>
+                <p className="text-white/60 text-sm">
+                  {lightboxIndex + 1} of {plans.length} floor plans
+                </p>
+              </div>
+              
+              {/* Thumbnail strip */}
+              {plans.length > 1 && (
+                <div className="hidden md:flex items-center gap-2">
+                  {plans.map((plan, index) => (
+                    <button
+                      key={index}
+                      onClick={(e) => {
+                        e.stopPropagation()
+                        setLightboxIndex(index)
+                      }}
+                      className={cn(
+                        "w-16 h-12 rounded-lg overflow-hidden border-2 transition-all",
+                        lightboxIndex === index
+                          ? "border-white scale-110"
+                          : "border-white/30 opacity-60 hover:opacity-100"
+                      )}
+                    >
+                      <img
+                        src={plan.image}
+                        alt={plan.label}
+                        className="w-full h-full object-cover"
+                      />
+                    </button>
+                  ))}
+                </div>
+              )}
+            </div>
+          </div>
+
+          {/* Keyboard hint */}
+          <div className="absolute top-4 left-4 text-white/40 text-xs hidden md:block">
+            Use arrow keys to navigate, ESC to close
+          </div>
         </div>
       )}
     </section>

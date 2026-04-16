@@ -23,6 +23,7 @@ interface ComboSelectProps {
   loading?: boolean
   className?: string
   disabled?: boolean
+  dropdownPosition?: "auto" | "top" | "bottom"
 }
 
 export function ComboSelect({
@@ -36,13 +37,32 @@ export function ComboSelect({
   loading = false,
   className,
   disabled = false,
+  dropdownPosition = "auto",
 }: ComboSelectProps) {
   const [isOpen, setIsOpen] = useState(false)
   const [searchTerm, setSearchTerm] = useState("")
   const [isAdding, setIsAdding] = useState(false)
   const [addedNotification, setAddedNotification] = useState<string | null>(null)
+  const [shouldOpenUpward, setShouldOpenUpward] = useState(false)
   const containerRef = useRef<HTMLDivElement>(null)
   const inputRef = useRef<HTMLInputElement>(null)
+
+  // Calculate dropdown position when opening
+  useEffect(() => {
+    if (isOpen && dropdownPosition === "auto" && containerRef.current) {
+      const rect = containerRef.current.getBoundingClientRect()
+      const spaceBelow = window.innerHeight - rect.bottom
+      const spaceAbove = rect.top
+      const dropdownHeight = 240 // approximate max height of dropdown
+      
+      // Open upward if there's not enough space below but enough above
+      setShouldOpenUpward(spaceBelow < dropdownHeight && spaceAbove > spaceBelow)
+    } else if (dropdownPosition === "top") {
+      setShouldOpenUpward(true)
+    } else if (dropdownPosition === "bottom") {
+      setShouldOpenUpward(false)
+    }
+  }, [isOpen, dropdownPosition])
 
   // Handle click outside to close dropdown
   useEffect(() => {
@@ -214,7 +234,12 @@ export function ComboSelect({
 
       {/* Dropdown */}
       {isOpen && (
-        <div className="absolute z-50 mt-1 w-full bg-card border border-border rounded-md shadow-lg max-h-60 overflow-auto">
+        <div 
+          className={cn(
+            "absolute z-[100] w-full bg-card border border-border rounded-md shadow-lg max-h-60 overflow-auto",
+            shouldOpenUpward ? "bottom-full mb-1" : "top-full mt-1"
+          )}
+        >
           {loading ? (
             <div className="flex items-center justify-center py-4">
               <Loader2 size={18} className="animate-spin text-muted-foreground" />
@@ -293,6 +318,7 @@ interface MultiComboSelectProps {
   loading?: boolean
   className?: string
   disabled?: boolean
+  dropdownPosition?: "auto" | "top" | "bottom"
 }
 
 export function MultiComboSelect({
@@ -305,6 +331,7 @@ export function MultiComboSelect({
   loading = false,
   className,
   disabled = false,
+  dropdownPosition = "auto",
 }: MultiComboSelectProps) {
   return (
     <ComboSelect
@@ -318,6 +345,7 @@ export function MultiComboSelect({
       loading={loading}
       className={className}
       disabled={disabled}
+      dropdownPosition={dropdownPosition}
     />
   )
 }

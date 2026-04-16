@@ -16,7 +16,7 @@ export default function AgentDashboardPage() {
   useEffect(() => {
     const loadData = async () => {
       try {
-        const userRes = await fetch("/api/auth/me")
+        const userRes = await fetch("/api/auth/me", { cache: "no-store", credentials: "include" })
         const userData = await userRes.json()
         setUser(userData)
 

@@ -2,6 +2,10 @@ import { getDatabase } from "@/lib/mongodb"
 import { type NextRequest, NextResponse } from "next/server"
 import { ObjectId } from "mongodb"
 
+// Disable caching for this route to ensure fresh data
+export const dynamic = "force-dynamic"
+export const revalidate = 0
+
 export async function GET(req: NextRequest) {
   try {
     const db = await getDatabase()
@@ -199,25 +203,25 @@ export async function GET(req: NextRequest) {
       query.$and = andConditions
     }
 
-    // Sorting
+    // Sorting - always include _id as secondary sort to ensure consistent pagination
     const sortBy = searchParams.get("sort") || "featured"
-    let sortOption: any = { is_featured: -1, created_at: -1 }
+    let sortOption: any = { is_featured: -1, created_at: -1, _id: -1 }
     
     switch (sortBy) {
       case "price_low":
-        sortOption = { lowest_price: 1 }
+        sortOption = { lowest_price: 1, _id: 1 }
         break
       case "price_high":
-        sortOption = { lowest_price: -1 }
+        sortOption = { lowest_price: -1, _id: -1 }
         break
       case "newest":
-        sortOption = { created_at: -1 }
+        sortOption = { created_at: -1, _id: -1 }
         break
       case "oldest":
-        sortOption = { created_at: 1 }
+        sortOption = { created_at: 1, _id: 1 }
         break
       case "name":
-        sortOption = { property_name: 1 }
+        sortOption = { property_name: 1, _id: 1 }
         break
     }
 

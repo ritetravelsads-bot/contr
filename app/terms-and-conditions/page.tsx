@@ -226,8 +226,8 @@ export default function TermsPage() {
           <div className="mt-12 pt-6 border-t border-border">
             <p className="text-muted-foreground text-sm">
               If you have any questions about these Terms & Conditions, please contact us at{" "}
-              <a href="mailto:info@countryroof.com" className="text-primary hover:underline">
-                info@countryroof.com
+              <a href="mailto:info@countryroof.in" className="text-primary hover:underline">
+                info@countryroof.in
               </a>
             </p>
           </div>

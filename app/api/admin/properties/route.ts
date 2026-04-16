@@ -2,6 +2,10 @@ import { getDatabase } from "@/lib/mongodb"
 import { getCurrentUser } from "@/lib/auth"
 import { type NextRequest, NextResponse } from "next/server"
 
+// Disable caching for admin routes
+export const dynamic = "force-dynamic"
+export const revalidate = 0
+
 export async function GET(req: NextRequest) {
   try {
     const user = await getCurrentUser()
@@ -139,6 +143,13 @@ export async function POST(req: NextRequest) {
       }
       slug = uniqueSlug
     }
+
+    // Debug: Log SEO fields being saved
+    console.log("[v0] API POST - SEO fields being saved:", {
+      meta_title: body.meta_title,
+      meta_description: body.meta_description,
+      meta_keywords: body.meta_keywords,
+    })
 
     const property = {
       ...body,

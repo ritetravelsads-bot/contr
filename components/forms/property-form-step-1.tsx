@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from "react"
 import { ComboSelect } from "@/components/ui/combo-select"
+import { Plus, Trash2 } from "lucide-react"
 
 interface Option {
   _id: string
@@ -369,16 +370,31 @@ export default function PropertyFormStep1({ formData, onChange }: any) {
       {/* About Project Section */}
       <div className="border-t border-border pt-4 mt-4">
         <h4 className="text-sm font-semibold mb-3">About Project</h4>
-        <div>
-          <label className="text-xs font-medium text-muted-foreground block mb-1.5">
-            About the Project (for property detail page)
-          </label>
-          <textarea
-            value={formData.about_project || ""}
-            onChange={(e) => onChange("about_project", e.target.value)}
-            placeholder="Write a detailed about section for the project. This will be shown prominently on the property detail page."
-            className="w-full px-3 py-2 text-sm border border-border rounded-md bg-input focus:outline-none focus:ring-1 focus:ring-ring resize-none h-32"
-          />
+        <div className="space-y-3">
+          <div>
+            <label className="text-xs font-medium text-muted-foreground block mb-1.5">
+              About Sub-heading (Optional)
+            </label>
+            <input
+              type="text"
+              value={formData.about_subheading || ""}
+              onChange={(e) => onChange("about_subheading", e.target.value)}
+              placeholder="e.g., A Premium Living Experience in the Heart of Gurugram"
+              className="w-full px-3 py-2 text-sm border border-border rounded-md bg-input focus:outline-none focus:ring-1 focus:ring-ring"
+            />
+            <p className="text-xs text-muted-foreground mt-1">This will appear as an h3 sub-heading below the main title</p>
+          </div>
+          <div>
+            <label className="text-xs font-medium text-muted-foreground block mb-1.5">
+              About the Project (for property detail page)
+            </label>
+            <textarea
+              value={formData.about_project || ""}
+              onChange={(e) => onChange("about_project", e.target.value)}
+              placeholder="Write a detailed about section for the project. This will be shown prominently on the property detail page."
+              className="w-full px-3 py-2 text-sm border border-border rounded-md bg-input focus:outline-none focus:ring-1 focus:ring-ring resize-none h-32"
+            />
+          </div>
         </div>
       </div>
 
@@ -416,6 +432,150 @@ export default function PropertyFormStep1({ formData, onChange }: any) {
             className="w-full px-3 py-2 text-sm border border-border rounded-md bg-input focus:outline-none focus:ring-1 focus:ring-ring resize-none h-20"
           />
         </div>
+      </div>
+
+      {/* Special Sections */}
+      <div className="border-t border-border pt-4 mt-4">
+        <div className="flex items-center justify-between mb-3">
+          <div>
+            <h4 className="text-sm font-semibold">Special Sections</h4>
+            <p className="text-xs text-muted-foreground">Add custom content sections to the property page</p>
+          </div>
+          <button
+            type="button"
+            onClick={() => {
+              const newSection = {
+                id: Date.now().toString(),
+                title: "",
+                subtitle: "",
+                content: "",
+                position: "after_about"
+              }
+              onChange("special_sections", [...(formData.special_sections || []), newSection])
+            }}
+            className="flex items-center gap-1 text-xs text-primary hover:text-primary/80 transition-colors"
+          >
+            <Plus className="h-4 w-4" />
+            Add Section
+          </button>
+        </div>
+
+        {(!formData.special_sections || formData.special_sections.length === 0) ? (
+          <div className="border-2 border-dashed border-border rounded-lg p-6 text-center">
+            <p className="text-sm text-muted-foreground mb-2">No special sections added yet</p>
+            <button
+              type="button"
+              onClick={() => {
+                const newSection = {
+                  id: Date.now().toString(),
+                  title: "",
+                  subtitle: "",
+                  content: "",
+                  position: "after_about"
+                }
+                onChange("special_sections", [newSection])
+              }}
+              className="text-sm text-primary hover:underline"
+            >
+              Add your first special section
+            </button>
+          </div>
+        ) : (
+          <div className="space-y-4">
+            {(formData.special_sections || []).map((section: any, index: number) => (
+              <div key={section.id || index} className="border border-border rounded-lg p-4 bg-muted/30">
+                <div className="flex items-start justify-between mb-3">
+                  <span className="text-xs font-medium text-muted-foreground">Section {index + 1}</span>
+                  <button
+                    type="button"
+                    onClick={() => {
+                      const updated = (formData.special_sections || []).filter((_: any, i: number) => i !== index)
+                      onChange("special_sections", updated)
+                    }}
+                    className="text-destructive hover:text-destructive/80 transition-colors"
+                  >
+                    <Trash2 className="h-4 w-4" />
+                  </button>
+                </div>
+                <div className="space-y-3">
+                  <div>
+                    <label className="text-xs font-medium text-muted-foreground block mb-1.5">
+                      Section Title (H2) *
+                    </label>
+                    <input
+                      type="text"
+                      value={section.title || ""}
+                      onChange={(e) => {
+                        const updated = [...(formData.special_sections || [])]
+                        updated[index] = { ...updated[index], title: e.target.value }
+                        onChange("special_sections", updated)
+                      }}
+                      placeholder="e.g., Why Choose This Project?"
+                      className="w-full px-3 py-2 text-sm border border-border rounded-md bg-input focus:outline-none focus:ring-1 focus:ring-ring"
+                    />
+                  </div>
+                  <div>
+                    <label className="text-xs font-medium text-muted-foreground block mb-1.5">
+                      Sub-title (H3) - Optional
+                    </label>
+                    <input
+                      type="text"
+                      value={section.subtitle || ""}
+                      onChange={(e) => {
+                        const updated = [...(formData.special_sections || [])]
+                        updated[index] = { ...updated[index], subtitle: e.target.value }
+                        onChange("special_sections", updated)
+                      }}
+                      placeholder="e.g., Discover the unique features that set us apart"
+                      className="w-full px-3 py-2 text-sm border border-border rounded-md bg-input focus:outline-none focus:ring-1 focus:ring-ring"
+                    />
+                  </div>
+                  <div>
+                    <label className="text-xs font-medium text-muted-foreground block mb-1.5">
+                      Content (Paragraph) *
+                    </label>
+                    <textarea
+                      value={section.content || ""}
+                      onChange={(e) => {
+                        const updated = [...(formData.special_sections || [])]
+                        updated[index] = { ...updated[index], content: e.target.value }
+                        onChange("special_sections", updated)
+                      }}
+                      placeholder="Write the main content for this section..."
+                      className="w-full px-3 py-2 text-sm border border-border rounded-md bg-input focus:outline-none focus:ring-1 focus:ring-ring resize-none h-24"
+                    />
+                  </div>
+                  <div>
+                    <label className="text-xs font-medium text-muted-foreground block mb-1.5">
+                      Display Position
+                    </label>
+                    <select
+                      value={section.position || "after_about"}
+                      onChange={(e) => {
+                        const updated = [...(formData.special_sections || [])]
+                        updated[index] = { ...updated[index], position: e.target.value }
+                        onChange("special_sections", updated)
+                      }}
+                      className="w-full px-3 py-2 text-sm border border-border rounded-md bg-input focus:outline-none focus:ring-1 focus:ring-ring"
+                    >
+                      <option value="after_about">After About Section</option>
+                      <option value="after_highlights">After Project Highlights</option>
+                      <option value="after_details">After Property Details</option>
+                      <option value="after_enquiry">After Enquiry Form</option>
+                      <option value="after_units">After Units Section</option>
+                      <option value="after_amenities">After Amenities</option>
+                      <option value="after_gallery">After Gallery</option>
+                      <option value="after_floor_plans">After Floor Plans</option>
+                      <option value="after_location">After Location</option>
+                      <option value="before_faq">Before FAQs</option>
+                    </select>
+                    <p className="text-xs text-muted-foreground mt-1">Choose where this section appears on the property page</p>
+                  </div>
+                </div>
+              </div>
+            ))}
+          </div>
+        )}
       </div>
     </div>
   )

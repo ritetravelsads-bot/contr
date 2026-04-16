@@ -10,7 +10,7 @@ export const metadata: Metadata = {
   openGraph: {
     title: "About Countryroof | Real Estate Advisory & Development",
     description: "Building Trust. Building Communities. Building the Future. Connect with thoughtfully selected residential and commercial opportunities.",
-    url: "https://countryroof.com/about",
+    url: "https://countryroof.in/about",
   },
 }
 
@@ -122,10 +122,22 @@ export default function AboutPage() {
             {/* Founder */}
             <div className="grid md:grid-cols-3 gap-8">
               <div className="md:col-span-1">
-                <div className="sticky top-24 space-y-3">
-                  <p className="text-xs font-medium text-primary uppercase tracking-wider">Founder</p>
-                  <h2 className="text-xl md:text-2xl font-bold">DP Chaudhary</h2>
-                  <p className="text-xs text-muted-foreground">Chairman Dharampal Chaudhary</p>
+                <div className="sticky top-24">
+                  <div className="relative p-6 rounded-2xl bg-gradient-to-br from-[#1a1a2e] via-[#16213e] to-[#0f0f23] border border-[#d4af37]/30 shadow-xl overflow-hidden">
+                    {/* Auto shine effect */}
+                    <div className="absolute inset-0 bg-gradient-to-r from-transparent via-[#d4af37]/15 to-transparent animate-luxury-shine" />
+                    {/* Gold corner accents */}
+                    <div className="absolute top-0 left-0 w-16 h-16 border-t-2 border-l-2 border-[#d4af37]/50 rounded-tl-2xl" />
+                    <div className="absolute bottom-0 right-0 w-16 h-16 border-b-2 border-r-2 border-[#d4af37]/50 rounded-br-2xl" />
+                    {/* Content */}
+                    <div className="relative z-10 space-y-3">
+                      <p className="text-xs font-semibold uppercase tracking-[0.2em] text-[#d4af37] drop-shadow-[0_0_8px_rgba(212,175,55,0.4)]">Founder</p>
+                      <h2 className="text-xl md:text-2xl font-bold text-white">DP Chaudhary</h2>
+                      <p className="text-xs text-gray-400">Chairman Dharampal Chaudhary</p>
+                      {/* Decorative line */}
+                      <div className="w-12 h-0.5 bg-gradient-to-r from-[#d4af37] to-transparent mt-2" />
+                    </div>
+                  </div>
                 </div>
               </div>
               <div className="md:col-span-2 space-y-4">
@@ -149,10 +161,22 @@ export default function AboutPage() {
             {/* CEO */}
             <div className="grid md:grid-cols-3 gap-8">
               <div className="md:col-span-1">
-                <div className="sticky top-24 space-y-3">
-                  <p className="text-xs font-medium text-primary uppercase tracking-wider">CEO</p>
-                  <h2 className="text-xl md:text-2xl font-bold">Vinod Kumar</h2>
-                  <p className="text-xs text-muted-foreground">Chief Executive Officer</p>
+                <div className="sticky top-24">
+                  <div className="relative p-6 rounded-2xl bg-gradient-to-br from-[#1a1a2e] via-[#16213e] to-[#0f0f23] border border-[#d4af37]/30 shadow-xl overflow-hidden">
+                    {/* Auto shine effect */}
+                    <div className="absolute inset-0 bg-gradient-to-r from-transparent via-[#d4af37]/15 to-transparent animate-luxury-shine [animation-delay:1.5s]" />
+                    {/* Gold corner accents */}
+                    <div className="absolute top-0 left-0 w-16 h-16 border-t-2 border-l-2 border-[#d4af37]/50 rounded-tl-2xl" />
+                    <div className="absolute bottom-0 right-0 w-16 h-16 border-b-2 border-r-2 border-[#d4af37]/50 rounded-br-2xl" />
+                    {/* Content */}
+                    <div className="relative z-10 space-y-3">
+                      <p className="text-xs font-semibold uppercase tracking-[0.2em] text-[#d4af37] drop-shadow-[0_0_8px_rgba(212,175,55,0.4)]">CEO</p>
+                      <h2 className="text-xl md:text-2xl font-bold text-white">Vinod Kumar</h2>
+                      <p className="text-xs text-gray-400">Chief Executive Officer</p>
+                      {/* Decorative line */}
+                      <div className="w-12 h-0.5 bg-gradient-to-r from-[#d4af37] to-transparent mt-2" />
+                    </div>
+                  </div>
                 </div>
               </div>
               <div className="md:col-span-2 space-y-4">

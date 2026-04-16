@@ -5,6 +5,7 @@ import { useState } from "react"
 import { useRouter } from "next/navigation"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
+import { toast } from "sonner"
 
 export default function AgentRegisterForm() {
   const router = useRouter()
@@ -58,9 +59,15 @@ export default function AgentRegisterForm() {
         throw new Error(data.error || "Registration failed")
       }
 
+      toast.success("Welcome to Country Roof!", {
+        description: "Your agent account has been created successfully. Check your email for a welcome message.",
+      })
       router.push("/agent/login?success=registered")
     } catch (err) {
       setError(err instanceof Error ? err.message : "An error occurred")
+      toast.error("Registration failed", {
+        description: err instanceof Error ? err.message : "Please try again.",
+      })
     } finally {
       setLoading(false)
     }

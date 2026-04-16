@@ -1,8 +1,7 @@
 import type { Metadata } from "next"
 import { Mail, Phone, MapPin, Clock } from "lucide-react"
-import { Button } from "@/components/ui/button"
 import Header from "@/components/layout/header"
-import Footer from "@/components/layout/footer"
+import ContactForm from "@/components/forms/contact-form"
 
 export const metadata: Metadata = {
   title: "Contact Us | CountryRoof Marketplace",
@@ -10,7 +9,7 @@ export const metadata: Metadata = {
   openGraph: {
     title: "Contact Us | CountryRoof",
     description: "Contact our support team for assistance with properties, listings, or marketplace support.",
-    url: "https://countryroof.com/contact",
+    url: "https://countryroof.in/contact",
   },
 }
 
@@ -55,8 +54,8 @@ export default function ContactPage() {
                     <Mail size={14} className="text-primary" />
                     <p className="text-xs font-semibold text-foreground">Email</p>
                   </div>
-                  <a href="mailto:info@countryroof.com" className="text-xs text-primary hover:underline block">
-                    info@countryroof.com
+                  <a href="mailto:info@countryroof.in" className="text-xs text-primary hover:underline block">
+                    info@countryroof.in
                   </a>
                 </div>
 
@@ -84,46 +83,9 @@ export default function ContactPage() {
 
             {/* Contact Form */}
             <div className="md:col-span-2">
-              <form className="space-y-3 bg-card border border-border rounded-lg p-4">
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
-                  <div>
-                    <label className="text-xs font-medium text-muted-foreground block mb-1">Name</label>
-                    <input
-                      type="text"
-                      placeholder="Your name"
-                      className="w-full px-3 py-2 text-sm border border-border rounded-md bg-input focus:outline-none focus:ring-1 focus:ring-ring"
-                    />
-                  </div>
-                  <div>
-                    <label className="text-xs font-medium text-muted-foreground block mb-1">Email</label>
-                    <input
-                      type="email"
-                      placeholder="your@email.com"
-                      className="w-full px-3 py-2 text-sm border border-border rounded-md bg-input focus:outline-none focus:ring-1 focus:ring-ring"
-                    />
-                  </div>
-                </div>
-
-                <div>
-                  <label className="text-xs font-medium text-muted-foreground block mb-1">Subject</label>
-                  <input
-                    type="text"
-                    placeholder="How can we help?"
-                    className="w-full px-3 py-2 text-sm border border-border rounded-md bg-input focus:outline-none focus:ring-1 focus:ring-ring"
-                  />
-                </div>
-
-                <div>
-                  <label className="text-xs font-medium text-muted-foreground block mb-1">Message</label>
-                  <textarea
-                    placeholder="Tell us more..."
-                    rows={5}
-                    className="w-full px-3 py-2 text-sm border border-border rounded-md bg-input focus:outline-none focus:ring-1 focus:ring-ring resize-none"
-                  ></textarea>
-                </div>
-
-                <Button className="w-full text-xs h-8">Send Message</Button>
-              </form>
+              <div className="bg-card border border-border rounded-lg p-4">
+                <ContactForm />
+              </div>
             </div>
           </div>
         </section>

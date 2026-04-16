@@ -2,6 +2,10 @@ import { getDatabase } from "@/lib/mongodb"
 import type { HomepageSection } from "@/lib/schemas"
 import { ObjectId } from "mongodb"
 
+// Force dynamic rendering - always fetch fresh data
+export const dynamic = "force-dynamic"
+export const revalidate = 0
+
 // Helper function to determine dominant category from properties
 function getDominantCategory(properties: any[]): string | null {
   if (!properties || properties.length === 0) return null

@@ -5,6 +5,25 @@ import Link from 'next/link'
 import { MapPin, Bed, Bath, Maximize2, CheckCircle2, Zap } from 'lucide-react'
 import { formatPriceToIndian } from '@/lib/utils'
 
+// Property type slug mapping for URL structure
+const PROPERTY_TYPE_MAP: Record<string, string[]> = {
+  residential: ["apartment", "villa", "house", "flat", "penthouse", "duplex", "studio", "independent", "row house", "bungalow", "farmhouse"],
+  commercial: ["office", "shop", "commercial", "showroom", "warehouse", "retail", "sco", "scf", "multiplex"],
+  plots: ["plot", "land", "agricultural", "industrial land"],
+}
+
+function getPropertyTypeSlug(propertyType: string): string {
+  if (!propertyType) return "residential"
+  const lowerType = propertyType.toLowerCase()
+  
+  for (const [slug, types] of Object.entries(PROPERTY_TYPE_MAP)) {
+    if (types.some(t => lowerType.includes(t))) {
+      return slug
+    }
+  }
+  return "residential"
+}
+
 interface LuxuryPropertyCardProps {
   _id: string
   property_name: string
@@ -50,6 +69,7 @@ export default function LuxuryPropertyCard({
 }: LuxuryPropertyCardProps) {
   const area = carpet_area || super_area || area_sqft
   const priceDisplay = price_range || (lowest_price ? formatPriceToIndian(lowest_price) : 'POA')
+  const typeSlug = getPropertyTypeSlug(property_type || "")
   
   // Validate and process image URL
   const getImageUrl = () => {
@@ -79,7 +99,7 @@ export default function LuxuryPropertyCard({
   const imageUrl = getImageUrl()
 
   return (
-    <Link href={`/properties/${slug}`}>
+    <Link href={`/properties/${typeSlug}/${slug}`}>
       <div className="luxury-card group h-full flex flex-col overflow-hidden">
         {/* Image Container */}
         <div className="relative overflow-hidden h-64 md:h-72 bg-gray-100">

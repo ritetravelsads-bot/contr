@@ -7,6 +7,7 @@ import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import GoogleSignInButton from "@/components/auth/google-sign-in-button"
+import { toast } from "sonner"
 
 export default function RegisterForm() {
   const router = useRouter()
@@ -65,9 +66,15 @@ export default function RegisterForm() {
         throw new Error(data.error || "Registration failed")
       }
 
+      toast.success("Welcome to Country Roof!", {
+        description: "Your account has been created successfully. Check your email for a welcome message.",
+      })
       router.push("/auth/login?success=registered")
     } catch (err) {
       setError(err instanceof Error ? err.message : "An error occurred")
+      toast.error("Registration failed", {
+        description: err instanceof Error ? err.message : "Please try again.",
+      })
     } finally {
       setLoading(false)
     }

@@ -2,10 +2,19 @@
 DirectoryIndex disabled
 RewriteEngine On
 
-# Redirect www to non-www for ALL paths
 RewriteCond %{HTTP_HOST} ^www\.countryroof\.in$ [NC]
+RewriteRule ^ https://countryroof.in%{REQUEST_URI} [R=301,L]
+
 RewriteCond %{HTTP_HOST} ^roof\.countryroof\.in$ [NC]
-RewriteRule ^(.*)$ https://countryroof.in/$1 [R=301,L]
+RewriteRule ^ https://countryroof.in%{REQUEST_URI} [R=301,L]
+
+
+RewriteCond %{QUERY_STRING} ^detail/ [NC]
+RewriteRule ^(.*)$ https://countryroof.in/? [R=301,L]
+
+
+RewriteCond %{QUERY_STRING} ^shop/ [NC]
+RewriteRule ^(.*)$ https://countryroof.in/? [R=301,L]
 
 # Tell Next.js the connection is secure
 RequestHeader set X-Forwarded-Proto "https"

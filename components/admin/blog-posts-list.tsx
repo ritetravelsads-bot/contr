@@ -243,7 +243,7 @@ export default function BlogPostsList() {
                       <TableCell>
                         <div className="flex items-center justify-end gap-1">
                           <Link
-                            href={isPublished ? `/blog/${post.slug}` : `/blog/preview/${post.slug}`}
+                            href={isPublished ? `/blogs/${post.slug}` : `/blogs/preview/${post.slug}`}
                             target="_blank"
                             rel="noopener noreferrer"
                             className="p-2 rounded hover:bg-muted text-muted-foreground hover:text-foreground transition-colors"

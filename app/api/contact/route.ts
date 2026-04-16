@@ -1,91 +1,72 @@
-import { MongoClient } from "mongodb"
+import { getDatabase } from "@/lib/mongodb"
+import { NextResponse } from "next/server"
+import {
+  sendEmail,
+  contactAdminTemplate,
+  contactUserTemplate,
+} from "@/lib/email"
 
-const mongoUrl = process.env.MONGODB_URI || ""
-
-async function saveContactForm(data: {
-  name: string
-  email: string
-  phone: string
-  subject: string
-  message: string
-  timestamp?: Date
-}) {
-  if (!mongoUrl) {
-    throw new Error("MongoDB URI not configured")
-  }
-
-  const client = new MongoClient(mongoUrl)
-
-  try {
-    await client.connect()
-    const db = client.db("countryroof")
-    const collection = db.collection("contacts")
-
-    const result = await collection.insertOne({
-      ...data,
-      timestamp: new Date(),
-      status: "new",
-    })
-
-    return result.insertedId
-  } finally {
-    await client.close()
-  }
-}
+const COMPANY_EMAIL = process.env.SMTP_USER || "countryroof.infobirth@gmail.com"
 
 export async function POST(request: Request) {
-  if (request.method !== "POST") {
-    return new Response("Method not allowed", { status: 405 })
-  }
-
   try {
     const body = await request.json()
-
     const { name, email, phone, subject, message } = body
 
+    // Validate required fields
     if (!name || !email || !subject || !message) {
-      return new Response(JSON.stringify({ error: "Missing required fields" }), {
-        status: 400,
-        headers: { "Content-Type": "application/json" },
-      })
+      return NextResponse.json(
+        { error: "Missing required fields" },
+        { status: 400 }
+      )
     }
 
     // Validate email
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
     if (!emailRegex.test(email)) {
-      return new Response(JSON.stringify({ error: "Invalid email address" }), {
-        status: 400,
-        headers: { "Content-Type": "application/json" },
-      })
+      return NextResponse.json(
+        { error: "Invalid email address" },
+        { status: 400 }
+      )
     }
 
     // Save to MongoDB
-    const id = await saveContactForm({ name, email, phone, subject, message })
+    const db = await getDatabase()
+    const result = await db.collection("contacts").insertOne({
+      name,
+      email,
+      phone: phone || "",
+      subject,
+      message,
+      status: "new",
+      created_at: new Date(),
+      updated_at: new Date(),
+    })
 
-    // TODO: Send email notification to admin
-    // TODO: Send confirmation email to user
+    // Send email to admin
+    await sendEmail({
+      to: COMPANY_EMAIL,
+      subject: `New Contact Form: ${subject}`,
+      html: contactAdminTemplate({ name, email, phone, subject, message }),
+    })
 
-    return new Response(
-      JSON.stringify({
-        success: true,
-        message: "Contact form submitted successfully",
-        id,
-      }),
-      {
-        status: 200,
-        headers: { "Content-Type": "application/json" },
-      },
-    )
+    // Send confirmation email to user
+    await sendEmail({
+      to: email,
+      subject: `Thank you for contacting Country Roof`,
+      html: contactUserTemplate({ name, subject }),
+    })
+
+    return NextResponse.json({
+      success: true,
+      message: "Contact form submitted successfully",
+      id: result.insertedId.toString(),
+    })
   } catch (error) {
-    console.error("Contact form error:", error)
-    return new Response(
-      JSON.stringify({
-        error: "Failed to submit contact form",
-      }),
-      {
-        status: 500,
-        headers: { "Content-Type": "application/json" },
-      },
+    console.error("[Contact API] Error:", error)
+    return NextResponse.json(
+      { error: "Failed to submit contact form" },
+      { status: 500 }
     )
   }
 }

@@ -9,10 +9,18 @@ export default function robots(): MetadataRoute.Robots {
         disallow: ["/admin", "/agent", "/dashboard", "/api"],
       },
       {
-        userAgent: "Googlebot",
+        userAgent: "SemrushBot",
+        allow: "/",
+      },
+      {
+        userAgent: "MJ12bot",
+        allow: "/",
+      },
+      {
+        userAgent: "AhrefsBot",
         allow: "/",
       },
     ],
-    sitemap: "https://countryroof.com/sitemap.xml",
+    sitemap: "https://countryroof.in/sitemap.xml",
   }
 }

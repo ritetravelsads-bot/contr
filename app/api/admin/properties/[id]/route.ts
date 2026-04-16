@@ -3,6 +3,10 @@ import { getCurrentUser } from "@/lib/auth"
 import { ObjectId } from "mongodb"
 import { type NextRequest, NextResponse } from "next/server"
 
+// Disable caching for this route
+export const dynamic = "force-dynamic"
+export const revalidate = 0
+
 export async function GET(req: NextRequest, { params }: { params: Promise<{ id: string }> }) {
   try {
     // In Next.js 15+, params is a Promise and must be awaited
@@ -44,6 +48,13 @@ export async function GET(req: NextRequest, { params }: { params: Promise<{ id: 
       multiple_images: property.multiple_images,
       floor_plans: property.floor_plans,
       master_plan: property.master_plan,
+    })
+    
+    // Debug: Log SEO fields being retrieved
+    console.log("[v0] API GET - SEO fields retrieved:", {
+      meta_title: property.meta_title,
+      meta_description: property.meta_description,
+      meta_keywords: property.meta_keywords,
     })
 
     return NextResponse.json(property)
@@ -108,6 +119,13 @@ export async function PUT(req: NextRequest, { params }: { params: Promise<{ id: 
       multiple_images: body.multiple_images,
       floor_plans: body.floor_plans,
       master_plan: body.master_plan,
+    })
+    
+    // Debug: Log SEO fields being saved
+    console.log("[v0] API PUT - SEO fields being saved:", {
+      meta_title: body.meta_title,
+      meta_description: body.meta_description,
+      meta_keywords: body.meta_keywords,
     })
     
     // Build the update object

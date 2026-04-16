@@ -1,26 +1,12 @@
 import { getDatabase } from "@/lib/mongodb"
 import { type NextRequest, NextResponse } from "next/server"
-import nodemailer from "nodemailer"
+import {
+  sendEmail,
+  propertyEnquiryAdminTemplate,
+  propertyEnquiryUserTemplate,
+} from "@/lib/email"
 
-// Configure nodemailer transporter
-const getTransporter = () => {
-  const host = process.env.SMTP_HOST
-  const port = parseInt(process.env.SMTP_PORT || "587")
-  const user = process.env.SMTP_USER
-  const pass = process.env.SMTP_PASS
-
-  if (!host || !user || !pass) {
-    console.warn("[v0] SMTP not configured - emails will not be sent")
-    return null
-  }
-
-  return nodemailer.createTransport({
-    host,
-    port,
-    secure: port === 465,
-    auth: { user, pass },
-  })
-}
+const COMPANY_EMAIL = process.env.SMTP_USER || "countryroof.infobirth@gmail.com"
 
 export async function POST(req: NextRequest) {
   try {
@@ -82,32 +68,31 @@ export async function POST(req: NextRequest) {
 
     const result = await db.collection("enquiries").insertOne(enquiry)
 
-    // Send email notification
-    const transporter = getTransporter()
-    if (transporter) {
-      const adminEmail = process.env.ADMIN_EMAIL || process.env.SMTP_USER
+    // Send email notification to admin
+    await sendEmail({
+      to: COMPANY_EMAIL,
+      subject: `New Property Enquiry: ${property_name || "General"}`,
+      html: propertyEnquiryAdminTemplate({
+        name,
+        email,
+        phone,
+        message,
+        property_name,
+        property_slug,
+      }),
+    })
 
-      try {
-        await transporter.sendMail({
-          from: `"Countryroof Enquiries" <${process.env.SMTP_USER}>`,
-          to: adminEmail,
-          subject: `New Property Enquiry: ${property_name || "General"}`,
-          html: `
-            <h2>New Property Enquiry</h2>
-            <p><strong>Name:</strong> ${name}</p>
-            <p><strong>Phone:</strong> ${phone}</p>
-            ${email ? `<p><strong>Email:</strong> ${email}</p>` : ""}
-            ${property_name ? `<p><strong>Property:</strong> ${property_name}</p>` : ""}
-            ${property_slug ? `<p><strong>Link:</strong> <a href="${process.env.NEXT_PUBLIC_BASE_URL || "https://countryroof.com"}/properties/${property_slug}">View Property</a></p>` : ""}
-            ${message ? `<p><strong>Message:</strong></p><p>${message}</p>` : ""}
-            <hr>
-            <p><small>Received at: ${new Date().toLocaleString()}</small></p>
-          `,
-        })
-      } catch (emailError) {
-        console.error("[v0] Failed to send email notification:", emailError)
-        // Don't fail the request if email fails - enquiry is still saved
-      }
+    // Send confirmation email to user if email provided
+    if (email) {
+      await sendEmail({
+        to: email,
+        subject: `Thank you for your enquiry - Country Roof`,
+        html: propertyEnquiryUserTemplate({
+          name,
+          property_name,
+          property_slug,
+        }),
+      })
     }
 
     return NextResponse.json({
@@ -116,7 +101,7 @@ export async function POST(req: NextRequest) {
       id: result.insertedId.toString(),
     })
   } catch (error) {
-    console.error("[v0] Property enquiry error:", error)
+    console.error("[Property Enquiry API] Error:", error)
     return NextResponse.json(
       { error: "Failed to submit enquiry" },
       { status: 500 }

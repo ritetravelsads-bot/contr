@@ -13,7 +13,7 @@ export const metadata: Metadata = {
   openGraph: {
     title: "Blogs | CountryRoof - Real Estate Insights",
     description: "Expert real estate insights and property investment tips from CountryRoof professionals.",
-    url: "https://countryroof.com/blogs",
+    url: "https://countryroof.in/blogs",
   },
 }
 
@@ -104,18 +104,17 @@ export default async function BlogsPage({
     <>
       <Header />
       <main className="min-h-screen bg-gradient-to-b from-gray-50 to-white">
-      
+
         {/* Category Filter */}
         <section className="w-full py-6 px-4 bg-white border-b border-gray-100 sticky top-0 z-40">
           <div className="max-w-7xl mx-auto">
             <div className="flex items-center gap-3 overflow-x-auto pb-2 scrollbar-hide">
               <Link
                 href="/blogs"
-                className={`flex-shrink-0 px-5 py-2.5 rounded-full text-sm font-medium transition-all ${
-                  !params.category
+                className={`flex-shrink-0 px-5 py-2.5 rounded-full text-sm font-medium transition-all ${!params.category
                     ? "bg-[#002366] text-white shadow-lg shadow-blue-500/25"
                     : "bg-gray-100 text-gray-600 hover:bg-gray-200"
-                }`}
+                  }`}
               >
                 All Posts
               </Link>
@@ -123,11 +122,10 @@ export default async function BlogsPage({
                 <Link
                   key={category}
                   href={`/blogs?category=${encodeURIComponent(category)}`}
-                  className={`flex-shrink-0 px-5 py-2.5 rounded-full text-sm font-medium transition-all capitalize ${
-                    params.category?.toLowerCase() === category.toLowerCase()
+                  className={`flex-shrink-0 px-5 py-2.5 rounded-full text-sm font-medium transition-all capitalize ${params.category?.toLowerCase() === category.toLowerCase()
                       ? "bg-[#002366] text-white shadow-lg shadow-blue-500/25"
                       : "bg-gray-100 text-gray-600 hover:bg-gray-200"
-                  }`}
+                    }`}
                 >
                   {category}
                 </Link>

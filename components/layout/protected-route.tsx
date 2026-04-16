@@ -19,7 +19,7 @@ export default function ProtectedRoute({ children, requiredRole }: ProtectedRout
   useEffect(() => {
     const checkAuth = async () => {
       try {
-        const response = await fetch("/api/auth/me", { credentials: "include" })
+        const response = await fetch("/api/auth/me", { credentials: "include", cache: "no-store" })
 
         if (!response.ok) {
           router.push("/auth/login")

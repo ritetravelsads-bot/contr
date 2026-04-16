@@ -4,6 +4,10 @@ import { redirect } from "next/navigation"
 import { getCurrentUser } from "@/lib/auth"
 import DashboardLayoutWrapper from "@/components/dashboard/dashboard-layout-wrapper"
 
+// Force dynamic rendering - auth-protected pages should never be cached
+export const dynamic = "force-dynamic"
+export const revalidate = 0
+
 export const metadata: Metadata = {
   title: "Admin Panel | CountryRoof",
   description: "Admin dashboard for managing platform",

@@ -189,9 +189,6 @@ export default function PropertyFormStep4({ formData, onChange }: any) {
   }) => {
     const imageUrl = formData[fieldName]
     const imageMeta = getImageMeta(fieldName)
-    
-    // Debug: Log what's being rendered for this field
-    console.log(`[v0] SingleImageUpload - ${fieldName}:`, { imageUrl, imageMeta, hasImage: !!imageUrl })
     const isUploading = uploading[fieldName]
     const error = uploadErrors[fieldName]
 
@@ -324,9 +321,6 @@ export default function PropertyFormStep4({ formData, onChange }: any) {
     }
     
     const imagesMeta = formData[`${fieldName}_meta`] || []
-    
-    // Debug: Log what's being rendered for this field
-    console.log(`[v0] MultipleImageUpload - ${fieldName}:`, { rawImages, images, imagesMeta, count: images.length, isArray: Array.isArray(rawImages) })
     const isUploading = uploading[fieldName]
     const error = uploadErrors[fieldName]
 
@@ -567,18 +561,18 @@ export default function PropertyFormStep4({ formData, onChange }: any) {
         
         <div>
           <label className="text-xs font-medium text-muted-foreground block mb-1.5">
-            Meta Title
+            SEO Title
           </label>
           <input
             type="text"
             value={formData.meta_title || ""}
             onChange={(e) => onChange("meta_title", e.target.value)}
-            placeholder="SEO title (50-60 characters recommended)"
-            maxLength={60}
+            placeholder="SEO title (max 75 characters)"
+            maxLength={75}
             className="w-full px-3 py-2 text-sm border border-border rounded-lg bg-background focus:outline-none focus:ring-2 focus:ring-ring"
           />
-          <p className="text-xs text-muted-foreground mt-1">
-            {(formData.meta_title || "").length}/60 characters
+          <p className="text-xs text-muted-foreground mt-1 text-right">
+            {(formData.meta_title || "").length}/75
           </p>
         </div>
 
@@ -602,12 +596,12 @@ export default function PropertyFormStep4({ formData, onChange }: any) {
           <textarea
             value={formData.meta_description || ""}
             onChange={(e) => onChange("meta_description", e.target.value)}
-            placeholder="Meta description (150-160 characters recommended)"
-            maxLength={160}
+            placeholder="Meta description (max 200 characters)"
+            maxLength={200}
             className="w-full px-3 py-2 text-sm border border-border rounded-lg bg-background focus:outline-none focus:ring-2 focus:ring-ring resize-none h-20"
           />
-          <p className="text-xs text-muted-foreground mt-1">
-            {(formData.meta_description || "").length}/160 characters
+          <p className="text-xs text-muted-foreground mt-1 text-right">
+            {(formData.meta_description || "").length}/200
           </p>
         </div>
       </div>

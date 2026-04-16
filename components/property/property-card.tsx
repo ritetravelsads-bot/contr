@@ -5,11 +5,31 @@ import { Badge } from "@/components/ui/badge"
 import { formatPriceRange } from "@/lib/utils"
 import { PropertyWhatsAppLink } from "@/components/ui/whatsapp-button"
 
+// Property type slug mapping for URL structure
+const PROPERTY_TYPE_MAP: Record<string, string[]> = {
+  residential: ["apartment", "villa", "house", "flat", "penthouse", "duplex", "studio", "independent", "row house", "bungalow", "farmhouse"],
+  commercial: ["office", "shop", "commercial", "showroom", "warehouse", "retail", "sco", "scf", "multiplex"],
+  plots: ["plot", "land", "agricultural", "industrial land"],
+}
+
+function getPropertyTypeSlug(propertyType: string): string {
+  if (!propertyType) return "residential"
+  const lowerType = propertyType.toLowerCase()
+  
+  for (const [slug, types] of Object.entries(PROPERTY_TYPE_MAP)) {
+    if (types.some(t => lowerType.includes(t))) {
+      return slug
+    }
+  }
+  return "residential"
+}
+
 interface PropertyCardProps {
   property: {
     _id: string
     slug?: string
     property_name: string
+    property_type?: string
     main_thumbnail: string
     lowest_price: number
     max_price?: number
@@ -30,12 +50,13 @@ export default function PropertyCard({ property }: PropertyCardProps) {
   
   // Use price_range if available, otherwise format from lowest/max price
   const priceDisplay = property.price_range || formatPriceRange(property.lowest_price, property.max_price)
+  const typeSlug = getPropertyTypeSlug(property.property_type || "")
   
   return (
-    <Link href={`/properties/${property.slug || property._id}`}>
-      <div className="bento-card hover:shadow-lg cursor-pointer group">
+    <Link href={`/properties/${typeSlug}/${property.slug || property._id}`} className="block min-h-[200px]">
+      <div className="bento-card hover:shadow-lg cursor-pointer group h-full">
         {/* Image with badges - fixed dimensions to prevent CLS */}
-        <div className="relative mb-2.5 overflow-hidden rounded bg-muted aspect-[4/3] hover:shadow-md transition-shadow">
+        <div className="relative mb-2.5 overflow-hidden rounded bg-muted aspect-[4/3] min-h-[120px] hover:shadow-md transition-shadow">
           <Image
             src={imageUrl || "/placeholder.svg"}
             alt={property.property_name || "Property"}

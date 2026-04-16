@@ -1,22 +1,22 @@
 import type React from "react"
 import type { Metadata, Viewport } from "next"
 import { Geist, Geist_Mono } from "next/font/google"
-import { Analytics } from "@vercel/analytics/next"
 import "./globals.css"
 import "@/styles/blog-content.css"
 import FrontendLayout from "@/components/layout/frontend-layout"
 import CustomHeadTags from "@/components/layout/custom-head-tags"
+import HeadTagsInjector from "@/components/layout/head-tags-injector"
 
 // Disable caching for this layout to ensure custom head tags are always fresh
 export const revalidate = 0
 
-const geist = Geist({ 
+const geist = Geist({
   subsets: ["latin"],
   display: "swap",
   preload: true,
   adjustFontFallback: true,
 })
-const geistMono = Geist_Mono({ 
+const geistMono = Geist_Mono({
   subsets: ["latin"],
   display: "swap",
   preload: true,
@@ -24,6 +24,10 @@ const geistMono = Geist_Mono({
 })
 
 export const metadata: Metadata = {
+  metadataBase: new URL('https://countryroof.in'),
+  alternates: {
+    canonical: '/',
+  },
   title: "Country Roof Real Estate | Buy & Sell Property in Gurgaon",
   description:
     "Find the best property in Gurgaon including flats, plots, villas and commercial spaces. Buy, sell or rent property with trusted real estate experts.",
@@ -44,7 +48,7 @@ export const metadata: Metadata = {
   openGraph: {
     type: "website",
     locale: "en_US",
-    url: "https://countryroof.com",
+    url: "https://countryroof.in",
     siteName: "CountryRoof",
     title: "Premium Property Marketplace | CountryRoof",
     description: "Find and list premium properties on CountryRoof marketplace.",
@@ -87,28 +91,21 @@ export default function RootLayout({
         {/* DNS prefetch for external resources */}
         <link rel="dns-prefetch" href="//ik.imagekit.io" />
         <link rel="preconnect" href="https://ik.imagekit.io" crossOrigin="anonymous" />
-        
-        {/* Preload critical LCP images - mobile first */}
+
+        {/* Preload critical LCP images - using Next.js image optimization URLs */}
         <link
           rel="preload"
           as="image"
-          href="/banners/home-mob-banner-1.jpg"
+          href="/_next/image?url=%2Fbanners%2Fhome-mob-banner-1.jpg&w=750&q=80"
           media="(max-width: 767px)"
           fetchPriority="high"
-          type="image/jpeg"
+          imageSrcSet="/_next/image?url=%2Fbanners%2Fhome-mob-banner-1.jpg&w=640&q=80 640w, /_next/image?url=%2Fbanners%2Fhome-mob-banner-1.jpg&w=750&q=80 750w"
         />
         <link
           rel="preload"
           as="image"
-          href="/home-banner-1.jpg"
+          href="/_next/image?url=%2Fhome-banner-1.jpg&w=1920&q=85"
           media="(min-width: 768px)"
-          fetchPriority="high"
-          type="image/jpeg"
-        />
-        <link
-          rel="preload"
-          as="image"
-          href="/images/logo.png"
           fetchPriority="high"
         />
         <script
@@ -119,7 +116,7 @@ export default function RootLayout({
               "@type": "RealEstateAgent",
               name: "CountryRoof",
               description: "Premium property marketplace connecting buyers, sellers, and agents",
-              url: "https://countryroof.com",
+              url: "https://countryroof.in",
               logo: "/logo.png",
               image: "/og-image.png",
             }),
@@ -129,10 +126,10 @@ export default function RootLayout({
         <CustomHeadTags />
       </head>
       <body className={`${geist.className} antialiased`}>
+        <HeadTagsInjector />
         <FrontendLayout>
           {children}
         </FrontendLayout>
-        <Analytics />
       </body>
     </html>
   )

@@ -5,6 +5,7 @@ import { useState, useEffect } from "react"
 import DashboardHeader from "./dashboard-header"
 import UnifiedSidebar from "./unified-sidebar"
 import { Toaster } from "@/components/ui/toaster"
+import { Toaster as SonnerToaster } from "@/components/ui/sonner"
 
 type UserRole = "admin" | "agent" | "builder" | "buyer" | "customer"
 
@@ -56,6 +57,7 @@ export default function DashboardLayoutWrapper({
 
       {/* Toast Notifications */}
       <Toaster />
+      <SonnerToaster position="top-center" richColors closeButton />
     </div>
   )
 }

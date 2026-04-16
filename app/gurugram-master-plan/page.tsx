@@ -12,7 +12,7 @@ export const metadata: Metadata = {
   openGraph: {
     title: "Gurugram Master Plan 2031 | CountryRoof",
     description: "Complete guide to Gurugram's development plan and real estate investment zones.",
-    url: "https://countryroof.com/gurugram-master-plan",
+    url: "https://countryroof.in/gurugram-master-plan",
   },
 }
 

@@ -57,7 +57,7 @@ export default function BlogGrid() {
       {posts.map((post) => {
         const thumbnail = post.cover_image || post.banner_image
         return (
-          <Link key={post._id} href={`/blog/${post.slug}`}>
+          <Link key={post._id} href={`/blogs/${post.slug}`}>
             <Card className="border border-border hover:border-primary/50 transition-colors h-full cursor-pointer overflow-hidden">
               {thumbnail && (
                 <div className="relative w-full h-40">

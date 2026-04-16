@@ -3,6 +3,10 @@ import { getCurrentUser } from "@/lib/auth"
 import { type NextRequest, NextResponse } from "next/server"
 import { ObjectId } from "mongodb"
 
+// Disable caching for this route
+export const dynamic = "force-dynamic"
+export const revalidate = 0
+
 export async function GET(req: NextRequest, { params }: { params: Promise<{ id: string }> }) {
   try {
     const { id } = await params
@@ -13,7 +17,13 @@ export async function GET(req: NextRequest, { params }: { params: Promise<{ id: 
       return NextResponse.json({ error: "Developer not found" }, { status: 404 })
     }
 
-    return NextResponse.json(developer)
+    return NextResponse.json(developer, {
+      headers: {
+        "Cache-Control": "no-store, no-cache, must-revalidate, proxy-revalidate",
+        "Pragma": "no-cache",
+        "Expires": "0",
+      },
+    })
   } catch (error) {
     console.error("[v0] Error fetching developer:", error)
     return NextResponse.json({ error: "Failed to fetch developer" }, { status: 500 })
@@ -33,24 +43,27 @@ export async function PUT(req: NextRequest, { params }: { params: Promise<{ id: 
 
     const slug = body.name.toLowerCase().replace(/\s+/g, "-")
 
+    const updateData = {
+      name: body.name,
+      slug,
+      logo_url: body.logo_url || "",
+      about_developer: body.about_developer || "",
+      updated_at: new Date(),
+    }
+
     const result = await db.collection("developers").updateOne(
       { _id: new ObjectId(id) },
-      {
-        $set: {
-          name: body.name,
-          slug,
-          logo_url: body.logo_url,
-          about_developer: body.about_developer || "",
-          updated_at: new Date(),
-        },
-      },
+      { $set: updateData },
     )
 
     if (result.matchedCount === 0) {
       return NextResponse.json({ error: "Developer not found" }, { status: 404 })
     }
 
-    return NextResponse.json({ message: "Developer updated" })
+    // Fetch and return the updated developer
+    const updatedDeveloper = await db.collection("developers").findOne({ _id: new ObjectId(id) })
+
+    return NextResponse.json({ message: "Developer updated", developer: updatedDeveloper })
   } catch (error) {
     console.error("[v0] Error updating developer:", error)
     return NextResponse.json({ error: "Failed to update developer" }, { status: 500 })

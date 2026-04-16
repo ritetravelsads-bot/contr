@@ -165,14 +165,14 @@ function GooglePreview({
   title,
   slug,
   description,
-  siteUrl = "countryroof.com"
+  siteUrl = "countryroof.in"
 }: {
   title: string
   slug: string
   description: string
   siteUrl?: string
 }) {
-  const displayUrl = `${siteUrl}/blog/${slug || "post-url"}`
+  const displayUrl = `${siteUrl}/blogs/${slug || "post-url"}`
   const displayTitle = title || "Post title"
   const displayDesc = description || "Add a meta description to see how this post will appear in search results..."
 
@@ -203,7 +203,7 @@ function generateBlogSchema({
   faqs,
   datePublished,
   dateModified,
-  siteUrl = "https://countryroof.com"
+  siteUrl = "https://countryroof.in"
 }: {
   title: string
   excerpt: string
@@ -251,9 +251,9 @@ function generateBlogSchema({
     },
     "mainEntityOfPage": {
       "@type": "WebPage",
-      "@id": `${siteUrl}/blog/${slug}`
+      "@id": `${siteUrl}/blogs/${slug}`
     },
-    "url": `${siteUrl}/blog/${slug}`,
+    "url": `${siteUrl}/blogs/${slug}`,
     "datePublished": datePublished || new Date().toISOString(),
     "dateModified": dateModified || new Date().toISOString(),
     "wordCount": wordCount,
@@ -290,7 +290,7 @@ function generateBlogSchema({
 
   // BreadcrumbList Schema - includes category (or Uncategorized) and blog title
   const categoryName = categories.length > 0 ? categories[0] : "Uncategorized"
-  
+
   const breadcrumbSchema = {
     "@context": "https://schema.org",
     "@type": "BreadcrumbList",
@@ -305,21 +305,21 @@ function generateBlogSchema({
         "@type": "ListItem",
         "position": 2,
         "name": "Blog",
-        "item": `${siteUrl}/blog`
+        "item": `${siteUrl}/blogs`
       },
       {
         "@type": "ListItem",
         "position": 3,
         "name": categoryName,
-        "item": categories.length > 0 
-          ? `${siteUrl}/blog?category=${encodeURIComponent(categoryName)}`
-          : `${siteUrl}/blog`
+        "item": categories.length > 0
+          ? `${siteUrl}/blogs?category=${encodeURIComponent(categoryName)}`
+          : `${siteUrl}/blogs`
       },
       {
         "@type": "ListItem",
         "position": 4,
         "name": title,
-        "item": `${siteUrl}/blog/${slug}`
+        "item": `${siteUrl}/blogs/${slug}`
       }
     ]
   }
@@ -449,7 +449,7 @@ function FAQSection({
           Add FAQ
         </Button>
       </div>
-      
+
       <div className="p-4 space-y-4">
         {faqs.length === 0 ? (
           <div className="text-center py-8 text-muted-foreground">
@@ -506,7 +506,7 @@ function FAQSection({
           ))
         )}
       </div>
-      
+
       {faqs.length > 0 && (
         <div className="px-4 py-3 border-t border-border bg-muted/30">
           <p className="text-xs text-muted-foreground flex items-center gap-2">
@@ -557,10 +557,10 @@ function BlockSettingsPanel({
   // Image size handlers - use the tracked blockPos for the selected image
   const handleImagePercentSize = (percent: string) => {
     if (!editor) return
-    
+
     // Use the tracked blockPos if available, otherwise try to find from current selection
     let imagePos = blockPos
-    
+
     if (imagePos === null) {
       // Fallback: check if current selection is on an image
       const { selection } = editor.state
@@ -569,7 +569,7 @@ function BlockSettingsPanel({
         imagePos = selection.from
       }
     }
-    
+
     if (imagePos !== null) {
       editor.chain()
         .setNodeSelection(imagePos)
@@ -582,10 +582,10 @@ function BlockSettingsPanel({
 
   const handleImagePixelSize = (px: number) => {
     if (!editor) return
-    
+
     // Use the tracked blockPos if available
     let imagePos = blockPos
-    
+
     if (imagePos === null) {
       const { selection } = editor.state
       const node = editor.state.doc.nodeAt(selection.from)
@@ -593,7 +593,7 @@ function BlockSettingsPanel({
         imagePos = selection.from
       }
     }
-    
+
     if (imagePos !== null) {
       editor.chain()
         .setNodeSelection(imagePos)
@@ -613,10 +613,10 @@ function BlockSettingsPanel({
       const style = h > 0
         ? `width: ${w}px; height: ${h}px; max-width: 100%;`
         : `width: ${w}px; max-width: 100%;`
-      
+
       // Use the tracked blockPos if available
       let imagePos = blockPos
-      
+
       if (imagePos === null) {
         const { selection } = editor.state
         const node = editor.state.doc.nodeAt(selection.from)
@@ -624,7 +624,7 @@ function BlockSettingsPanel({
           imagePos = selection.from
         }
       }
-      
+
       if (imagePos !== null) {
         editor.chain()
           .setNodeSelection(imagePos)
@@ -637,10 +637,10 @@ function BlockSettingsPanel({
   const handleAltTextChange = (value: string) => {
     setAltText(value)
     if (!editor) return
-    
+
     // Use the tracked blockPos if available
     let imagePos = blockPos
-    
+
     if (imagePos === null) {
       const { selection } = editor.state
       const node = editor.state.doc.nodeAt(selection.from)
@@ -648,7 +648,7 @@ function BlockSettingsPanel({
         imagePos = selection.from
       }
     }
-    
+
     if (imagePos !== null) {
       editor.chain()
         .setNodeSelection(imagePos)
@@ -680,21 +680,21 @@ function BlockSettingsPanel({
             <div>
               <label className="text-xs font-medium mb-1 block">Text Alignment</label>
               <div className="flex gap-1">
-                <button 
-                  type="button" 
+                <button
+                  type="button"
                   onClick={() => editor?.chain().focus().setTextAlign("left").run()}
                   className={cn("flex-1 p-2 border border-border rounded hover:bg-muted", editor?.isActive({ textAlign: "left" }) && "bg-muted")}
                 >
                   <AlignLeft className="h-4 w-4 mx-auto" />
                 </button>
-                <button 
+                <button
                   type="button"
                   onClick={() => editor?.chain().focus().setTextAlign("center").run()}
                   className={cn("flex-1 p-2 border border-border rounded hover:bg-muted", editor?.isActive({ textAlign: "center" }) && "bg-muted")}
                 >
                   <AlignCenter className="h-4 w-4 mx-auto" />
                 </button>
-                <button 
+                <button
                   type="button"
                   onClick={() => editor?.chain().focus().setTextAlign("right").run()}
                   className={cn("flex-1 p-2 border border-border rounded hover:bg-muted", editor?.isActive({ textAlign: "right" }) && "bg-muted")}
@@ -779,8 +779,8 @@ function BlockSettingsPanel({
 
           <CollapsiblePanel title="Alt Text" icon={FileText} defaultOpen>
             <div className="space-y-2">
-              <Input 
-                placeholder="Describe the image..." 
+              <Input
+                placeholder="Describe the image..."
                 className="h-8 text-sm"
                 value={altText}
                 onChange={(e) => handleAltTextChange(e.target.value)}
@@ -802,10 +802,25 @@ function BlockSettingsPanel({
                   <button
                     key={color}
                     type="button"
-                    className="w-6 h-6 rounded border border-border"
+                    onClick={() => editor?.chain().focus().setColor(color).run()}
+                    className={cn(
+                      "w-6 h-6 rounded border-2 transition-all hover:scale-110",
+                      editor?.getAttributes("textStyle").color === color
+                        ? "border-primary ring-2 ring-primary/30"
+                        : "border-border"
+                    )}
                     style={{ backgroundColor: color }}
+                    title={`Set text color to ${color}`}
                   />
                 ))}
+                <button
+                  type="button"
+                  onClick={() => editor?.chain().focus().unsetColor().run()}
+                  className="w-6 h-6 rounded border-2 border-border flex items-center justify-center text-xs hover:bg-muted"
+                  title="Remove text color"
+                >
+                  <X className="h-3 w-3" />
+                </button>
               </div>
             </div>
             <div>
@@ -815,8 +830,22 @@ function BlockSettingsPanel({
                   <button
                     key={color}
                     type="button"
-                    className="w-6 h-6 rounded border border-border"
+                    onClick={() => {
+                      if (color === "transparent") {
+                        editor?.chain().focus().unsetHighlight().run()
+                      } else {
+                        editor?.chain().focus().setHighlight({ color }).run()
+                      }
+                    }}
+                    className={cn(
+                      "w-6 h-6 rounded border-2 transition-all hover:scale-110",
+                      (color === "transparent" && !editor?.getAttributes("highlight").color) ||
+                        editor?.getAttributes("highlight").color === color
+                        ? "border-primary ring-2 ring-primary/30"
+                        : "border-border"
+                    )}
                     style={{ backgroundColor: color === "transparent" ? "white" : color }}
+                    title={color === "transparent" ? "Remove background color" : `Set background to ${color}`}
                   />
                 ))}
               </div>
@@ -1389,7 +1418,7 @@ export default function WordPressBlogEditor({ initialData }: WordPressBlogEditor
                 className="w-full text-4xl font-bold bg-transparent border-none outline-none placeholder:text-muted-foreground/50 focus:ring-0"
               />
               <p className="text-sm text-muted-foreground">
-                Permalink: /blog/{formData.slug || generateSlug(formData.title) || "post-url"}
+                Permalink: /blogs/{formData.slug || generateSlug(formData.title) || "post-url"}
               </p>
             </div>
 
@@ -1410,13 +1439,13 @@ export default function WordPressBlogEditor({ initialData }: WordPressBlogEditor
                 content={formData.content}
                 onChange={(content) => setFormData((prev) => ({ ...prev, content }))}
                 placeholder="Start writing or type '/' to insert a block..."
-onBlockSelect={(blockType, blockPos) => {
-  setSelectedBlockType(blockType)
-  setSelectedBlockPos(blockPos ?? null)
-  if (blockType) {
-  setActivePanel("block")
-  }
-  }}
+                onBlockSelect={(blockType, blockPos) => {
+                  setSelectedBlockType(blockType)
+                  setSelectedBlockPos(blockPos ?? null)
+                  if (blockType) {
+                    setActivePanel("block")
+                  }
+                }}
                 onEditorReady={(editor) => setEditorInstance(editor)}
               />
             </div>
@@ -1864,16 +1893,16 @@ onBlockSelect={(blockType, blockPos) => {
           {activePanel === "block" && (
             <div className="flex-1 overflow-y-auto pb-20">
               {selectedBlockType ? (
-<BlockSettingsPanel
-  blockType={selectedBlockType}
-  blockPos={selectedBlockPos}
-  onClose={() => {
-  setSelectedBlockType(null)
-  setSelectedBlockPos(null)
-  setActivePanel("post")
-  }}
-  editor={editorInstance}
-  />
+                <BlockSettingsPanel
+                  blockType={selectedBlockType}
+                  blockPos={selectedBlockPos}
+                  onClose={() => {
+                    setSelectedBlockType(null)
+                    setSelectedBlockPos(null)
+                    setActivePanel("post")
+                  }}
+                  editor={editorInstance}
+                />
               ) : (
                 <div className="p-4 text-center text-muted-foreground">
                   <Layers className="h-12 w-12 mx-auto mb-3 opacity-20" />
@@ -2099,14 +2128,49 @@ onBlockSelect={(blockType, blockPos) => {
                     />
                   </div>
                   <div className="space-y-2">
-                    <label className="text-xs font-medium">OG Image URL</label>
+                    <label className="text-xs font-medium">OG Image</label>
+                    <p className="text-xs text-muted-foreground">
+                      Upload or enter URL. Recommended: 1200x630px
+                    </p>
+                    <div className="flex items-center gap-2">
+                      <label className="flex items-center justify-center px-3 py-1.5 border border-border rounded-md cursor-pointer hover:bg-muted transition-colors text-xs font-medium">
+                        <input
+                          type="file"
+                          accept="image/*"
+                          onChange={(e) => handleImageUpload(e, "og_image")}
+                          disabled={uploading.og_image}
+                          className="hidden"
+                        />
+                        {uploading.og_image ? "Uploading..." : "Upload"}
+                      </label>
+                      {formData.og_image && (
+                        <Button
+                          type="button"
+                          variant="ghost"
+                          size="sm"
+                          onClick={() => setFormData((prev) => ({ ...prev, og_image: "" }))}
+                          className="h-7 text-xs"
+                        >
+                          Remove
+                        </Button>
+                      )}
+                    </div>
                     <Input
                       name="og_image"
                       value={formData.og_image}
                       onChange={handleChange}
-                      placeholder="https://..."
+                      placeholder="Or enter image URL..."
                       className="h-8 text-sm"
                     />
+                    {formData.og_image && (
+                      <div className="mt-2">
+                        <img
+                          src={formData.og_image}
+                          alt="OG Image preview"
+                          className="w-full h-auto rounded-md border border-border"
+                        />
+                      </div>
+                    )}
                   </div>
                 </div>
               </CollapsiblePanel>
@@ -2155,7 +2219,7 @@ onBlockSelect={(blockType, blockPos) => {
                   const headings: { level: number; text: string }[] = []
                   let match
                   const tempDiv = typeof document !== 'undefined' ? document.createElement('div') : null
-                  
+
                   while ((match = headingRegex.exec(formData.content)) !== null) {
                     // Strip HTML tags from heading text
                     let text = match[2]
@@ -2219,20 +2283,20 @@ onBlockSelect={(blockType, blockPos) => {
                   const imgRegex = /<img[^>]+src="([^"]+)"[^>]*(?:width="(\d+)")?[^>]*(?:height="(\d+)")?[^>]*>/gi
                   const images: { src: string; width?: string; height?: string; alt?: string }[] = []
                   let match
-                  
+
                   // Reset regex lastIndex
                   imgRegex.lastIndex = 0
-                  
+
                   const content = formData.content
                   while ((match = imgRegex.exec(content)) !== null) {
                     const fullTag = match[0]
                     const src = match[1]
-                    
+
                     // Extract width, height, and alt from the full tag
                     const widthMatch = fullTag.match(/width="(\d+)"/)
                     const heightMatch = fullTag.match(/height="(\d+)"/)
                     const altMatch = fullTag.match(/alt="([^"]*)"/)
-                    
+
                     images.push({
                       src,
                       width: widthMatch?.[1],
@@ -2301,7 +2365,7 @@ onBlockSelect={(blockType, blockPos) => {
                   } else {
                     plainText = formData.content.replace(/<[^>]*>/g, ' ')
                   }
-                  
+
                   const wordCount = plainText.trim().split(/\s+/).filter(w => w.length > 0).length
                   const charCount = plainText.length
                   const paragraphCount = (formData.content.match(/<p[^>]*>/gi) || []).length

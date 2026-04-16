@@ -65,14 +65,18 @@ export default async function CustomHeadTags() {
     return null
   }
   
+  // Use Fragment with suppressHydrationWarning to handle dynamic content
+  // We inject raw HTML as a script that creates the elements on client-side only
+  // This avoids hydration mismatches from dynamic database content
+  const combinedHtml = filteredTags.map(tag => tag.tag_content).join('\n')
+  
   return (
-    <>
-      {filteredTags.map((tag) => (
-        <div
-          key={tag._id}
-          dangerouslySetInnerHTML={{ __html: tag.tag_content }}
-        />
-      ))}
-    </>
+    <script
+      id="custom-head-tags"
+      type="application/json"
+      data-head-tags="true"
+      suppressHydrationWarning
+      dangerouslySetInnerHTML={{ __html: JSON.stringify({ tags: combinedHtml }) }}
+    />
   )
 }

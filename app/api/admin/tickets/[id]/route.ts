@@ -3,15 +3,16 @@ import { getCurrentUser } from "@/lib/auth"
 import { ObjectId } from "mongodb"
 import { type NextRequest, NextResponse } from "next/server"
 
-export async function GET(req: NextRequest, { params }: { params: { id: string } }) {
+export async function GET(req: NextRequest, { params }: { params: Promise<{ id: string }> }) {
   try {
+    const { id } = await params
     const user = await getCurrentUser()
     if (!user || user.user_type !== "admin") {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 })
     }
 
     const db = await getDatabase()
-    const ticket = await db.collection("tickets").findOne({ _id: new ObjectId(params.id) })
+    const ticket = await db.collection("tickets").findOne({ _id: new ObjectId(id) })
 
     if (!ticket) {
       return NextResponse.json({ error: "Ticket not found" }, { status: 404 })

@@ -3,13 +3,15 @@
 import { useState, useRef } from "react"
 import { useRouter } from "next/navigation"
 import { Button } from "@/components/ui/button"
-import { Upload } from "lucide-react"
+import { Upload, X } from "lucide-react"
 import PageHeader from "@/components/dashboard/page-header"
+import { toast } from "sonner"
 
 export default function AdminAddDeveloperPage() {
   const router = useRouter()
   const fileInputRef = useRef<HTMLInputElement>(null)
   const [loading, setLoading] = useState(false)
+  const [uploading, setUploading] = useState(false)
   const [logoPreview, setLogoPreview] = useState("")
   const [formData, setFormData] = useState({
     name: "",
@@ -33,10 +35,11 @@ export default function AdminAddDeveloperPage() {
     }
     reader.readAsDataURL(file)
 
-    // Upload to ImageKit
+    setUploading(true)
     try {
       const formDataUpload = new FormData()
       formDataUpload.append("file", file)
+      formDataUpload.append("folder", "developers")
 
       const res = await fetch("/api/upload", {
         method: "POST",
@@ -46,26 +49,58 @@ export default function AdminAddDeveloperPage() {
       if (res.ok) {
         const data = await res.json()
         setFormData((prev) => ({ ...prev, logo_url: data.url }))
+        setLogoPreview(data.url)
+        toast.success("Logo uploaded successfully")
+      } else {
+        toast.error("Failed to upload logo")
+        setLogoPreview("")
       }
     } catch (error) {
       console.error("[v0] Error uploading image:", error)
+      toast.error("Error uploading logo")
+      setLogoPreview("")
+    } finally {
+      setUploading(false)
+    }
+  }
+
+  const handleRemoveLogo = () => {
+    setLogoPreview("")
+    setFormData((prev) => ({ ...prev, logo_url: "" }))
+    if (fileInputRef.current) {
+      fileInputRef.current.value = ""
     }
   }
 
   const handleSubmit = async (e: any) => {
     e.preventDefault()
+    
+    if (!formData.name.trim()) {
+      toast.error("Developer name is required")
+      return
+    }
+    
     setLoading(true)
     try {
       const res = await fetch("/api/admin/developers", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(formData),
+        body: JSON.stringify({
+          name: formData.name.trim(),
+          logo_url: formData.logo_url || "",
+          about_developer: formData.about_developer || "",
+        }),
       })
       if (res.ok) {
+        toast.success("Developer created successfully")
         router.push("/admin/developers")
+      } else {
+        const data = await res.json()
+        toast.error(data.error || "Failed to create developer")
       }
     } catch (error) {
       console.error("[v0] Error creating developer:", error)
+      toast.error("Error creating developer")
     } finally {
       setLoading(false)
     }
@@ -96,7 +131,7 @@ export default function AdminAddDeveloperPage() {
 
                 <div>
                   <label className="text-xs font-medium text-muted-foreground block mb-1.5">Developer Logo</label>
-                  <div className="space-y-2">
+                  <div className="space-y-3">
                     <div className="flex items-center gap-3">
                       <input
                         ref={fileInputRef}
@@ -110,20 +145,38 @@ export default function AdminAddDeveloperPage() {
                         onClick={() => fileInputRef.current?.click()}
                         variant="outline"
                         className="text-xs h-8"
+                        disabled={uploading}
                       >
                         <Upload size={14} className="mr-1.5" />
-                        Upload Logo
+                        {uploading ? "Uploading..." : logoPreview ? "Change Logo" : "Upload Logo"}
                       </Button>
                     </div>
                     {logoPreview && (
-                      <div className="flex items-center gap-3">
+                      <div className="flex items-center gap-3 p-3 bg-muted/50 rounded-md border border-border">
                         <img
-                          src={logoPreview || "/placeholder.svg"}
+                          src={logoPreview}
                           alt="Logo preview"
-                          className="h-12 w-12 object-cover rounded border border-border"
+                          className="h-16 w-16 object-contain rounded border border-border bg-background"
                         />
-                        <span className="text-xs text-muted-foreground">Logo uploaded successfully</span>
+                        <div className="flex-1">
+                          <p className="text-xs font-medium text-foreground">Logo Preview</p>
+                          <p className="text-xs text-muted-foreground">
+                            {formData.logo_url ? "Ready to save" : "Uploading..."}
+                          </p>
+                        </div>
+                        <Button
+                          type="button"
+                          variant="ghost"
+                          size="sm"
+                          className="h-8 w-8 p-0 text-destructive hover:text-destructive"
+                          onClick={handleRemoveLogo}
+                        >
+                          <X size={16} />
+                        </Button>
                       </div>
+                    )}
+                    {!logoPreview && (
+                      <p className="text-xs text-muted-foreground">Upload a logo to represent this developer.</p>
                     )}
                   </div>
                 </div>

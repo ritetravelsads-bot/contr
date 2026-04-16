@@ -1,103 +1,88 @@
-import { MongoClient } from "mongodb"
+import { getDatabase } from "@/lib/mongodb"
+import { NextResponse } from "next/server"
+import {
+  sendEmail,
+  quoteAdminTemplate,
+  quoteUserTemplate,
+} from "@/lib/email"
 
-const mongoUrl = process.env.MONGODB_URI || ""
-
-async function saveQuoteRequest(data: {
-  name: string
-  email: string
-  phone: string
-  serviceType: string
-  propertyType: string
-  roofSize: string
-  urgency: string
-  details: string
-  timestamp?: Date
-}) {
-  if (!mongoUrl) {
-    throw new Error("MongoDB URI not configured")
-  }
-
-  const client = new MongoClient(mongoUrl)
-
-  try {
-    await client.connect()
-    const db = client.db("countryroof")
-    const collection = db.collection("quotes")
-
-    const result = await collection.insertOne({
-      ...data,
-      timestamp: new Date(),
-      status: "pending",
-    })
-
-    return result.insertedId
-  } finally {
-    await client.close()
-  }
-}
+const COMPANY_EMAIL = process.env.SMTP_USER || "countryroof.infobirth@gmail.com"
 
 export async function POST(request: Request) {
-  if (request.method !== "POST") {
-    return new Response("Method not allowed", { status: 405 })
-  }
-
   try {
     const body = await request.json()
 
     const { name, email, phone, serviceType, propertyType, roofSize, urgency, details } = body
 
+    // Validate required fields
     if (!name || !email || !phone || !serviceType || !propertyType) {
-      return new Response(JSON.stringify({ error: "Missing required fields" }), {
-        status: 400,
-        headers: { "Content-Type": "application/json" },
-      })
+      return NextResponse.json(
+        { error: "Missing required fields" },
+        { status: 400 }
+      )
     }
 
     // Validate email
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
     if (!emailRegex.test(email)) {
-      return new Response(JSON.stringify({ error: "Invalid email address" }), {
-        status: 400,
-        headers: { "Content-Type": "application/json" },
-      })
+      return NextResponse.json(
+        { error: "Invalid email address" },
+        { status: 400 }
+      )
     }
 
     // Save to MongoDB
-    const id = await saveQuoteRequest({
+    const db = await getDatabase()
+    const result = await db.collection("quotes").insertOne({
       name,
       email,
       phone,
       serviceType,
       propertyType,
-      roofSize,
-      urgency,
-      details,
+      roofSize: roofSize || "",
+      urgency: urgency || "",
+      details: details || "",
+      status: "pending",
+      created_at: new Date(),
+      updated_at: new Date(),
     })
 
-    // TODO: Send email notification to admin
-    // TODO: Send confirmation email to user
+    // Send email to admin
+    await sendEmail({
+      to: COMPANY_EMAIL,
+      subject: `New Quote Request: ${serviceType}`,
+      html: quoteAdminTemplate({
+        name,
+        email,
+        phone,
+        serviceType,
+        propertyType,
+        roofSize,
+        urgency,
+        details,
+      }),
+    })
 
-    return new Response(
-      JSON.stringify({
-        success: true,
-        message: "Quote request submitted successfully",
-        id,
+    // Send confirmation email to user
+    await sendEmail({
+      to: email,
+      subject: `Your quote request has been received - Country Roof`,
+      html: quoteUserTemplate({
+        name,
+        serviceType,
       }),
-      {
-        status: 200,
-        headers: { "Content-Type": "application/json" },
-      },
-    )
+    })
+
+    return NextResponse.json({
+      success: true,
+      message: "Quote request submitted successfully",
+      id: result.insertedId.toString(),
+    })
   } catch (error) {
-    console.error("Quote request error:", error)
-    return new Response(
-      JSON.stringify({
-        error: "Failed to submit quote request",
-      }),
-      {
-        status: 500,
-        headers: { "Content-Type": "application/json" },
-      },
+    console.error("[Quote API] Error:", error)
+    return NextResponse.json(
+      { error: "Failed to submit quote request" },
+      { status: 500 }
     )
   }
 }

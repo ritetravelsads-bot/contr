@@ -1,7 +1,7 @@
 import type { Metadata } from "next"
 import { redirect } from "next/navigation"
 import { requireAdmin } from "@/lib/auth"
-import { getBlogPostById } from "@/app/blog/_actions"
+import { getBlogPostById } from "@/app/blogs/_actions"
 import WordPressBlogEditor from "@/components/admin/wordpress-blog-editor"
 
 export const metadata: Metadata = {

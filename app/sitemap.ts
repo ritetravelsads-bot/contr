@@ -32,6 +32,25 @@ async function getDbConnection() {
   }
 }
 
+// Property type slug mapping for URL structure
+const PROPERTY_TYPE_MAP: Record<string, string[]> = {
+  residential: ["apartment", "villa", "house", "flat", "penthouse", "duplex", "studio", "independent", "row house", "bungalow", "farmhouse"],
+  commercial: ["office", "shop", "commercial", "showroom", "warehouse", "retail", "sco", "scf", "multiplex"],
+  plots: ["plot", "land", "agricultural", "industrial land"],
+}
+
+function getPropertyTypeSlug(propertyType: string): string {
+  if (!propertyType) return "residential"
+  const lowerType = propertyType.toLowerCase()
+  
+  for (const [slug, types] of Object.entries(PROPERTY_TYPE_MAP)) {
+    if (types.some(t => lowerType.includes(t))) {
+      return slug
+    }
+  }
+  return "residential"
+}
+
 async function getProperties() {
   const client = await getDbConnection()
   if (!client) return []
@@ -41,7 +60,7 @@ async function getProperties() {
     const properties = await db
       .collection("properties")
       .find({ status: "active" })
-      .project({ slug: 1, updated_at: 1, property_name: 1 })
+      .project({ slug: 1, updated_at: 1, property_name: 1, property_type: 1 })
       .toArray()
     return properties
   } catch (error) {
@@ -148,7 +167,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
       priority: 0.9,
     },
     {
-      url: `${baseUrl}/blog`,
+      url: `${baseUrl}/blogs`,
       lastModified: new Date(),
       changeFrequency: "weekly",
       priority: 0.8,
@@ -212,21 +231,24 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     getNews(),
   ])
 
-  // Dynamic property pages - using slug (title-based URL)
+  // Dynamic property pages - using new URL structure /properties/[type]/[slug]
   const propertyPages: MetadataRoute.Sitemap = properties
     .filter((prop: any) => prop.slug) // Only include properties with slugs
-    .map((prop: any) => ({
-      url: `${baseUrl}/properties/${sanitizeSlug(prop.slug)}`,
-      lastModified: prop.updated_at ? new Date(prop.updated_at) : new Date(),
-      changeFrequency: "weekly" as const,
-      priority: 0.7,
-    }))
+    .map((prop: any) => {
+      const typeSlug = getPropertyTypeSlug(prop.property_type || "")
+      return {
+        url: `${baseUrl}/properties/${typeSlug}/${sanitizeSlug(prop.slug)}`,
+        lastModified: prop.updated_at ? new Date(prop.updated_at) : new Date(),
+        changeFrequency: "weekly" as const,
+        priority: 0.7,
+      }
+    })
 
   // Dynamic blog pages - using slug (title-based URL)
   const blogPages: MetadataRoute.Sitemap = blogs
     .filter((blog: any) => blog.slug)
     .map((blog: any) => ({
-      url: `${baseUrl}/blog/${sanitizeSlug(blog.slug)}`,
+      url: `${baseUrl}/blogs/${sanitizeSlug(blog.slug)}`,
       lastModified: blog.updated_at ? new Date(blog.updated_at) : new Date(),
       changeFrequency: "monthly" as const,
       priority: 0.6,

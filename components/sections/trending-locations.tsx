@@ -67,14 +67,14 @@ export default function TrendingLocations() {
           Invest in rapidly developing Gurugram areas with strong appreciation potential
         </p>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+        <div className="grid grid-cols-2 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 md:gap-6">
           {trendingLocations.map((location) => (
             <Link
               key={location.name}
               href={`/${location.slug}`}
-              className="relative overflow-hidden rounded-lg shadow-md hover:shadow-xl transition-all duration-300 bg-white"
+              className="relative overflow-hidden rounded-lg shadow-md hover:shadow-xl transition-[transform,box-shadow] duration-300 bg-white min-h-[120px] md:min-h-[200px]"
             >
-              <div className="relative h-48 overflow-hidden bg-slate-200">
+              <div className="relative h-32 md:h-48 overflow-hidden bg-slate-200">
                 <Image
                   src={location.image || "/placeholder.svg"}
                   alt={location.name}
@@ -85,14 +85,14 @@ export default function TrendingLocations() {
                 />
                 <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/30 to-transparent" />
               </div>
-              <div className="absolute bottom-0 left-0 right-0 p-4">
-                <div className="flex items-center gap-2 mb-1">
-                  <MapPin className="h-5 w-5 text-white" />
-                  <h3 className="text-lg font-bold text-white">{location.name}</h3>
+              <div className="absolute bottom-0 left-0 right-0 p-3 md:p-4">
+                <div className="flex items-center gap-1.5 md:gap-2 mb-0.5 md:mb-1">
+                  <MapPin className="h-4 w-4 md:h-5 md:w-5 text-white shrink-0" />
+                  <h3 className="text-sm md:text-lg font-bold text-white line-clamp-1">{location.name}</h3>
                 </div>
-                <p className="text-sm text-white/90">{location.properties}</p>
+                <p className="text-xs md:text-sm text-white/90">{location.properties}</p>
               </div>
-              <div className="absolute top-3 right-3 bg-[#002366] text-white text-xs font-semibold px-3 py-1 rounded-full">
+              <div className="absolute top-2 right-2 md:top-3 md:right-3 bg-[#002366] text-white text-[10px] md:text-xs font-semibold px-2 md:px-3 py-0.5 md:py-1 rounded-full">
                 Trending
               </div>
             </Link>

@@ -18,7 +18,7 @@ export default function PrivacyPolicyPage() {
             <h2 className="text-2xl font-semibold text-foreground">Legal & Policy Framework</h2>
             <div className="flex flex-wrap gap-4 text-sm text-muted-foreground">
               <p><strong>Effective Date:</strong> To be inserted</p>
-              <p><strong>Website:</strong> https://countryroof.com</p>
+              <p><strong>Website:</strong> https://countryroof.in</p>
               <p><strong>Jurisdiction:</strong> Gurugram, Haryana, India</p>
             </div>
           </div>
@@ -160,7 +160,7 @@ export default function PrivacyPolicyPage() {
                 <li>Deletion (subject to legal retention obligations)</li>
               </ul>
               <p className="text-muted-foreground mt-3">
-                <strong>Email:</strong> info@countryroof.com
+                <strong>Email:</strong> info@countryroof.in
               </p>
             </section>
 
@@ -169,7 +169,7 @@ export default function PrivacyPolicyPage() {
               <div className="p-4 bg-card border border-border rounded-lg">
                 <p className="text-muted-foreground"><strong>Grievance Officer</strong></p>
                 <p className="text-muted-foreground">Countryroof</p>
-                <p className="text-muted-foreground"><strong>Email:</strong> info@countryroof.com</p>
+                <p className="text-muted-foreground"><strong>Email:</strong> info@countryroof.in</p>
                 <p className="text-muted-foreground"><strong>Phone:</strong> +91-98737-02365</p>
                 <p className="text-muted-foreground mt-3">Response within 30 days.</p>
               </div>

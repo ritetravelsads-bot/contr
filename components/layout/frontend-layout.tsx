@@ -8,6 +8,7 @@ import BottomNav from "./bottom-nav"
 import WhatsAppButton from "@/components/ui/whatsapp-button"
 import NavigationProgress from "./navigation-progress"
 import RoutePrefetcher from "./route-prefetcher"
+import { Toaster } from "@/components/ui/sonner"
 
 // Lazy load footer to reduce initial bundle and prevent CLS
 const Footer = lazy(() => import("./footer"))
@@ -40,6 +41,7 @@ export default function FrontendLayout({ children }: { children: React.ReactNode
       </Suspense>
       <BottomNav />
       <WhatsAppButton />
+      <Toaster position="top-center" richColors closeButton />
     </>
   )
 }

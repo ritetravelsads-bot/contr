@@ -3,6 +3,9 @@ import dynamic from "next/dynamic"
 import BannerSlider from "@/components/sections/banner-slider"
 import AdvancedSearch from "@/components/sections/advanced-search"
 
+// Force dynamic rendering to ensure fresh data on every page load
+export const revalidate = 0
+
 // Lazy load below-the-fold components for better LCP
 const RecentlyViewed = dynamic(() => import("@/components/sections/recently-viewed"), {
   ssr: true,

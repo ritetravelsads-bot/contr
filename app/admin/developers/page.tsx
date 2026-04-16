@@ -11,7 +11,13 @@ export default function AdminDevelopersPage() {
 
   const loadDevelopers = async () => {
     try {
-      const res = await fetch("/api/admin/developers")
+      // Add cache-busting timestamp to ensure fresh data
+      const res = await fetch(`/api/admin/developers?_t=${Date.now()}`, {
+        cache: "no-store",
+        headers: {
+          "Cache-Control": "no-cache",
+        },
+      })
       const data = await res.json()
       setDevelopers(data)
     } catch (error) {

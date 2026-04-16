@@ -2,11 +2,21 @@ import { getDatabase } from "@/lib/mongodb"
 import { getCurrentUser } from "@/lib/auth"
 import { type NextRequest, NextResponse } from "next/server"
 
+// Disable caching for this route
+export const dynamic = "force-dynamic"
+export const revalidate = 0
+
 export async function GET() {
   try {
     const db = await getDatabase()
     const developers = await db.collection("developers").find({}).sort({ name: 1 }).toArray()
-    return NextResponse.json(developers)
+    return NextResponse.json(developers, {
+      headers: {
+        "Cache-Control": "no-store, no-cache, must-revalidate, proxy-revalidate",
+        "Pragma": "no-cache",
+        "Expires": "0",
+      },
+    })
   } catch (error) {
     console.error("[v0] Error fetching developers:", error)
     return NextResponse.json({ error: "Failed to fetch developers" }, { status: 500 })

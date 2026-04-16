@@ -983,6 +983,47 @@ export default function BlogPostForm({ initialData }: BlogPostFormProps) {
                   rows={3}
                 />
               </div>
+
+              <div className="space-y-2">
+                <label htmlFor="og_image" className="text-sm font-medium">
+                  OG Image (Social Media Preview)
+                </label>
+                <p className="text-xs text-muted-foreground mb-2">
+                  Upload a custom image for social media sharing. Recommended size: 1200x630 pixels.
+                </p>
+                <div className="flex items-center gap-4">
+                  <label className="flex items-center justify-center px-4 py-2 border border-border rounded-md cursor-pointer hover:bg-muted transition-colors">
+                    <input
+                      id="og_image"
+                      type="file"
+                      accept="image/*"
+                      onChange={(e) => handleImageUpload(e, "og_image")}
+                      disabled={uploading.og_image}
+                      className="hidden"
+                    />
+                    {uploading.og_image ? "Uploading..." : "Choose File"}
+                  </label>
+                  {formData.og_image && (
+                    <Button
+                      type="button"
+                      variant="ghost"
+                      size="sm"
+                      onClick={() => setFormData((prev) => ({ ...prev, og_image: "" }))}
+                    >
+                      Remove
+                    </Button>
+                  )}
+                </div>
+                {formData.og_image && (
+                  <div className="mt-2">
+                    <img
+                      src={formData.og_image}
+                      alt="OG Image preview"
+                      className="w-full max-w-md h-auto rounded-md border border-border"
+                    />
+                  </div>
+                )}
+              </div>
             </CardContent>
           </Card>
         </TabsContent>

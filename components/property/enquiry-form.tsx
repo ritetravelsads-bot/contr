@@ -4,6 +4,7 @@ import { useState } from "react"
 import { Send, Phone, User, Mail, MessageSquare, Loader2, CheckCircle, Sparkles, Shield, Clock, HeadphonesIcon, ArrowRight } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { cn } from "@/lib/utils"
+import { toast } from "sonner"
 
 interface EnquiryFormProps {
   propertyId?: string
@@ -45,11 +46,20 @@ export function EnquiryForm({ propertyId, propertyName, propertySlug }: EnquiryF
       if (res.ok) {
         setSuccess(true)
         setFormData({ name: "", phone: "", email: "", message: "" })
+        toast.success("Enquiry submitted successfully!", {
+          description: "Our expert team will contact you within 2 hours.",
+        })
       } else {
         setError(data.error || "Failed to submit enquiry")
+        toast.error("Failed to submit enquiry", {
+          description: data.error || "Please try again or call us directly.",
+        })
       }
     } catch (err) {
       setError("Network error. Please try again.")
+      toast.error("Network error", {
+        description: "Please check your connection and try again.",
+      })
     } finally {
       setLoading(false)
     }

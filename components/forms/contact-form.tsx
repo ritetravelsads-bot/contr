@@ -6,6 +6,7 @@ import { useState } from "react"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Textarea } from "@/components/ui/textarea"
+import { toast } from "sonner"
 
 interface FormData {
   name: string
@@ -49,9 +50,15 @@ export default function ContactForm() {
 
       setSuccess(true)
       setFormData({ name: "", email: "", phone: "", subject: "", message: "" })
+      toast.success("Message sent successfully!", {
+        description: "Thank you for contacting us. We'll get back to you within 24 hours.",
+      })
       setTimeout(() => setSuccess(false), 5000)
     } catch (err) {
       setError(err instanceof Error ? err.message : "An error occurred")
+      toast.error("Failed to send message", {
+        description: "Please try again or contact us directly.",
+      })
     } finally {
       setLoading(false)
     }

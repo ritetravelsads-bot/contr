@@ -8,7 +8,7 @@ const ROUTES_TO_PREFETCH = [
   "/properties",
   "/about",
   "/contact",
-  "/blog",
+  "/blogs",
   "/developers",
 ]
 

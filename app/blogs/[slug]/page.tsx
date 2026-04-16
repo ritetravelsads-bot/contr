@@ -128,7 +128,7 @@ export async function generateMetadata({
     openGraph: {
       title: post.og_title || post.title,
       description: post.og_description || post.excerpt,
-      url: `https://countryroof.com/blogs/${slug}`,
+      url: `https://countryroof.in/blogs/${slug}`,
       type: "article",
       publishedTime: post.publication_date,
       authors: [post.author?.toString() || "CountryRoof"],
@@ -164,7 +164,7 @@ export default async function BlogPostPage({
   })
 
   const schemaMarkup = generateBlogSchema(post, post.author || "CountryRoof")
-  const canonicalUrl = `https://countryroof.com/blogs/${slug}`
+  const canonicalUrl = `https://countryroof.in/blogs/${slug}`
   const heroImage = post.banner_image || post.cover_image || post.og_image
 
   return (
@@ -284,7 +284,7 @@ export default async function BlogPostPage({
               <article className="flex-1 min-w-0">
                 {/* Tags */}
                 {post.tags && post.tags.length > 0 && (
-                  <div className="flex flex-wrap items-center gap-2 mb-8 pb-6 border-b border-border">
+                  <div className="hidden flex flex-wrap items-center gap-2 mb-8 pb-6 border-b border-border">
                     <Tag className="h-3.5 w-3.5 text-muted-foreground shrink-0" />
                     {post.tags.map((tag: string) => (
                       <Link
@@ -414,24 +414,6 @@ export default async function BlogPostPage({
                     </div>
                   </dl>
                 </div>
-
-                {/* Tags cloud */}
-                {post.tags && post.tags.length > 0 && (
-                  <div className="rounded-xl border border-border bg-card p-5">
-                    <p className="text-sm font-semibold mb-3">Tags</p>
-                    <div className="flex flex-wrap gap-2">
-                      {post.tags.map((tag: string) => (
-                        <Link
-                          key={tag}
-                          href={`/blogs?tag=${encodeURIComponent(tag)}`}
-                          className="text-xs font-medium px-2.5 py-1 rounded-full bg-muted hover:bg-primary/10 hover:text-primary text-muted-foreground transition-colors"
-                        >
-                          #{tag}
-                        </Link>
-                      ))}
-                    </div>
-                  </div>
-                )}
               </aside>
             </div>
           </div>
@@ -524,7 +506,6 @@ export default async function BlogPostPage({
       </main>
 
       <BackToTop />
-      <Footer />
     </>
   )
 }

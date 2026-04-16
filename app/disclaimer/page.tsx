@@ -109,7 +109,7 @@ export default function DisclaimerPage() {
                 If you have any questions about this Disclaimer, please contact us:
               </p>
               <ul className="list-disc pl-6 space-y-1 text-muted-foreground">
-                <li>By email: legal@countryroof.com</li>
+                <li>By email: legal@countryroof.in</li>
                 <li>By phone: +91 8500-900-100</li>
                 <li>By visiting our office: IRIS Tech Park, Unit No. 407, Gurugram, Haryana</li>
               </ul>

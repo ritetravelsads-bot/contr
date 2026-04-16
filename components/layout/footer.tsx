@@ -5,6 +5,7 @@ import Image from "next/image"
 import Link from "next/link"
 import { useState } from "react"
 import { Phone, Mail, ChevronDown, Send } from "lucide-react"
+import { toast } from "sonner"
 
 export default function Footer() {
   const currentYear = new Date().getFullYear()
@@ -27,7 +28,7 @@ export default function Footer() {
     setFormError("")
 
     try {
-      const res = await fetch("/api/contact", {
+      const res = await fetch("/api/callback", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
@@ -38,15 +39,25 @@ export default function Footer() {
         }),
       })
 
-      if (!res.ok) throw new Error("Failed to submit")
+      if (!res.ok) {
+        const data = await res.json()
+        throw new Error(data.error || "Failed to submit")
+      }
 
       setFormSubmitted(true)
+      toast.success("Callback request submitted!", {
+        description: "Our team will contact you within 30 minutes.",
+      })
       setTimeout(() => {
         setFormData({ name: "", phone: "", message: "" })
         setFormSubmitted(false)
       }, 3000)
-    } catch {
-      setFormError("Something went wrong. Please try again.")
+    } catch (error) {
+      const errorMessage = error instanceof Error ? error.message : "Something went wrong. Please try again."
+      setFormError(errorMessage)
+      toast.error("Failed to submit request", {
+        description: errorMessage,
+      })
     } finally {
       setFormLoading(false)
     }
@@ -123,10 +134,10 @@ export default function Footer() {
   }
 
   return (
-    <footer 
+    <footer
       className="w-full bg-gradient-to-b from-gray-50 to-white border-t border-gray-200"
-      style={{ 
-        contain: "layout style", 
+      style={{
+        contain: "layout style",
         minHeight: "600px",
         contentVisibility: "auto",
         containIntrinsicSize: "auto 600px"
@@ -159,10 +170,10 @@ export default function Footer() {
                   <Mail size={18} className="text-white" />
                 </div>
                 <a
-                  href="mailto:info@countryroof.com"
+                  href="mailto:info@countryroof.in"
                   className="text-sm text-gray-700 hover:text-red-500 transition-colors"
                 >
-                  info@countryroof.com
+                  info@countryroof.in
                 </a>
               </div>
             </div>
@@ -249,7 +260,7 @@ export default function Footer() {
         <div className="border-t border-gray-200 pt-8">
           <div className="flex flex-col md:flex-row items-center justify-between gap-4">
             <p className="text-xs text-gray-600 text-center md:text-left">
-              © {currentYear} countryroof.com All rights reserved.
+              © {currentYear} countryroof.in All rights reserved.
             </p>
             <div className="flex items-center gap-6">
               <Link href="/privacy-policy" className="text-xs text-gray-600 hover:text-red-500 transition-colors">

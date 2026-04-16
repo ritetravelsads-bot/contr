@@ -58,15 +58,18 @@ export default function MegaMenuHeader() {
       try {
         const response = await fetch("/api/auth/me", { 
           credentials: "include",
-          // Add cache to speed up repeated requests
-          next: { revalidate: 60 }
+          // IMPORTANT: Never cache auth responses - each user must get their own session
+          cache: "no-store",
         })
         if (response.ok) {
           const data = await response.json()
-          setCurrentUser(data.user)
+          // API returns user: null for unauthenticated users
+          if (data.user) {
+            setCurrentUser(data.user)
+          }
         }
       } catch {
-        // User not logged in
+        // Network error - user not logged in
       }
     }
 

@@ -92,10 +92,11 @@ const PropertyVideoCard = memo(function PropertyVideoCard({ property, index }: {
         "group relative rounded-2xl overflow-hidden cursor-pointer",
         "h-[380px] md:h-[420px]",
         "shadow-lg hover:shadow-2xl bg-slate-200",
-        "transition-all duration-500 ease-out",
-        "hover:scale-[1.02] hover:-translate-y-1"
+        // Use transform-based transitions for GPU acceleration (no filter animations)
+        "transition-[transform,box-shadow] duration-300 ease-out",
+        "hover:scale-[1.02] hover:-translate-y-1",
+        "will-change-transform"
       )}
-      style={{ animationDelay: `${index * 100}ms` }}
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
     >

@@ -12,7 +12,7 @@ export const metadata: Metadata = {
   openGraph: {
     title: "Careers at CountryRoof",
     description: "Build your career with Gurugram's leading real estate advisory firm.",
-    url: "https://countryroof.com/career",
+    url: "https://countryroof.in/career",
   },
 }
 

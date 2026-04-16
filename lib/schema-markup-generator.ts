@@ -32,17 +32,17 @@ export function generateBlogSchema(post: any, authorName: string) {
       name: "CountryRoof",
       logo: {
         "@type": "ImageObject",
-        url: "https://countryroof.com/logo.png",
+        url: "https://countryroof.in/logo.png",
       },
     },
     mainEntityOfPage: {
       "@type": "WebPage",
-      "@id": `https://countryroof.com/blogs/${post.slug}`,
+      "@id": `https://countryroof.in/blogs/${post.slug}`,
     },
     ...(post.tags && post.tags.length > 0 && {
       keywords: post.tags.join(", ")
     }),
-    articleSection: post.category 
+    articleSection: post.category
       ? (Array.isArray(post.category) ? post.category[0] : post.category)
       : "Uncategorized"
   }
@@ -69,10 +69,10 @@ export function generateBlogSchema(post: any, authorName: string) {
   }
 
   // BreadcrumbList Schema - includes category (or Uncategorized) and blog title
-  const categoryName = post.category 
+  const categoryName = post.category
     ? (Array.isArray(post.category) ? post.category[0] : post.category)
     : "Uncategorized"
-  
+
   const breadcrumbSchema = {
     "@context": "https://schema.org",
     "@type": "BreadcrumbList",
@@ -81,27 +81,27 @@ export function generateBlogSchema(post: any, authorName: string) {
         "@type": "ListItem",
         position: 1,
         name: "Home",
-        item: "https://countryroof.com"
+        item: "https://countryroof.in"
       },
       {
         "@type": "ListItem",
         position: 2,
         name: "Blogs",
-        item: "https://countryroof.com/blogs"
+        item: "https://countryroof.in/blogs"
       },
       {
         "@type": "ListItem",
         position: 3,
         name: categoryName,
-        item: post.category 
-          ? `https://countryroof.com/blogs?category=${encodeURIComponent(categoryName)}`
-          : "https://countryroof.com/blogs"
+        item: post.category
+          ? `https://countryroof.in/blogs?category=${encodeURIComponent(categoryName)}`
+          : "https://countryroof.in/blogs"
       },
       {
         "@type": "ListItem",
         position: 4,
         name: post.title,
-        item: `https://countryroof.com/blogs/${post.slug}`
+        item: `https://countryroof.in/blogs/${post.slug}`
       }
     ]
   }
@@ -159,7 +159,7 @@ export function generateOrganizationSchema() {
     "@context": "https://schema.org",
     "@type": "RealEstateAgent",
     name: "CountryRoof",
-    url: "https://countryroof.com",
+    url: "https://countryroof.in",
     logo: "/logo.png",
     description: "Premium property marketplace connecting buyers, sellers, and agents",
     sameAs: [

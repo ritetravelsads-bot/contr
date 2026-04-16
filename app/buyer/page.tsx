@@ -16,7 +16,7 @@ export default function BuyerDashboard() {
   useEffect(() => {
     const loadData = async () => {
       try {
-        const res = await fetch("/api/auth/me")
+        const res = await fetch("/api/auth/me", { cache: "no-store", credentials: "include" })
         const userData = await res.json()
         setUser(userData.user)
       } catch (error) {

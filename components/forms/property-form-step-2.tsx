@@ -1,9 +1,12 @@
 "use client"
 
+import { useState } from "react"
 import { formatPriceToIndian } from "@/lib/utils"
-import { Plus, Trash2 } from "lucide-react"
+import { Plus, Trash2, Upload, X, Loader2, ImageIcon } from "lucide-react"
 
 export default function PropertyFormStep2({ formData, onChange }: any) {
+  const [uploadingUnit, setUploadingUnit] = useState<number | null>(null)
+  
   // Units management
   const units = formData.units || []
 
@@ -12,9 +15,51 @@ export default function PropertyFormStep2({ formData, onChange }: any) {
       type: "",
       size_range: "",
       price_range: "",
-      available: true
+      available: true,
+      floor_plan_image: ""
     }
     onChange("units", [...units, newUnit])
+  }
+
+  // Handle floor plan image upload for a specific unit
+  const handleUnitFloorPlanUpload = async (e: React.ChangeEvent<HTMLInputElement>, unitIndex: number) => {
+    const file = e.target.files?.[0]
+    if (!file) return
+
+    setUploadingUnit(unitIndex)
+
+    try {
+      const uploadFormData = new FormData()
+      uploadFormData.append("file", file)
+      uploadFormData.append("folder", "floor-plans")
+
+      const response = await fetch("/api/upload", {
+        method: "POST",
+        body: uploadFormData,
+      })
+
+      if (!response.ok) {
+        throw new Error("Upload failed")
+      }
+
+      const data = await response.json()
+      
+      // Update the specific unit's floor plan
+      const updatedUnits = [...units]
+      updatedUnits[unitIndex] = { ...updatedUnits[unitIndex], floor_plan_image: data.url }
+      onChange("units", updatedUnits)
+    } catch (error) {
+      console.error("Floor plan upload error:", error)
+    } finally {
+      setUploadingUnit(null)
+      e.target.value = ""
+    }
+  }
+
+  const removeUnitFloorPlan = (unitIndex: number) => {
+    const updatedUnits = [...units]
+    updatedUnits[unitIndex] = { ...updatedUnits[unitIndex], floor_plan_image: "" }
+    onChange("units", updatedUnits)
   }
 
   const updateUnit = (index: number, field: string, value: any) => {
@@ -447,6 +492,65 @@ export default function PropertyFormStep2({ formData, onChange }: any) {
                           <option value="no">No</option>
                         </select>
                       </div>
+                    </div>
+                    
+                    {/* Floor Plan Image Upload for this Unit */}
+                    <div className="mt-3 pt-3 border-t border-border">
+                      <label className="text-xs text-muted-foreground block mb-2">
+                        Floor Plan Image {unit.type ? `for ${unit.type}` : ""}
+                      </label>
+                      {unit.floor_plan_image ? (
+                        <div className="flex items-start gap-3">
+                          <div className="relative w-32 h-24 rounded-lg overflow-hidden border border-border bg-muted">
+                            <img
+                              src={unit.floor_plan_image}
+                              alt={`Floor plan for ${unit.type || `Unit ${index + 1}`}`}
+                              className="w-full h-full object-cover"
+                            />
+                            <button
+                              type="button"
+                              onClick={() => removeUnitFloorPlan(index)}
+                              className="absolute top-1 right-1 p-1 bg-destructive text-destructive-foreground rounded-full hover:bg-destructive/90 transition-colors"
+                            >
+                              <X className="h-3 w-3" />
+                            </button>
+                          </div>
+                          <div className="flex-1">
+                            <p className="text-xs text-muted-foreground">Floor plan uploaded</p>
+                            <label className="inline-flex items-center gap-1 mt-1 text-xs text-primary cursor-pointer hover:underline">
+                              <input
+                                type="file"
+                                accept="image/*"
+                                onChange={(e) => handleUnitFloorPlanUpload(e, index)}
+                                disabled={uploadingUnit === index}
+                                className="hidden"
+                              />
+                              Replace image
+                            </label>
+                          </div>
+                        </div>
+                      ) : (
+                        <label className="flex items-center justify-center gap-2 w-full h-20 border-2 border-dashed border-border rounded-lg cursor-pointer hover:border-primary hover:bg-muted/50 transition-all">
+                          <input
+                            type="file"
+                            accept="image/*"
+                            onChange={(e) => handleUnitFloorPlanUpload(e, index)}
+                            disabled={uploadingUnit === index}
+                            className="hidden"
+                          />
+                          {uploadingUnit === index ? (
+                            <>
+                              <Loader2 className="h-4 w-4 text-primary animate-spin" />
+                              <span className="text-xs text-primary">Uploading...</span>
+                            </>
+                          ) : (
+                            <>
+                              <ImageIcon className="h-4 w-4 text-muted-foreground" />
+                              <span className="text-xs text-muted-foreground">Upload floor plan image</span>
+                            </>
+                          )}
+                        </label>
+                      )}
                     </div>
                   </div>
                 ))}

@@ -6,6 +6,7 @@ import { useState } from "react"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Textarea } from "@/components/ui/textarea"
+import { toast } from "sonner"
 
 interface QuoteData {
   name: string
@@ -64,9 +65,15 @@ export default function QuoteForm() {
         urgency: "normal",
         details: "",
       })
+      toast.success("Quote request submitted!", {
+        description: "We'll send you a detailed quote within 24-48 hours.",
+      })
       setTimeout(() => setSuccess(false), 5000)
     } catch (err) {
       setError(err instanceof Error ? err.message : "An error occurred")
+      toast.error("Failed to submit quote request", {
+        description: "Please try again or contact us directly.",
+      })
     } finally {
       setLoading(false)
     }

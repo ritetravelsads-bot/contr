@@ -217,6 +217,7 @@ export interface Property {
     size_range?: string
     price_range?: string
     available?: boolean
+    floor_plan_image?: string
   }>
   location_connectivity?: Array<{
     type: "metro" | "airport" | "highway" | "hospital" | "school" | "mall" | "railway" | "bus_stand"

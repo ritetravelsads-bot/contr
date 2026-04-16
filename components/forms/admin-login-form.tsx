@@ -59,7 +59,7 @@ export default function AdminLoginForm() {
           id="email"
           name="email"
           type="email"
-          placeholder="admin@countryroof.com"
+          placeholder="admin@countryroof.in"
           value={formData.email}
           onChange={handleChange}
           required

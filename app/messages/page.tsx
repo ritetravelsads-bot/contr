@@ -14,7 +14,7 @@ export default function MessagesPage() {
   useEffect(() => {
     const checkAuth = async () => {
       try {
-        const response = await fetch("/api/auth/me", { credentials: "include" })
+        const response = await fetch("/api/auth/me", { credentials: "include", cache: "no-store" })
         setAuthenticated(response.ok)
       } catch {
         setAuthenticated(false)

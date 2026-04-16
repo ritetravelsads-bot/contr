@@ -9,7 +9,7 @@ export const metadata: Metadata = {
   openGraph: {
     title: "Portfolio | CountryRoof",
     description: "Completed roofing projects that showcase our expertise and quality work.",
-    url: "https://countryroof.com/portfolio",
+    url: "https://countryroof.in/portfolio",
   },
 }
 
