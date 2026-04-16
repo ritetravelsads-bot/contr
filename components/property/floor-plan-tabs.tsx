@@ -1,6 +1,7 @@
 "use client"
 
 import { useState, useEffect, useCallback } from "react"
+import { createPortal } from "react-dom"
 import { Layers, X, ChevronLeft, ChevronRight, Maximize2, ZoomIn, ZoomOut, RotateCcw } from "lucide-react"
 import Image from "next/image"
 import { cn } from "@/lib/utils"
@@ -22,6 +23,12 @@ export function FloorPlanTabs({ floorPlans, configurations, units }: FloorPlanTa
   const [showLightbox, setShowLightbox] = useState(false)
   const [lightboxIndex, setLightboxIndex] = useState(0)
   const [zoomLevel, setZoomLevel] = useState(1)
+  const [mounted, setMounted] = useState(false)
+
+  // For portal - ensure we only render on client
+  useEffect(() => {
+    setMounted(true)
+  }, [])
 
   // Combine floor plans from all sources (units, configurations, and standalone)
   const plans: Array<{ label: string; image: string }> = []
@@ -135,6 +142,306 @@ export function FloorPlanTabs({ floorPlans, configurations, units }: FloorPlanTa
   }
 
   if (plans.length === 0) return null
+
+  // Lightbox component rendered via portal
+  const lightboxContent = showLightbox && mounted ? (
+    <div 
+      style={{
+        position: 'fixed',
+        top: 0,
+        left: 0,
+        right: 0,
+        bottom: 0,
+        width: '100vw',
+        height: '100vh',
+        zIndex: 99999,
+        backgroundColor: 'rgba(0, 0, 0, 0.97)',
+        display: 'flex',
+        flexDirection: 'column',
+      }}
+      onClick={closeLightbox}
+    >
+      {/* Top Controls Bar */}
+      <div 
+        style={{
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'space-between',
+          padding: '16px 20px',
+          backgroundColor: 'rgba(0, 0, 0, 0.8)',
+          borderBottom: '1px solid rgba(255, 255, 255, 0.15)',
+        }}
+        onClick={(e) => e.stopPropagation()}
+      >
+        {/* Left: Image info */}
+        <div>
+          <p style={{ color: 'white', fontWeight: 600, fontSize: '16px', margin: 0 }}>
+            {plans[lightboxIndex].label}
+          </p>
+          <p style={{ color: 'rgba(255, 255, 255, 0.6)', fontSize: '14px', margin: '4px 0 0 0' }}>
+            {lightboxIndex + 1} of {plans.length}
+          </p>
+        </div>
+
+        {/* Center: Zoom Controls */}
+        <div 
+          style={{
+            display: 'flex',
+            alignItems: 'center',
+            gap: '4px',
+            backgroundColor: 'rgba(255, 255, 255, 0.15)',
+            borderRadius: '12px',
+            padding: '6px',
+          }}
+        >
+          <button
+            onClick={zoomOut}
+            disabled={zoomLevel <= 0.5}
+            style={{
+              padding: '10px',
+              borderRadius: '8px',
+              background: 'transparent',
+              border: 'none',
+              color: 'white',
+              cursor: zoomLevel <= 0.5 ? 'not-allowed' : 'pointer',
+              opacity: zoomLevel <= 0.5 ? 0.4 : 1,
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+            }}
+            title="Zoom out (-)"
+          >
+            <ZoomOut style={{ width: '22px', height: '22px' }} />
+          </button>
+          <span 
+            style={{
+              padding: '8px 16px',
+              color: 'white',
+              fontSize: '14px',
+              fontWeight: 600,
+              minWidth: '70px',
+              textAlign: 'center',
+            }}
+          >
+            {Math.round(zoomLevel * 100)}%
+          </span>
+          <button
+            onClick={zoomIn}
+            disabled={zoomLevel >= 3}
+            style={{
+              padding: '10px',
+              borderRadius: '8px',
+              background: 'transparent',
+              border: 'none',
+              color: 'white',
+              cursor: zoomLevel >= 3 ? 'not-allowed' : 'pointer',
+              opacity: zoomLevel >= 3 ? 0.4 : 1,
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+            }}
+            title="Zoom in (+)"
+          >
+            <ZoomIn style={{ width: '22px', height: '22px' }} />
+          </button>
+          <button
+            onClick={resetZoom}
+            style={{
+              padding: '10px',
+              borderRadius: '8px',
+              background: 'transparent',
+              border: 'none',
+              color: 'white',
+              cursor: 'pointer',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+            }}
+            title="Reset zoom (0)"
+          >
+            <RotateCcw style={{ width: '22px', height: '22px' }} />
+          </button>
+        </div>
+
+        {/* Right: Close button */}
+        <button
+          onClick={closeLightbox}
+          style={{
+            padding: '12px',
+            borderRadius: '10px',
+            backgroundColor: 'rgba(255, 255, 255, 0.15)',
+            border: 'none',
+            color: 'white',
+            cursor: 'pointer',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+          }}
+          aria-label="Close lightbox"
+        >
+          <X style={{ width: '26px', height: '26px' }} />
+        </button>
+      </div>
+
+      {/* Main Image Area */}
+      <div 
+        style={{
+          flex: 1,
+          position: 'relative',
+          overflow: 'auto',
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+          padding: '20px',
+        }}
+        onClick={(e) => e.stopPropagation()}
+      >
+        {/* Navigation - Previous */}
+        {plans.length > 1 && (
+          <button
+            onClick={prevImage}
+            style={{
+              position: 'absolute',
+              left: '20px',
+              top: '50%',
+              transform: 'translateY(-50%)',
+              zIndex: 10,
+              padding: '16px',
+              backgroundColor: 'rgba(255, 255, 255, 0.2)',
+              border: 'none',
+              borderRadius: '50%',
+              color: 'white',
+              cursor: 'pointer',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              boxShadow: '0 4px 20px rgba(0,0,0,0.3)',
+            }}
+            aria-label="Previous image"
+          >
+            <ChevronLeft style={{ width: '28px', height: '28px' }} />
+          </button>
+        )}
+
+        {/* Image Container with zoom */}
+        <div 
+          style={{ 
+            position: 'relative',
+            transition: 'transform 0.2s ease-out',
+            transform: `scale(${zoomLevel})`,
+            width: '75vw',
+            height: '65vh',
+            maxWidth: '1100px',
+          }}
+        >
+          <Image
+            src={plans[lightboxIndex].image}
+            alt={`Floor Plan - ${plans[lightboxIndex].label}`}
+            fill
+            style={{ objectFit: 'contain' }}
+            sizes="85vw"
+            priority
+          />
+        </div>
+
+        {/* Navigation - Next */}
+        {plans.length > 1 && (
+          <button
+            onClick={nextImage}
+            style={{
+              position: 'absolute',
+              right: '20px',
+              top: '50%',
+              transform: 'translateY(-50%)',
+              zIndex: 10,
+              padding: '16px',
+              backgroundColor: 'rgba(255, 255, 255, 0.2)',
+              border: 'none',
+              borderRadius: '50%',
+              color: 'white',
+              cursor: 'pointer',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              boxShadow: '0 4px 20px rgba(0,0,0,0.3)',
+            }}
+            aria-label="Next image"
+          >
+            <ChevronRight style={{ width: '28px', height: '28px' }} />
+          </button>
+        )}
+      </div>
+
+      {/* Bottom Thumbnail Strip */}
+      {plans.length > 1 && (
+        <div 
+          style={{
+            backgroundColor: 'rgba(0, 0, 0, 0.8)',
+            borderTop: '1px solid rgba(255, 255, 255, 0.15)',
+            padding: '16px 20px',
+          }}
+          onClick={(e) => e.stopPropagation()}
+        >
+          <div 
+            style={{
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              gap: '10px',
+              overflowX: 'auto',
+            }}
+          >
+            {plans.map((plan, index) => (
+              <button
+                key={index}
+                onClick={(e) => {
+                  e.stopPropagation()
+                  setLightboxIndex(index)
+                  setZoomLevel(1)
+                }}
+                style={{
+                  position: 'relative',
+                  width: '70px',
+                  height: '50px',
+                  borderRadius: '8px',
+                  overflow: 'hidden',
+                  border: lightboxIndex === index 
+                    ? '3px solid white' 
+                    : '2px solid rgba(255, 255, 255, 0.3)',
+                  opacity: lightboxIndex === index ? 1 : 0.6,
+                  cursor: 'pointer',
+                  flexShrink: 0,
+                  padding: 0,
+                  background: 'transparent',
+                }}
+              >
+                <Image
+                  src={plan.image}
+                  alt={plan.label}
+                  fill
+                  style={{ objectFit: 'cover' }}
+                  sizes="70px"
+                />
+              </button>
+            ))}
+          </div>
+        </div>
+      )}
+
+      {/* Keyboard hint */}
+      <div 
+        style={{
+          position: 'absolute',
+          bottom: plans.length > 1 ? '90px' : '20px',
+          left: '20px',
+          color: 'rgba(255, 255, 255, 0.5)',
+          fontSize: '12px',
+        }}
+      >
+        Arrow keys: navigate | +/-: zoom | 0: reset | ESC: close
+      </div>
+    </div>
+  ) : null
 
   return (
     <section className="py-10 md:py-14 bg-gradient-to-b from-background to-muted/30">
@@ -262,147 +569,8 @@ export function FloorPlanTabs({ floorPlans, configurations, units }: FloorPlanTa
         </div>
       </div>
 
-      {/* Enhanced Lightbox with z-[9999] to be above navbar */}
-      {showLightbox && (
-        <div 
-          className="fixed inset-0 z-[9999] bg-black/95 flex flex-col"
-          onClick={closeLightbox}
-        >
-          {/* Top Controls Bar */}
-          <div className="flex items-center justify-between px-4 py-3 bg-black/80 border-b border-white/10">
-            {/* Left: Image info */}
-            <div className="flex items-center gap-4">
-              <div>
-                <p className="text-white font-semibold">{plans[lightboxIndex].label}</p>
-                <p className="text-white/60 text-sm">
-                  {lightboxIndex + 1} of {plans.length}
-                </p>
-              </div>
-            </div>
-
-            {/* Center: Zoom Controls */}
-            <div className="flex items-center gap-1 bg-white/10 rounded-lg p-1">
-              <button
-                onClick={zoomOut}
-                disabled={zoomLevel <= 0.5}
-                className="p-2 rounded-md hover:bg-white/20 text-white transition-colors disabled:opacity-40 disabled:cursor-not-allowed"
-                title="Zoom out (-)"
-              >
-                <ZoomOut className="h-5 w-5" />
-              </button>
-              <span className="px-3 py-1 text-white text-sm font-medium min-w-[60px] text-center">
-                {Math.round(zoomLevel * 100)}%
-              </span>
-              <button
-                onClick={zoomIn}
-                disabled={zoomLevel >= 3}
-                className="p-2 rounded-md hover:bg-white/20 text-white transition-colors disabled:opacity-40 disabled:cursor-not-allowed"
-                title="Zoom in (+)"
-              >
-                <ZoomIn className="h-5 w-5" />
-              </button>
-              <button
-                onClick={resetZoom}
-                className="p-2 rounded-md hover:bg-white/20 text-white transition-colors"
-                title="Reset zoom (0)"
-              >
-                <RotateCcw className="h-5 w-5" />
-              </button>
-            </div>
-
-            {/* Right: Close button */}
-            <button
-              onClick={closeLightbox}
-              className="p-2 rounded-lg bg-white/10 hover:bg-white/20 text-white transition-colors"
-              aria-label="Close lightbox"
-            >
-              <X className="h-6 w-6" />
-            </button>
-          </div>
-
-          {/* Main Image Area */}
-          <div className="flex-1 relative overflow-auto flex items-center justify-center" onClick={(e) => e.stopPropagation()}>
-            {/* Navigation - Previous */}
-            {plans.length > 1 && (
-              <button
-                onClick={prevImage}
-                className="absolute left-4 top-1/2 -translate-y-1/2 z-10 p-3 bg-white/20 hover:bg-white/30 rounded-full text-white transition-colors shadow-lg"
-                aria-label="Previous image"
-              >
-                <ChevronLeft className="h-6 w-6" />
-              </button>
-            )}
-
-            {/* Image Container with zoom */}
-            <div 
-              className="relative transition-transform duration-200 ease-out"
-              style={{ 
-                transform: `scale(${zoomLevel})`,
-                width: '80vw',
-                height: '70vh',
-                maxWidth: '1200px'
-              }}
-            >
-              <Image
-                src={plans[lightboxIndex].image}
-                alt={`Floor Plan - ${plans[lightboxIndex].label}`}
-                fill
-                className="object-contain"
-                sizes="90vw"
-                priority
-              />
-            </div>
-
-            {/* Navigation - Next */}
-            {plans.length > 1 && (
-              <button
-                onClick={nextImage}
-                className="absolute right-4 top-1/2 -translate-y-1/2 z-10 p-3 bg-white/20 hover:bg-white/30 rounded-full text-white transition-colors shadow-lg"
-                aria-label="Next image"
-              >
-                <ChevronRight className="h-6 w-6" />
-              </button>
-            )}
-          </div>
-
-          {/* Bottom Thumbnail Strip */}
-          {plans.length > 1 && (
-            <div className="bg-black/80 border-t border-white/10 px-4 py-3">
-              <div className="flex items-center justify-center gap-2 overflow-x-auto">
-                {plans.map((plan, index) => (
-                  <button
-                    key={index}
-                    onClick={(e) => {
-                      e.stopPropagation()
-                      setLightboxIndex(index)
-                      setZoomLevel(1)
-                    }}
-                    className={cn(
-                      "relative w-16 h-12 rounded-lg overflow-hidden border-2 transition-all flex-shrink-0",
-                      lightboxIndex === index
-                        ? "border-white ring-2 ring-white/50"
-                        : "border-white/30 opacity-60 hover:opacity-100 hover:border-white/60"
-                    )}
-                  >
-                    <Image
-                      src={plan.image}
-                      alt={plan.label}
-                      fill
-                      className="object-cover"
-                      sizes="64px"
-                    />
-                  </button>
-                ))}
-              </div>
-            </div>
-          )}
-
-          {/* Keyboard hint */}
-          <div className="absolute bottom-20 left-4 text-white/50 text-xs hidden md:block">
-            Arrow keys: navigate | +/-: zoom | 0: reset | ESC: close
-          </div>
-        </div>
-      )}
+      {/* Render lightbox via portal to document.body */}
+      {mounted && showLightbox && createPortal(lightboxContent, document.body)}
     </section>
   )
 }

@@ -1,6 +1,7 @@
 "use client"
 
 import { useState, useEffect, useCallback } from "react"
+import { createPortal } from "react-dom"
 import { Map, ZoomIn, ZoomOut, X, Maximize2, RotateCcw } from "lucide-react"
 import Image from "next/image"
 import { cn } from "@/lib/utils"
@@ -13,6 +14,12 @@ interface MasterPlanSectionProps {
 export function MasterPlanSection({ masterPlan, propertyName }: MasterPlanSectionProps) {
   const [showLightbox, setShowLightbox] = useState(false)
   const [zoomLevel, setZoomLevel] = useState(1)
+  const [mounted, setMounted] = useState(false)
+
+  // For portal - ensure we only render on client
+  useEffect(() => {
+    setMounted(true)
+  }, [])
 
   // Keyboard navigation for lightbox
   const handleKeyDown = useCallback((e: KeyboardEvent) => {
@@ -72,6 +79,233 @@ export function MasterPlanSection({ masterPlan, propertyName }: MasterPlanSectio
   }
 
   if (!masterPlan) return null
+
+  // Lightbox component rendered via portal
+  const lightboxContent = showLightbox && mounted ? (
+    <div 
+      style={{
+        position: 'fixed',
+        top: 0,
+        left: 0,
+        right: 0,
+        bottom: 0,
+        width: '100vw',
+        height: '100vh',
+        zIndex: 99999,
+        backgroundColor: 'rgba(0, 0, 0, 0.97)',
+        display: 'flex',
+        flexDirection: 'column',
+      }}
+      onClick={closeLightbox}
+    >
+      {/* Top Controls Bar */}
+      <div 
+        style={{
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'space-between',
+          padding: '16px 20px',
+          backgroundColor: 'rgba(0, 0, 0, 0.8)',
+          borderBottom: '1px solid rgba(255, 255, 255, 0.15)',
+        }}
+        onClick={(e) => e.stopPropagation()}
+      >
+        {/* Left: Image info */}
+        <div>
+          <p style={{ color: 'white', fontWeight: 600, fontSize: '16px', margin: 0 }}>
+            Master Plan
+          </p>
+          <p style={{ color: 'rgba(255, 255, 255, 0.6)', fontSize: '14px', margin: '4px 0 0 0' }}>
+            {propertyName || "Project"} - Complete Layout
+          </p>
+        </div>
+
+        {/* Center: Zoom Controls */}
+        <div 
+          style={{
+            display: 'flex',
+            alignItems: 'center',
+            gap: '4px',
+            backgroundColor: 'rgba(255, 255, 255, 0.15)',
+            borderRadius: '12px',
+            padding: '6px',
+          }}
+        >
+          <button
+            onClick={zoomOutHandler}
+            disabled={zoomLevel <= 0.5}
+            style={{
+              padding: '10px',
+              borderRadius: '8px',
+              background: 'transparent',
+              border: 'none',
+              color: 'white',
+              cursor: zoomLevel <= 0.5 ? 'not-allowed' : 'pointer',
+              opacity: zoomLevel <= 0.5 ? 0.4 : 1,
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+            }}
+            title="Zoom out (-)"
+          >
+            <ZoomOut style={{ width: '22px', height: '22px' }} />
+          </button>
+          <span 
+            style={{
+              padding: '8px 16px',
+              color: 'white',
+              fontSize: '14px',
+              fontWeight: 600,
+              minWidth: '70px',
+              textAlign: 'center',
+            }}
+          >
+            {Math.round(zoomLevel * 100)}%
+          </span>
+          <button
+            onClick={zoomInHandler}
+            disabled={zoomLevel >= 3}
+            style={{
+              padding: '10px',
+              borderRadius: '8px',
+              background: 'transparent',
+              border: 'none',
+              color: 'white',
+              cursor: zoomLevel >= 3 ? 'not-allowed' : 'pointer',
+              opacity: zoomLevel >= 3 ? 0.4 : 1,
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+            }}
+            title="Zoom in (+)"
+          >
+            <ZoomIn style={{ width: '22px', height: '22px' }} />
+          </button>
+          <button
+            onClick={resetZoom}
+            style={{
+              padding: '10px',
+              borderRadius: '8px',
+              background: 'transparent',
+              border: 'none',
+              color: 'white',
+              cursor: 'pointer',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+            }}
+            title="Reset zoom (0)"
+          >
+            <RotateCcw style={{ width: '22px', height: '22px' }} />
+          </button>
+        </div>
+
+        {/* Right: Close button */}
+        <button
+          onClick={closeLightbox}
+          style={{
+            padding: '12px',
+            borderRadius: '10px',
+            backgroundColor: 'rgba(255, 255, 255, 0.15)',
+            border: 'none',
+            color: 'white',
+            cursor: 'pointer',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+          }}
+          aria-label="Close lightbox"
+        >
+          <X style={{ width: '26px', height: '26px' }} />
+        </button>
+      </div>
+
+      {/* Main Image Area */}
+      <div 
+        style={{
+          flex: 1,
+          position: 'relative',
+          overflow: 'auto',
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+          padding: '20px',
+        }}
+        onClick={(e) => e.stopPropagation()}
+      >
+        {/* Image Container with zoom */}
+        <div 
+          style={{ 
+            position: 'relative',
+            transition: 'transform 0.2s ease-out',
+            transform: `scale(${zoomLevel})`,
+            width: '75vw',
+            height: '70vh',
+            maxWidth: '1100px',
+          }}
+        >
+          <Image
+            src={masterPlan}
+            alt={`Master Plan - ${propertyName || "Project"}`}
+            fill
+            style={{ objectFit: 'contain' }}
+            sizes="85vw"
+            priority
+          />
+        </div>
+      </div>
+
+      {/* Bottom Info Bar */}
+      <div 
+        style={{
+          backgroundColor: 'rgba(0, 0, 0, 0.8)',
+          borderTop: '1px solid rgba(255, 255, 255, 0.15)',
+          padding: '16px 20px',
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+        }}
+        onClick={(e) => e.stopPropagation()}
+      >
+        <a
+          href={masterPlan}
+          target="_blank"
+          rel="noopener noreferrer"
+          style={{
+            display: 'flex',
+            alignItems: 'center',
+            gap: '8px',
+            padding: '10px 20px',
+            backgroundColor: 'rgba(255, 255, 255, 0.15)',
+            border: 'none',
+            borderRadius: '10px',
+            color: 'white',
+            fontSize: '14px',
+            fontWeight: 500,
+            textDecoration: 'none',
+            cursor: 'pointer',
+          }}
+          onClick={(e) => e.stopPropagation()}
+        >
+          <Maximize2 style={{ width: '18px', height: '18px' }} />
+          Open Full Size
+        </a>
+      </div>
+
+      {/* Keyboard hint */}
+      <div 
+        style={{
+          position: 'absolute',
+          bottom: '85px',
+          left: '20px',
+          color: 'rgba(255, 255, 255, 0.5)',
+          fontSize: '12px',
+        }}
+      >
+        +/-: zoom | 0: reset | ESC: close
+      </div>
+    </div>
+  ) : null
 
   return (
     <section className="py-10 md:py-14 bg-muted/30">
@@ -147,109 +381,8 @@ export function MasterPlanSection({ masterPlan, propertyName }: MasterPlanSectio
         </div>
       </div>
 
-      {/* Enhanced Lightbox with z-[9999] to be above navbar */}
-      {showLightbox && (
-        <div 
-          className="fixed inset-0 z-[9999] bg-black/95 flex flex-col"
-          onClick={closeLightbox}
-        >
-          {/* Top Controls Bar */}
-          <div className="flex items-center justify-between px-4 py-3 bg-black/80 border-b border-white/10">
-            {/* Left: Image info */}
-            <div className="flex items-center gap-4">
-              <div>
-                <p className="text-white font-semibold">Master Plan</p>
-                <p className="text-white/60 text-sm">
-                  {propertyName || "Project"} - Complete Layout
-                </p>
-              </div>
-            </div>
-
-            {/* Center: Zoom Controls */}
-            <div className="flex items-center gap-1 bg-white/10 rounded-lg p-1">
-              <button
-                onClick={zoomOutHandler}
-                disabled={zoomLevel <= 0.5}
-                className="p-2 rounded-md hover:bg-white/20 text-white transition-colors disabled:opacity-40 disabled:cursor-not-allowed"
-                title="Zoom out (-)"
-              >
-                <ZoomOut className="h-5 w-5" />
-              </button>
-              <span className="px-3 py-1 text-white text-sm font-medium min-w-[60px] text-center">
-                {Math.round(zoomLevel * 100)}%
-              </span>
-              <button
-                onClick={zoomInHandler}
-                disabled={zoomLevel >= 3}
-                className="p-2 rounded-md hover:bg-white/20 text-white transition-colors disabled:opacity-40 disabled:cursor-not-allowed"
-                title="Zoom in (+)"
-              >
-                <ZoomIn className="h-5 w-5" />
-              </button>
-              <button
-                onClick={resetZoom}
-                className="p-2 rounded-md hover:bg-white/20 text-white transition-colors"
-                title="Reset zoom (0)"
-              >
-                <RotateCcw className="h-5 w-5" />
-              </button>
-            </div>
-
-            {/* Right: Close button */}
-            <button
-              onClick={closeLightbox}
-              className="p-2 rounded-lg bg-white/10 hover:bg-white/20 text-white transition-colors"
-              aria-label="Close lightbox"
-            >
-              <X className="h-6 w-6" />
-            </button>
-          </div>
-
-          {/* Main Image Area */}
-          <div className="flex-1 relative overflow-auto flex items-center justify-center" onClick={(e) => e.stopPropagation()}>
-            {/* Image Container with zoom */}
-            <div 
-              className="relative transition-transform duration-200 ease-out"
-              style={{ 
-                transform: `scale(${zoomLevel})`,
-                width: '80vw',
-                height: '70vh',
-                maxWidth: '1200px'
-              }}
-            >
-              <Image
-                src={masterPlan}
-                alt={`Master Plan - ${propertyName || "Project"}`}
-                fill
-                className="object-contain"
-                sizes="90vw"
-                priority
-              />
-            </div>
-          </div>
-
-          {/* Bottom Info Bar */}
-          <div className="bg-black/80 border-t border-white/10 px-4 py-3">
-            <div className="flex items-center justify-center gap-4">
-              <a
-                href={masterPlan}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="flex items-center gap-2 px-4 py-2 bg-white/10 hover:bg-white/20 rounded-lg text-white text-sm font-medium transition-colors"
-                onClick={(e) => e.stopPropagation()}
-              >
-                <Maximize2 className="h-4 w-4" />
-                Open Full Size
-              </a>
-            </div>
-          </div>
-
-          {/* Keyboard hint */}
-          <div className="absolute bottom-16 left-4 text-white/50 text-xs hidden md:block">
-            +/-: zoom | 0: reset | ESC: close
-          </div>
-        </div>
-      )}
+      {/* Render lightbox via portal to document.body */}
+      {mounted && showLightbox && createPortal(lightboxContent, document.body)}
     </section>
   )
 }
