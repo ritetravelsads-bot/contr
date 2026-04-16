@@ -21,7 +21,34 @@ const nextConfig = {
     minimumCacheTTL: 31536000,
   },
   experimental: {
-    optimizePackageImports: ["@radix-ui", "lucide-react"],
+    // Tree-shake heavy packages to reduce unused JS
+    optimizePackageImports: [
+      "@radix-ui/react-accordion",
+      "@radix-ui/react-alert-dialog",
+      "@radix-ui/react-avatar",
+      "@radix-ui/react-checkbox",
+      "@radix-ui/react-dialog",
+      "@radix-ui/react-dropdown-menu",
+      "@radix-ui/react-label",
+      "@radix-ui/react-popover",
+      "@radix-ui/react-progress",
+      "@radix-ui/react-scroll-area",
+      "@radix-ui/react-select",
+      "@radix-ui/react-separator",
+      "@radix-ui/react-slot",
+      "@radix-ui/react-switch",
+      "@radix-ui/react-tabs",
+      "@radix-ui/react-toast",
+      "@radix-ui/react-tooltip",
+      "lucide-react",
+      "date-fns",
+      "recharts",
+      "embla-carousel-react",
+      "react-day-picker",
+      "sonner",
+      "class-variance-authority",
+      "clsx",
+    ],
     ppr: false,
   },
   transpilePackages: [],
@@ -29,6 +56,25 @@ const nextConfig = {
     removeConsole: process.env.NODE_ENV === "production" ? { exclude: ["error", "warn"] } : false,
   },
   reactStrictMode: true,
+  
+  // Remove legacy polyfills for modern browsers only (saves ~14KB)
+  // Using Turbopack alias to replace polyfill module with empty file
+  turbopack: {
+    resolveAlias: {
+      '../build/polyfills/polyfill-module': './lib/modern-polyfill.js',
+      'next/dist/build/polyfills/polyfill-module': './lib/modern-polyfill.js',
+    },
+  },
+  
+  // Webpack fallback for when not using Turbopack
+  webpack(config) {
+    config.resolve.alias = {
+      ...config.resolve.alias,
+      '../build/polyfills/polyfill-module': false,
+      'next/dist/build/polyfills/polyfill-module': false,
+    };
+    return config;
+  },
   
   // Disable caching for API routes and pages to ensure fresh data
   async headers() {
