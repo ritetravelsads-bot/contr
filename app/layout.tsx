@@ -92,23 +92,27 @@ export default function RootLayout({
         <link rel="dns-prefetch" href="//ik.imagekit.io" />
         <link rel="preconnect" href="https://ik.imagekit.io" crossOrigin="anonymous" />
 
-        {/* Preload critical LCP images - using native image paths for fastest loading */}
-        {/* Native paths eliminate /_next/image processing delay (saves ~1400ms load delay) */}
+        {/* Preload critical LCP images - using Next.js optimized WebP URLs */}
+        {/* WebP format saves ~29KB vs JPEG, preload eliminates resource load delay */}
         <link
           rel="preload"
           as="image"
-          href="/banners/home-mob-banner-1.jpg"
+          href="/_next/image?url=%2Fbanners%2Fhome-mob-banner-1.jpg&w=750&q=75"
           media="(max-width: 767px)"
           fetchPriority="high"
-          type="image/jpeg"
+          type="image/webp"
+          imageSrcSet="/_next/image?url=%2Fbanners%2Fhome-mob-banner-1.jpg&w=480&q=75 480w, /_next/image?url=%2Fbanners%2Fhome-mob-banner-1.jpg&w=640&q=75 640w, /_next/image?url=%2Fbanners%2Fhome-mob-banner-1.jpg&w=750&q=75 750w"
+          imageSizes="100vw"
         />
         <link
           rel="preload"
           as="image"
-          href="/home-banner-1.jpg"
+          href="/_next/image?url=%2Fhome-banner-1.jpg&w=1920&q=80"
           media="(min-width: 768px)"
           fetchPriority="high"
-          type="image/jpeg"
+          type="image/webp"
+          imageSrcSet="/_next/image?url=%2Fhome-banner-1.jpg&w=1080&q=80 1080w, /_next/image?url=%2Fhome-banner-1.jpg&w=1200&q=80 1200w, /_next/image?url=%2Fhome-banner-1.jpg&w=1920&q=80 1920w"
+          imageSizes="100vw"
         />
         <script
           type="application/ld+json"
