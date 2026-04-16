@@ -88,36 +88,28 @@ export default function RootLayout({
   return (
     <html lang="en">
       <head>
-        {/* DNS prefetch for external resources */}
-        <link rel="dns-prefetch" href="//ik.imagekit.io" />
-        <link rel="preconnect" href="https://ik.imagekit.io" crossOrigin="anonymous" />
-        {/* Preconnect to own origin for faster image optimization endpoint */}
-        <link rel="preconnect" href="/" />
-        <link rel="dns-prefetch" href="//countryroof.in" />
-
-        {/* Preload critical LCP images - must exactly match srcset in banner-slider.tsx */}
-        {/* Using native picture with /_next/image URLs eliminates both resource load delay and render delay */}
-        {/* URLs must match exactly - currently using .webp source images */}
+        {/* CRITICAL: Preload LCP images FIRST - before any other resources */}
+        {/* These must be at the very top of <head> for maximum priority */}
+        {/* Mobile LCP image preload */}
         <link
           rel="preload"
           as="image"
           href="/_next/image?url=%2Fbanners%2Fhome-mob-banner-1.webp&w=640&q=75"
           media="(max-width: 767px)"
           fetchPriority="high"
-          type="image/webp"
-          imageSrcSet="/_next/image?url=%2Fbanners%2Fhome-mob-banner-1.webp&w=480&q=75 480w, /_next/image?url=%2Fbanners%2Fhome-mob-banner-1.webp&w=640&q=75 640w, /_next/image?url=%2Fbanners%2Fhome-mob-banner-1.webp&w=750&q=75 750w"
-          imageSizes="100vw"
         />
+        {/* Desktop LCP image preload */}
         <link
           rel="preload"
           as="image"
           href="/_next/image?url=%2Fhome-banner-1.webp&w=1200&q=80"
           media="(min-width: 768px)"
           fetchPriority="high"
-          type="image/webp"
-          imageSrcSet="/_next/image?url=%2Fhome-banner-1.webp&w=1080&q=80 1080w, /_next/image?url=%2Fhome-banner-1.webp&w=1200&q=80 1200w, /_next/image?url=%2Fhome-banner-1.webp&w=1920&q=80 1920w"
-          imageSizes="100vw"
         />
+        
+        {/* DNS prefetch for external resources */}
+        <link rel="dns-prefetch" href="//ik.imagekit.io" />
+        <link rel="preconnect" href="https://ik.imagekit.io" crossOrigin="anonymous" />
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{
