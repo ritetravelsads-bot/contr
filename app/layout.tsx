@@ -97,25 +97,25 @@ export default function RootLayout({
 
         {/* Preload critical LCP images - must exactly match srcset in banner-slider.tsx */}
         {/* Using native picture with /_next/image URLs eliminates both resource load delay and render delay */}
-        {/* Note: crossOrigin="anonymous" is required for preload to be used by the img element */}
+        {/* URLs must match exactly - currently using .webp source images */}
         <link
           rel="preload"
           as="image"
-          href="/_next/image?url=%2Fbanners%2Fhome-mob-banner-1.jpg&w=640&q=75"
+          href="/_next/image?url=%2Fbanners%2Fhome-mob-banner-1.webp&w=640&q=75"
           media="(max-width: 767px)"
           fetchPriority="high"
           type="image/webp"
-          imageSrcSet="/_next/image?url=%2Fbanners%2Fhome-mob-banner-1.jpg&w=480&q=75 480w, /_next/image?url=%2Fbanners%2Fhome-mob-banner-1.jpg&w=640&q=75 640w, /_next/image?url=%2Fbanners%2Fhome-mob-banner-1.jpg&w=750&q=75 750w"
+          imageSrcSet="/_next/image?url=%2Fbanners%2Fhome-mob-banner-1.webp&w=480&q=75 480w, /_next/image?url=%2Fbanners%2Fhome-mob-banner-1.webp&w=640&q=75 640w, /_next/image?url=%2Fbanners%2Fhome-mob-banner-1.webp&w=750&q=75 750w"
           imageSizes="100vw"
         />
         <link
           rel="preload"
           as="image"
-          href="/_next/image?url=%2Fhome-banner-1.jpg&w=1200&q=80"
+          href="/_next/image?url=%2Fhome-banner-1.webp&w=1200&q=80"
           media="(min-width: 768px)"
           fetchPriority="high"
           type="image/webp"
-          imageSrcSet="/_next/image?url=%2Fhome-banner-1.jpg&w=1080&q=80 1080w, /_next/image?url=%2Fhome-banner-1.jpg&w=1200&q=80 1200w, /_next/image?url=%2Fhome-banner-1.jpg&w=1920&q=80 1920w"
+          imageSrcSet="/_next/image?url=%2Fhome-banner-1.webp&w=1080&q=80 1080w, /_next/image?url=%2Fhome-banner-1.webp&w=1200&q=80 1200w, /_next/image?url=%2Fhome-banner-1.webp&w=1920&q=80 1920w"
           imageSizes="100vw"
         />
         <script

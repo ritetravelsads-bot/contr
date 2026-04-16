@@ -1,20 +1,21 @@
 "use client"
 
-import { useState, useEffect } from "react"
+import { useState, useEffect, lazy, Suspense } from "react"
 import Link from "next/link"
 import Image from "next/image"
-import { Menu, X, LogOut, User, ChevronDown, IndianRupee } from "lucide-react"
+import { Menu, X, LogOut, User, ChevronDown, IndianRupee, MapPin, Building2 } from "lucide-react"
 import { Button } from "@/components/ui/button"
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuTrigger,
-  DropdownMenuSeparator,
-} from "@/components/ui/dropdown-menu"
-import { MapPin, Building2 } from "lucide-react"
 import { BUDGET_RANGES } from "@/lib/utils"
-import HeaderSearch from "./header-search"
+
+// Lazy load dropdown menu components - not needed until user hovers/clicks
+const DropdownMenu = lazy(() => import("@/components/ui/dropdown-menu").then(mod => ({ default: mod.DropdownMenu })))
+const DropdownMenuContent = lazy(() => import("@/components/ui/dropdown-menu").then(mod => ({ default: mod.DropdownMenuContent })))
+const DropdownMenuItem = lazy(() => import("@/components/ui/dropdown-menu").then(mod => ({ default: mod.DropdownMenuItem })))
+const DropdownMenuTrigger = lazy(() => import("@/components/ui/dropdown-menu").then(mod => ({ default: mod.DropdownMenuTrigger })))
+const DropdownMenuSeparator = lazy(() => import("@/components/ui/dropdown-menu").then(mod => ({ default: mod.DropdownMenuSeparator })))
+
+// Lazy load header search - not critical for initial render
+const HeaderSearch = lazy(() => import("./header-search"))
 
 interface CurrentUser {
   id: string
@@ -130,67 +131,73 @@ export default function MegaMenuHeader() {
             </Link>
 
             {/* Locations Dropdown */}
-            <DropdownMenu>
-              <DropdownMenuTrigger asChild>
-                <button className="px-4 py-2 text-sm font-medium text-gray-700 hover:text-[#002366] transition-colors flex items-center gap-1">
-                  <MapPin className="h-4 w-4" />
-                  Locations
-                  <ChevronDown className="h-4 w-4" />
-                </button>
-              </DropdownMenuTrigger>
-              <DropdownMenuContent align="start" className="w-56">
-                {locations.map((location) => (
-                  <DropdownMenuItem key={location.name} asChild>
-                    <Link href={location.href} className="w-full">
-                      {location.name}
-                    </Link>
-                  </DropdownMenuItem>
-                ))}
-              </DropdownMenuContent>
-            </DropdownMenu>
+            <Suspense fallback={<button className="px-4 py-2 text-sm font-medium text-gray-700">Locations</button>}>
+              <DropdownMenu>
+                <DropdownMenuTrigger asChild>
+                  <button className="px-4 py-2 text-sm font-medium text-gray-700 hover:text-[#002366] transition-colors flex items-center gap-1">
+                    <MapPin className="h-4 w-4" />
+                    Locations
+                    <ChevronDown className="h-4 w-4" />
+                  </button>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent align="start" className="w-56">
+                  {locations.map((location) => (
+                    <DropdownMenuItem key={location.name} asChild>
+                      <Link href={location.href} className="w-full">
+                        {location.name}
+                      </Link>
+                    </DropdownMenuItem>
+                  ))}
+                </DropdownMenuContent>
+              </DropdownMenu>
+            </Suspense>
 
             {/* Projects Dropdown */}
-            <DropdownMenu>
-              <DropdownMenuTrigger asChild>
-                <button className="px-4 py-2 text-sm font-medium text-gray-700 hover:text-[#002366] transition-colors flex items-center gap-1">
-                  <Building2 className="h-4 w-4" />
-                  Projects
-                  <ChevronDown className="h-4 w-4" />
-                </button>
-              </DropdownMenuTrigger>
-              <DropdownMenuContent align="start" className="w-48">
-                {projects.map((project) => (
-                  <DropdownMenuItem key={project.name} asChild>
-                    <Link href={project.href} className="w-full">
-                      {project.name}
-                    </Link>
-                  </DropdownMenuItem>
-                ))}
-              </DropdownMenuContent>
-            </DropdownMenu>
+            <Suspense fallback={<button className="px-4 py-2 text-sm font-medium text-gray-700">Projects</button>}>
+              <DropdownMenu>
+                <DropdownMenuTrigger asChild>
+                  <button className="px-4 py-2 text-sm font-medium text-gray-700 hover:text-[#002366] transition-colors flex items-center gap-1">
+                    <Building2 className="h-4 w-4" />
+                    Projects
+                    <ChevronDown className="h-4 w-4" />
+                  </button>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent align="start" className="w-48">
+                  {projects.map((project) => (
+                    <DropdownMenuItem key={project.name} asChild>
+                      <Link href={project.href} className="w-full">
+                        {project.name}
+                      </Link>
+                    </DropdownMenuItem>
+                  ))}
+                </DropdownMenuContent>
+              </DropdownMenu>
+            </Suspense>
 
             {/* Budget Dropdown */}
-            <DropdownMenu>
-              <DropdownMenuTrigger asChild>
-                <button className="px-4 py-2 text-sm font-medium text-gray-700 hover:text-[#002366] transition-colors flex items-center gap-1">
-                  <IndianRupee className="h-4 w-4" />
-                  Budget
-                  <ChevronDown className="h-4 w-4" />
-                </button>
-              </DropdownMenuTrigger>
-              <DropdownMenuContent align="start" className="w-48">
-                {BUDGET_RANGES.map((range) => (
-                  <DropdownMenuItem key={range.value} asChild>
-                    <Link 
-                      href={`/properties?minPrice=${range.min}${range.max ? `&maxPrice=${range.max}` : ''}`}
-                      className="w-full"
-                    >
-                      {range.label}
-                    </Link>
-                  </DropdownMenuItem>
-                ))}
-              </DropdownMenuContent>
-            </DropdownMenu>
+            <Suspense fallback={<button className="px-4 py-2 text-sm font-medium text-gray-700">Budget</button>}>
+              <DropdownMenu>
+                <DropdownMenuTrigger asChild>
+                  <button className="px-4 py-2 text-sm font-medium text-gray-700 hover:text-[#002366] transition-colors flex items-center gap-1">
+                    <IndianRupee className="h-4 w-4" />
+                    Budget
+                    <ChevronDown className="h-4 w-4" />
+                  </button>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent align="start" className="w-48">
+                  {BUDGET_RANGES.map((range) => (
+                    <DropdownMenuItem key={range.value} asChild>
+                      <Link 
+                        href={`/properties?minPrice=${range.min}${range.max ? `&maxPrice=${range.max}` : ''}`}
+                        className="w-full"
+                      >
+                        {range.label}
+                      </Link>
+                    </DropdownMenuItem>
+                  ))}
+                </DropdownMenuContent>
+              </DropdownMenu>
+            </Suspense>
 
             <Link
               href="/about"
@@ -208,43 +215,47 @@ export default function MegaMenuHeader() {
 
           {/* Desktop Search */}
           <div className="hidden lg:block relative">
-            <HeaderSearch />
+            <Suspense fallback={<div className="w-8 h-8" />}>
+              <HeaderSearch />
+            </Suspense>
           </div>
 
           {/* Desktop Auth */}
           <div className="hidden lg:flex items-center gap-2">
             {mounted ? (
               currentUser ? (
-                <DropdownMenu>
-                  <DropdownMenuTrigger asChild>
-                    <Button
-                      variant="outline"
-                      size="sm"
-                      className="text-sm h-9 border-[#002366] text-[#002366] bg-transparent"
-                    >
-                      <User size={16} className="mr-2" />
-                      {currentUser.username}
-                    </Button>
-                  </DropdownMenuTrigger>
-                  <DropdownMenuContent align="end">
-                    <DropdownMenuItem asChild>
-                      <Link href={getDashboardLink()}>{getDashboardLabel()}</Link>
-                    </DropdownMenuItem>
-                    {currentUser.user_type === "admin" && (
-                      <>
-                        <DropdownMenuSeparator />
-                        <DropdownMenuItem asChild>
-                          <Link href="/admin/dashboard">Admin Settings</Link>
-                        </DropdownMenuItem>
-                      </>
-                    )}
-                    <DropdownMenuSeparator />
-                    <DropdownMenuItem onClick={handleLogout}>
-                      <LogOut size={16} className="mr-2" />
-                      Logout
-                    </DropdownMenuItem>
-                  </DropdownMenuContent>
-                </DropdownMenu>
+                <Suspense fallback={<Button variant="outline" size="sm" className="text-sm h-9">{currentUser.username}</Button>}>
+                  <DropdownMenu>
+                    <DropdownMenuTrigger asChild>
+                      <Button
+                        variant="outline"
+                        size="sm"
+                        className="text-sm h-9 border-[#002366] text-[#002366] bg-transparent"
+                      >
+                        <User size={16} className="mr-2" />
+                        {currentUser.username}
+                      </Button>
+                    </DropdownMenuTrigger>
+                    <DropdownMenuContent align="end">
+                      <DropdownMenuItem asChild>
+                        <Link href={getDashboardLink()}>{getDashboardLabel()}</Link>
+                      </DropdownMenuItem>
+                      {currentUser.user_type === "admin" && (
+                        <>
+                          <DropdownMenuSeparator />
+                          <DropdownMenuItem asChild>
+                            <Link href="/admin/dashboard">Admin Settings</Link>
+                          </DropdownMenuItem>
+                        </>
+                      )}
+                      <DropdownMenuSeparator />
+                      <DropdownMenuItem onClick={handleLogout}>
+                        <LogOut size={16} className="mr-2" />
+                        Logout
+                      </DropdownMenuItem>
+                    </DropdownMenuContent>
+                  </DropdownMenu>
+                </Suspense>
               ) : (
                 <>
                   <Button
@@ -280,7 +291,9 @@ export default function MegaMenuHeader() {
           <div className="flex flex-col gap-1 px-4 py-3">
             {/* Mobile Search Bar */}
             <div className="mb-3">
-              <HeaderSearch />
+              <Suspense fallback={<div className="h-10 bg-gray-100 rounded animate-pulse" />}>
+                <HeaderSearch />
+              </Suspense>
             </div>
 
             <Link
