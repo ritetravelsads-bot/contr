@@ -26,8 +26,44 @@ export function HeroBanner({ property }: HeroBannerProps) {
   const bgImage = property.main_banner || property.main_thumbnail
 
   // Get unit types from configurations or units
-  const unitTypes = property.configurations?.map(c => c.type).filter(Boolean) ||
+  const rawUnitTypes = property.configurations?.map(c => c.type).filter(Boolean) ||
     property.units?.map(u => u.type).filter(Boolean) || []
+  
+  // Format unit types to show only BHK numbers combined (e.g., "4 & 5 BHK")
+  const formatBHKNumbers = (types: string[]): string => {
+    // Extract BHK numbers from strings like "3 BHK Luxury", "4 BHK Ultra Luxury", etc.
+    const bhkNumbers: number[] = []
+    
+    for (const type of types) {
+      const match = type.match(/^(\d+)\s*BHK/i)
+      if (match) {
+        const num = parseInt(match[1], 10)
+        if (!bhkNumbers.includes(num)) {
+          bhkNumbers.push(num)
+        }
+      }
+    }
+    
+    if (bhkNumbers.length === 0) {
+      // No BHK types found, return original (for non-BHK types like "Penthouse", "Studio")
+      return types.slice(0, 3).join(", ") || "Multiple Options"
+    }
+    
+    // Sort numbers
+    bhkNumbers.sort((a, b) => a - b)
+    
+    if (bhkNumbers.length === 1) {
+      return `${bhkNumbers[0]} BHK`
+    } else if (bhkNumbers.length === 2) {
+      return `${bhkNumbers[0]} & ${bhkNumbers[1]} BHK`
+    } else {
+      // For 3+ numbers: "3, 4 & 5 BHK"
+      const last = bhkNumbers.pop()
+      return `${bhkNumbers.join(", ")} & ${last} BHK`
+    }
+  }
+  
+  const formattedUnitTypes = formatBHKNumbers(rawUnitTypes)
 
   // Format payment plan
   const paymentPlan = property.payment_plan_details ||
@@ -115,7 +151,7 @@ export function HeroBanner({ property }: HeroBannerProps) {
             </div>
             <p className="text-sm text-white/70 mb-1.5 font-medium">Unit Types</p>
             <p className="font-bold text-lg md:text-xl">
-              {unitTypes.length > 0 ? unitTypes.slice(0, 3).join(", ") : "Multiple Options"}
+              {formattedUnitTypes}
             </p>
           </div>
 

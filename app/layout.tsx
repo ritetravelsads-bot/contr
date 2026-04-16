@@ -91,9 +91,13 @@ export default function RootLayout({
         {/* DNS prefetch for external resources */}
         <link rel="dns-prefetch" href="//ik.imagekit.io" />
         <link rel="preconnect" href="https://ik.imagekit.io" crossOrigin="anonymous" />
+        {/* Preconnect to own origin for faster image optimization endpoint */}
+        <link rel="preconnect" href="/" />
+        <link rel="dns-prefetch" href="//countryroof.in" />
 
         {/* Preload critical LCP images - must exactly match srcset in banner-slider.tsx */}
         {/* Using native picture with /_next/image URLs eliminates both resource load delay and render delay */}
+        {/* Note: crossOrigin="anonymous" is required for preload to be used by the img element */}
         <link
           rel="preload"
           as="image"

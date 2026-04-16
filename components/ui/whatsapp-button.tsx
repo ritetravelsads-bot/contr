@@ -12,9 +12,17 @@ export default function WhatsAppButton() {
   const [showTooltip, setShowTooltip] = useState(false)
 
   useEffect(() => {
-    // Slide in after a short delay
-    const timer = setTimeout(() => setIsVisible(true), 1500)
-    return () => clearTimeout(timer)
+    // Slide in after LCP to not compete for resources
+    // Using requestIdleCallback with longer timeout for non-critical UI
+    const showButton = () => setIsVisible(true)
+    
+    if ('requestIdleCallback' in window) {
+      const id = window.requestIdleCallback(showButton, { timeout: 4000 })
+      return () => window.cancelIdleCallback(id)
+    } else {
+      const timer = setTimeout(showButton, 2500)
+      return () => clearTimeout(timer)
+    }
   }, [])
 
   // Show tooltip briefly after button appears

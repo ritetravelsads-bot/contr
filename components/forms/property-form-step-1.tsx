@@ -1,8 +1,18 @@
 "use client"
 
-import { useState, useEffect } from "react"
+import { useState, useEffect, useCallback } from "react"
 import { ComboSelect } from "@/components/ui/combo-select"
-import { Plus, Trash2 } from "lucide-react"
+import { Plus, Trash2, Link2 } from "lucide-react"
+
+// Generate slug from text
+const generateSlug = (text: string): string => {
+  return text
+    .toLowerCase()
+    .trim()
+    .replace(/[^\w\s-]/g, "")
+    .replace(/\s+/g, "-")
+    .replace(/-+/g, "-")
+}
 
 interface Option {
   _id: string
@@ -15,6 +25,23 @@ export default function PropertyFormStep1({ formData, onChange }: any) {
   const [categories, setCategories] = useState<Option[]>([])
   const [loadingDevelopers, setLoadingDevelopers] = useState(false)
   const [loadingCategories, setLoadingCategories] = useState(false)
+  // Track if slug has been manually edited
+  const [slugManuallyEdited, setSlugManuallyEdited] = useState(!!formData.slug)
+  
+  // Handle property name change - auto-generate slug if not manually edited
+  const handlePropertyNameChange = useCallback((value: string) => {
+    onChange("property_name", value)
+    // Only auto-generate slug if it hasn't been manually edited
+    if (!slugManuallyEdited) {
+      onChange("slug", generateSlug(value))
+    }
+  }, [onChange, slugManuallyEdited])
+  
+  // Handle slug change - mark as manually edited
+  const handleSlugChange = useCallback((value: string) => {
+    setSlugManuallyEdited(true)
+    onChange("slug", generateSlug(value))
+  }, [onChange])
 
   useEffect(() => {
     const loadDevelopers = async () => {
@@ -137,7 +164,7 @@ export default function PropertyFormStep1({ formData, onChange }: any) {
           <input
             type="text"
             value={formData.property_name}
-            onChange={(e) => onChange("property_name", e.target.value)}
+            onChange={(e) => handlePropertyNameChange(e.target.value)}
             placeholder="e.g., Modern 3BHK Apartment"
             required
             className="w-full px-3 py-2 text-sm border border-border rounded-md bg-input focus:outline-none focus:ring-1 focus:ring-ring"
@@ -161,6 +188,45 @@ export default function PropertyFormStep1({ formData, onChange }: any) {
             <option value="warehouse">Warehouse</option>
           </select>
         </div>
+      </div>
+
+      {/* Slug Field - Auto-generated from property name */}
+      <div>
+        <label className="text-xs font-medium text-muted-foreground block mb-1.5">
+          <span className="flex items-center gap-1.5">
+            <Link2 className="h-3 w-3" />
+            URL Slug
+          </span>
+        </label>
+        <div className="flex items-center gap-2">
+          <div className="flex-1 relative">
+            <span className="absolute left-3 top-1/2 -translate-y-1/2 text-xs text-muted-foreground">/properties/</span>
+            <input
+              type="text"
+              value={formData.slug || ""}
+              onChange={(e) => handleSlugChange(e.target.value)}
+              placeholder="auto-generated-from-name"
+              className="w-full pl-[85px] pr-3 py-2 text-sm border border-border rounded-md bg-input focus:outline-none focus:ring-1 focus:ring-ring"
+            />
+          </div>
+          {slugManuallyEdited && (
+            <button
+              type="button"
+              onClick={() => {
+                setSlugManuallyEdited(false)
+                onChange("slug", generateSlug(formData.property_name || ""))
+              }}
+              className="px-3 py-2 text-xs font-medium text-primary hover:text-primary/80 border border-border rounded-md hover:bg-muted transition-colors"
+            >
+              Reset
+            </button>
+          )}
+        </div>
+        <p className="text-xs text-muted-foreground mt-1">
+          {slugManuallyEdited 
+            ? "Custom URL slug (click Reset to auto-generate from property name)" 
+            : "Auto-generated from property name. Edit to customize."}
+        </p>
       </div>
 
       {/* Category Selection with ComboSelect */}

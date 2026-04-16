@@ -30,6 +30,15 @@ export function FloorPlanTabs({ floorPlans, configurations, units }: FloorPlanTa
     setMounted(true)
   }, [])
 
+  // Format unit type to show simplified BHK label (e.g., "3 BHK Luxury" -> "3 BHK")
+  const formatBHKLabel = (type: string): string => {
+    const match = type.match(/^(\d+)\s*BHK/i)
+    if (match) {
+      return `${match[1]} BHK`
+    }
+    return type // Return original if not BHK format (e.g., "Penthouse", "Studio")
+  }
+  
   // Combine floor plans from all sources (units, configurations, and standalone)
   const plans: Array<{ label: string; image: string }> = []
 
@@ -37,7 +46,7 @@ export function FloorPlanTabs({ floorPlans, configurations, units }: FloorPlanTa
   units?.forEach(unit => {
     if (unit.floor_plan_image) {
       plans.push({
-        label: unit.type || "Unit",
+        label: formatBHKLabel(unit.type || "Unit"),
         image: unit.floor_plan_image
       })
     }
@@ -47,7 +56,7 @@ export function FloorPlanTabs({ floorPlans, configurations, units }: FloorPlanTa
   configurations?.forEach(config => {
     if (config.floor_plan_image && !plans.some(p => p.image === config.floor_plan_image)) {
       plans.push({
-        label: config.type,
+        label: formatBHKLabel(config.type),
         image: config.floor_plan_image
       })
     }

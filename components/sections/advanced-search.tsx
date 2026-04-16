@@ -1,6 +1,6 @@
 "use client"
 
-import { useState, useEffect, useRef } from "react"
+import { useState, useEffect, useRef, startTransition } from "react"
 import { Search, Building2, Home, MapPin, Sparkles, ArrowRight, Mic, MicOff } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { useRouter } from "next/navigation"
@@ -65,7 +65,7 @@ export default function AdvancedSearch() {
   const [properties, setProperties] = useState<any[]>([])
   const [placeholderIndex, setPlaceholderIndex] = useState(0)
   const [isTyping, setIsTyping] = useState(false)
-  const [displayedPlaceholder, setDisplayedPlaceholder] = useState("")
+  const [displayedPlaceholder, setDisplayedPlaceholder] = useState("3 BHK in Gurgaon")
   const searchRef = useRef<HTMLDivElement>(null)
   const inputRef = useRef<HTMLInputElement>(null)
   const router = useRouter()
@@ -78,9 +78,26 @@ export default function AdvancedSearch() {
     },
   })
 
-  // Typewriter effect for placeholder
+  // Typewriter effect for placeholder - deferred to not block LCP
+  const [animationReady, setAnimationReady] = useState(false)
+  
+  // Defer animation start until after LCP
   useEffect(() => {
-    if (searchTerm) return // Don't animate if user is typing
+    if ('requestIdleCallback' in window) {
+      const id = window.requestIdleCallback(() => {
+        startTransition(() => setAnimationReady(true))
+      }, { timeout: 3000 })
+      return () => window.cancelIdleCallback(id)
+    } else {
+      const timeout = setTimeout(() => {
+        startTransition(() => setAnimationReady(true))
+      }, 1000)
+      return () => clearTimeout(timeout)
+    }
+  }, [])
+  
+  useEffect(() => {
+    if (searchTerm || !animationReady) return // Don't animate if user is typing or not ready
     
     const currentSuggestion = PLACEHOLDER_SUGGESTIONS[placeholderIndex]
     let charIndex = 0
@@ -108,7 +125,7 @@ export default function AdvancedSearch() {
     }, isDeleting ? 50 : 100)
 
     return () => clearInterval(typeInterval)
-  }, [placeholderIndex, searchTerm])
+  }, [placeholderIndex, searchTerm, animationReady])
 
   // Defer property fetching to not block initial render - only fetch when user focuses on search
   useEffect(() => {
