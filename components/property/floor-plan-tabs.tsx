@@ -1,7 +1,7 @@
 "use client"
 
 import { useState, useEffect, useCallback } from "react"
-import { Layers, X, ChevronLeft, ChevronRight, Maximize2 } from "lucide-react"
+import { Layers, X, ChevronLeft, ChevronRight, Maximize2, ZoomIn, ZoomOut, RotateCcw } from "lucide-react"
 import Image from "next/image"
 import { cn } from "@/lib/utils"
 
@@ -21,6 +21,7 @@ export function FloorPlanTabs({ floorPlans, configurations, units }: FloorPlanTa
   const [activeTab, setActiveTab] = useState(0)
   const [showLightbox, setShowLightbox] = useState(false)
   const [lightboxIndex, setLightboxIndex] = useState(0)
+  const [zoomLevel, setZoomLevel] = useState(1)
 
   // Combine floor plans from all sources (units, configurations, and standalone)
   const plans: Array<{ label: string; image: string }> = []
@@ -62,10 +63,19 @@ export function FloorPlanTabs({ floorPlans, configurations, units }: FloorPlanTa
     
     if (e.key === "Escape") {
       setShowLightbox(false)
+      setZoomLevel(1)
     } else if (e.key === "ArrowLeft") {
       setLightboxIndex(prev => (prev - 1 + plans.length) % plans.length)
+      setZoomLevel(1)
     } else if (e.key === "ArrowRight") {
       setLightboxIndex(prev => (prev + 1) % plans.length)
+      setZoomLevel(1)
+    } else if (e.key === "+" || e.key === "=") {
+      setZoomLevel(prev => Math.min(prev + 0.25, 3))
+    } else if (e.key === "-") {
+      setZoomLevel(prev => Math.max(prev - 0.25, 0.5))
+    } else if (e.key === "0") {
+      setZoomLevel(1)
     }
   }, [showLightbox, plans.length])
 
@@ -88,21 +98,40 @@ export function FloorPlanTabs({ floorPlans, configurations, units }: FloorPlanTa
 
   const openLightbox = (index: number) => {
     setLightboxIndex(index)
+    setZoomLevel(1)
     setShowLightbox(true)
   }
 
   const closeLightbox = () => {
     setShowLightbox(false)
+    setZoomLevel(1)
   }
 
   const nextImage = (e?: React.MouseEvent) => {
     e?.stopPropagation()
     setLightboxIndex(prev => (prev + 1) % plans.length)
+    setZoomLevel(1)
   }
   
   const prevImage = (e?: React.MouseEvent) => {
     e?.stopPropagation()
     setLightboxIndex(prev => (prev - 1 + plans.length) % plans.length)
+    setZoomLevel(1)
+  }
+
+  const zoomIn = (e?: React.MouseEvent) => {
+    e?.stopPropagation()
+    setZoomLevel(prev => Math.min(prev + 0.25, 3))
+  }
+
+  const zoomOut = (e?: React.MouseEvent) => {
+    e?.stopPropagation()
+    setZoomLevel(prev => Math.max(prev - 0.25, 0.5))
+  }
+
+  const resetZoom = (e?: React.MouseEvent) => {
+    e?.stopPropagation()
+    setZoomLevel(1)
   }
 
   if (plans.length === 0) return null
@@ -233,102 +262,144 @@ export function FloorPlanTabs({ floorPlans, configurations, units }: FloorPlanTa
         </div>
       </div>
 
-      {/* Enhanced Lightbox */}
+      {/* Enhanced Lightbox with z-[9999] to be above navbar */}
       {showLightbox && (
         <div 
-          className="fixed inset-0 z-[100] bg-black flex items-center justify-center"
+          className="fixed inset-0 z-[9999] bg-black/95 flex flex-col"
           onClick={closeLightbox}
         >
-          {/* Close button - always visible */}
-          <button
-            onClick={closeLightbox}
-            className="absolute top-4 right-4 z-[110] p-3 bg-white/20 hover:bg-white/30 rounded-full text-white transition-colors"
-            aria-label="Close lightbox"
-          >
-            <X className="h-6 w-6" />
-          </button>
-
-          {/* Navigation - Previous - always visible */}
-          {plans.length > 1 && (
-            <button
-              onClick={prevImage}
-              className="absolute left-4 top-1/2 -translate-y-1/2 z-[110] p-3 bg-white/20 hover:bg-white/30 rounded-full text-white transition-colors"
-              aria-label="Previous image"
-            >
-              <ChevronLeft className="h-6 w-6" />
-            </button>
-          )}
-
-          {/* Navigation - Next - always visible */}
-          {plans.length > 1 && (
-            <button
-              onClick={nextImage}
-              className="absolute right-4 top-1/2 -translate-y-1/2 z-[110] p-3 bg-white/20 hover:bg-white/30 rounded-full text-white transition-colors"
-              aria-label="Next image"
-            >
-              <ChevronRight className="h-6 w-6" />
-            </button>
-          )}
-
-          {/* Main Image */}
-          <div 
-            className="relative w-full h-full max-w-[90vw] max-h-[80vh] mx-auto my-auto"
-            onClick={(e) => e.stopPropagation()}
-          >
-            <Image
-              src={plans[lightboxIndex].image}
-              alt={`Floor Plan - ${plans[lightboxIndex].label}`}
-              fill
-              className="object-contain"
-              sizes="90vw"
-              priority
-            />
-          </div>
-
-          {/* Bottom info bar - always visible */}
-          <div className="absolute bottom-0 left-0 right-0 z-[110] bg-gradient-to-t from-black/90 via-black/60 to-transparent py-6 px-4">
-            <div className="max-w-6xl mx-auto flex items-center justify-between">
+          {/* Top Controls Bar */}
+          <div className="flex items-center justify-between px-4 py-3 bg-black/80 border-b border-white/10">
+            {/* Left: Image info */}
+            <div className="flex items-center gap-4">
               <div>
-                <p className="text-white font-semibold text-lg">{plans[lightboxIndex].label}</p>
-                <p className="text-white/70 text-sm">
-                  {lightboxIndex + 1} of {plans.length} floor plans
+                <p className="text-white font-semibold">{plans[lightboxIndex].label}</p>
+                <p className="text-white/60 text-sm">
+                  {lightboxIndex + 1} of {plans.length}
                 </p>
               </div>
-              
-              {/* Thumbnail strip */}
-              {plans.length > 1 && plans.length <= 10 && (
-                <div className="hidden md:flex items-center gap-2">
-                  {plans.map((plan, index) => (
-                    <button
-                      key={index}
-                      onClick={(e) => {
-                        e.stopPropagation()
-                        setLightboxIndex(index)
-                      }}
-                      className={cn(
-                        "relative w-16 h-12 rounded-lg overflow-hidden border-2 transition-all",
-                        lightboxIndex === index
-                          ? "border-white scale-110"
-                          : "border-white/30 opacity-60 hover:opacity-100"
-                      )}
-                    >
-                      <Image
-                        src={plan.image}
-                        alt={plan.label}
-                        fill
-                        className="object-cover"
-                        sizes="64px"
-                      />
-                    </button>
-                  ))}
-                </div>
-              )}
             </div>
+
+            {/* Center: Zoom Controls */}
+            <div className="flex items-center gap-1 bg-white/10 rounded-lg p-1">
+              <button
+                onClick={zoomOut}
+                disabled={zoomLevel <= 0.5}
+                className="p-2 rounded-md hover:bg-white/20 text-white transition-colors disabled:opacity-40 disabled:cursor-not-allowed"
+                title="Zoom out (-)"
+              >
+                <ZoomOut className="h-5 w-5" />
+              </button>
+              <span className="px-3 py-1 text-white text-sm font-medium min-w-[60px] text-center">
+                {Math.round(zoomLevel * 100)}%
+              </span>
+              <button
+                onClick={zoomIn}
+                disabled={zoomLevel >= 3}
+                className="p-2 rounded-md hover:bg-white/20 text-white transition-colors disabled:opacity-40 disabled:cursor-not-allowed"
+                title="Zoom in (+)"
+              >
+                <ZoomIn className="h-5 w-5" />
+              </button>
+              <button
+                onClick={resetZoom}
+                className="p-2 rounded-md hover:bg-white/20 text-white transition-colors"
+                title="Reset zoom (0)"
+              >
+                <RotateCcw className="h-5 w-5" />
+              </button>
+            </div>
+
+            {/* Right: Close button */}
+            <button
+              onClick={closeLightbox}
+              className="p-2 rounded-lg bg-white/10 hover:bg-white/20 text-white transition-colors"
+              aria-label="Close lightbox"
+            >
+              <X className="h-6 w-6" />
+            </button>
           </div>
 
+          {/* Main Image Area */}
+          <div className="flex-1 relative overflow-auto flex items-center justify-center" onClick={(e) => e.stopPropagation()}>
+            {/* Navigation - Previous */}
+            {plans.length > 1 && (
+              <button
+                onClick={prevImage}
+                className="absolute left-4 top-1/2 -translate-y-1/2 z-10 p-3 bg-white/20 hover:bg-white/30 rounded-full text-white transition-colors shadow-lg"
+                aria-label="Previous image"
+              >
+                <ChevronLeft className="h-6 w-6" />
+              </button>
+            )}
+
+            {/* Image Container with zoom */}
+            <div 
+              className="relative transition-transform duration-200 ease-out"
+              style={{ 
+                transform: `scale(${zoomLevel})`,
+                width: '80vw',
+                height: '70vh',
+                maxWidth: '1200px'
+              }}
+            >
+              <Image
+                src={plans[lightboxIndex].image}
+                alt={`Floor Plan - ${plans[lightboxIndex].label}`}
+                fill
+                className="object-contain"
+                sizes="90vw"
+                priority
+              />
+            </div>
+
+            {/* Navigation - Next */}
+            {plans.length > 1 && (
+              <button
+                onClick={nextImage}
+                className="absolute right-4 top-1/2 -translate-y-1/2 z-10 p-3 bg-white/20 hover:bg-white/30 rounded-full text-white transition-colors shadow-lg"
+                aria-label="Next image"
+              >
+                <ChevronRight className="h-6 w-6" />
+              </button>
+            )}
+          </div>
+
+          {/* Bottom Thumbnail Strip */}
+          {plans.length > 1 && (
+            <div className="bg-black/80 border-t border-white/10 px-4 py-3">
+              <div className="flex items-center justify-center gap-2 overflow-x-auto">
+                {plans.map((plan, index) => (
+                  <button
+                    key={index}
+                    onClick={(e) => {
+                      e.stopPropagation()
+                      setLightboxIndex(index)
+                      setZoomLevel(1)
+                    }}
+                    className={cn(
+                      "relative w-16 h-12 rounded-lg overflow-hidden border-2 transition-all flex-shrink-0",
+                      lightboxIndex === index
+                        ? "border-white ring-2 ring-white/50"
+                        : "border-white/30 opacity-60 hover:opacity-100 hover:border-white/60"
+                    )}
+                  >
+                    <Image
+                      src={plan.image}
+                      alt={plan.label}
+                      fill
+                      className="object-cover"
+                      sizes="64px"
+                    />
+                  </button>
+                ))}
+              </div>
+            </div>
+          )}
+
           {/* Keyboard hint */}
-          <div className="absolute top-4 left-4 z-[110] text-white/60 text-xs hidden md:block">
-            Use arrow keys to navigate, ESC to close
+          <div className="absolute bottom-20 left-4 text-white/50 text-xs hidden md:block">
+            Arrow keys: navigate | +/-: zoom | 0: reset | ESC: close
           </div>
         </div>
       )}

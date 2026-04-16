@@ -1,7 +1,7 @@
 "use client"
 
 import { useState, useEffect, useCallback } from "react"
-import { Map, ZoomIn, X, Maximize2 } from "lucide-react"
+import { Map, ZoomIn, ZoomOut, X, Maximize2, RotateCcw } from "lucide-react"
 import Image from "next/image"
 import { cn } from "@/lib/utils"
 
@@ -12,12 +12,20 @@ interface MasterPlanSectionProps {
 
 export function MasterPlanSection({ masterPlan, propertyName }: MasterPlanSectionProps) {
   const [showLightbox, setShowLightbox] = useState(false)
+  const [zoomLevel, setZoomLevel] = useState(1)
 
   // Keyboard navigation for lightbox
   const handleKeyDown = useCallback((e: KeyboardEvent) => {
     if (!showLightbox) return
     if (e.key === "Escape") {
       setShowLightbox(false)
+      setZoomLevel(1)
+    } else if (e.key === "+" || e.key === "=") {
+      setZoomLevel(prev => Math.min(prev + 0.25, 3))
+    } else if (e.key === "-") {
+      setZoomLevel(prev => Math.max(prev - 0.25, 0.5))
+    } else if (e.key === "0") {
+      setZoomLevel(1)
     }
   }, [showLightbox])
 
@@ -39,11 +47,28 @@ export function MasterPlanSection({ masterPlan, propertyName }: MasterPlanSectio
   }, [showLightbox])
 
   const openLightbox = () => {
+    setZoomLevel(1)
     setShowLightbox(true)
   }
 
   const closeLightbox = () => {
     setShowLightbox(false)
+    setZoomLevel(1)
+  }
+
+  const zoomInHandler = (e?: React.MouseEvent) => {
+    e?.stopPropagation()
+    setZoomLevel(prev => Math.min(prev + 0.25, 3))
+  }
+
+  const zoomOutHandler = (e?: React.MouseEvent) => {
+    e?.stopPropagation()
+    setZoomLevel(prev => Math.max(prev - 0.25, 0.5))
+  }
+
+  const resetZoom = (e?: React.MouseEvent) => {
+    e?.stopPropagation()
+    setZoomLevel(1)
   }
 
   if (!masterPlan) return null
@@ -122,50 +147,95 @@ export function MasterPlanSection({ masterPlan, propertyName }: MasterPlanSectio
         </div>
       </div>
 
-      {/* Lightbox */}
+      {/* Enhanced Lightbox with z-[9999] to be above navbar */}
       {showLightbox && (
         <div 
-          className="fixed inset-0 z-[100] bg-black flex items-center justify-center"
+          className="fixed inset-0 z-[9999] bg-black/95 flex flex-col"
           onClick={closeLightbox}
         >
-          {/* Close button - always visible */}
-          <button
-            onClick={closeLightbox}
-            className="absolute top-4 right-4 z-[110] p-3 bg-white/20 hover:bg-white/30 rounded-full text-white transition-colors"
-            aria-label="Close lightbox"
-          >
-            <X className="h-6 w-6" />
-          </button>
-
-          {/* Main Image */}
-          <div 
-            className="relative w-full h-full max-w-[90vw] max-h-[80vh] mx-auto my-auto"
-            onClick={(e) => e.stopPropagation()}
-          >
-            <Image
-              src={masterPlan}
-              alt={`Master Plan - ${propertyName || "Project"}`}
-              fill
-              className="object-contain"
-              sizes="90vw"
-              priority
-            />
-          </div>
-
-          {/* Bottom info bar - always visible */}
-          <div className="absolute bottom-0 left-0 right-0 z-[110] bg-gradient-to-t from-black/90 via-black/60 to-transparent py-6 px-4">
-            <div className="max-w-6xl mx-auto flex items-center justify-between">
+          {/* Top Controls Bar */}
+          <div className="flex items-center justify-between px-4 py-3 bg-black/80 border-b border-white/10">
+            {/* Left: Image info */}
+            <div className="flex items-center gap-4">
               <div>
-                <p className="text-white font-semibold text-lg">Master Plan</p>
-                <p className="text-white/70 text-sm">
+                <p className="text-white font-semibold">Master Plan</p>
+                <p className="text-white/60 text-sm">
                   {propertyName || "Project"} - Complete Layout
                 </p>
               </div>
+            </div>
+
+            {/* Center: Zoom Controls */}
+            <div className="flex items-center gap-1 bg-white/10 rounded-lg p-1">
+              <button
+                onClick={zoomOutHandler}
+                disabled={zoomLevel <= 0.5}
+                className="p-2 rounded-md hover:bg-white/20 text-white transition-colors disabled:opacity-40 disabled:cursor-not-allowed"
+                title="Zoom out (-)"
+              >
+                <ZoomOut className="h-5 w-5" />
+              </button>
+              <span className="px-3 py-1 text-white text-sm font-medium min-w-[60px] text-center">
+                {Math.round(zoomLevel * 100)}%
+              </span>
+              <button
+                onClick={zoomInHandler}
+                disabled={zoomLevel >= 3}
+                className="p-2 rounded-md hover:bg-white/20 text-white transition-colors disabled:opacity-40 disabled:cursor-not-allowed"
+                title="Zoom in (+)"
+              >
+                <ZoomIn className="h-5 w-5" />
+              </button>
+              <button
+                onClick={resetZoom}
+                className="p-2 rounded-md hover:bg-white/20 text-white transition-colors"
+                title="Reset zoom (0)"
+              >
+                <RotateCcw className="h-5 w-5" />
+              </button>
+            </div>
+
+            {/* Right: Close button */}
+            <button
+              onClick={closeLightbox}
+              className="p-2 rounded-lg bg-white/10 hover:bg-white/20 text-white transition-colors"
+              aria-label="Close lightbox"
+            >
+              <X className="h-6 w-6" />
+            </button>
+          </div>
+
+          {/* Main Image Area */}
+          <div className="flex-1 relative overflow-auto flex items-center justify-center" onClick={(e) => e.stopPropagation()}>
+            {/* Image Container with zoom */}
+            <div 
+              className="relative transition-transform duration-200 ease-out"
+              style={{ 
+                transform: `scale(${zoomLevel})`,
+                width: '80vw',
+                height: '70vh',
+                maxWidth: '1200px'
+              }}
+            >
+              <Image
+                src={masterPlan}
+                alt={`Master Plan - ${propertyName || "Project"}`}
+                fill
+                className="object-contain"
+                sizes="90vw"
+                priority
+              />
+            </div>
+          </div>
+
+          {/* Bottom Info Bar */}
+          <div className="bg-black/80 border-t border-white/10 px-4 py-3">
+            <div className="flex items-center justify-center gap-4">
               <a
                 href={masterPlan}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="flex items-center gap-2 px-4 py-2 bg-white/20 hover:bg-white/30 rounded-lg text-white text-sm font-medium transition-colors"
+                className="flex items-center gap-2 px-4 py-2 bg-white/10 hover:bg-white/20 rounded-lg text-white text-sm font-medium transition-colors"
                 onClick={(e) => e.stopPropagation()}
               >
                 <Maximize2 className="h-4 w-4" />
@@ -175,8 +245,8 @@ export function MasterPlanSection({ masterPlan, propertyName }: MasterPlanSectio
           </div>
 
           {/* Keyboard hint */}
-          <div className="absolute top-4 left-4 z-[110] text-white/60 text-xs hidden md:block">
-            Press ESC to close
+          <div className="absolute bottom-16 left-4 text-white/50 text-xs hidden md:block">
+            +/-: zoom | 0: reset | ESC: close
           </div>
         </div>
       )}
