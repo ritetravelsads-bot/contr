@@ -448,14 +448,6 @@ export default function PropertyFormStep4({ formData, onChange }: any) {
         gridCols="grid-cols-2 md:grid-cols-4"
       />
 
-      {/* Floor Plans */}
-      <MultipleImageUpload
-        fieldName="floor_plans"
-        title="Floor Plans"
-        description="Upload floor plan images for different unit types"
-        gridCols="grid-cols-2 md:grid-cols-3"
-      />
-
       {/* Master Plan */}
       <SingleImageUpload
         fieldName="master_plan"

@@ -1,7 +1,7 @@
 "use client"
 
 import { useState, useEffect, useCallback } from "react"
-import { Layers, ZoomIn, X, ChevronLeft, ChevronRight, Download, Maximize2 } from "lucide-react"
+import { Layers, X, ChevronLeft, ChevronRight, Maximize2 } from "lucide-react"
 import { cn } from "@/lib/utils"
 
 interface FloorPlanTabsProps {
@@ -111,31 +111,35 @@ export function FloorPlanTabs({ floorPlans, configurations, units }: FloorPlanTa
           </p>
         </div>
 
-        {/* Tab Navigation */}
-        {plans.length > 1 && (
-          <div className="flex flex-wrap justify-center gap-2 mb-6">
-            {plans.map((plan, index) => (
-              <button
-                key={index}
-                onClick={() => setActiveTab(index)}
-                className={cn(
-                  "px-4 py-2 text-sm font-medium rounded-full transition-all duration-200",
-                  activeTab === index
-                    ? "bg-primary text-primary-foreground shadow-md shadow-primary/20"
-                    : "bg-card border border-border text-muted-foreground hover:border-primary/50 hover:text-foreground"
-                )}
-              >
-                {plan.label}
-              </button>
-            ))}
+        {/* Tab Panel Container with max height */}
+        <div className="bg-card border border-border rounded-2xl overflow-hidden shadow-lg" style={{ maxHeight: "550px" }}>
+          {/* Tab Navigation - Horizontal scrollable tabs */}
+          <div className="border-b border-border bg-muted/30">
+            <div className="flex overflow-x-auto scrollbar-hide">
+              {plans.map((plan, index) => (
+                <button
+                  key={index}
+                  onClick={() => setActiveTab(index)}
+                  className={cn(
+                    "flex-shrink-0 px-5 py-3 text-sm font-medium transition-all duration-200 border-b-2 relative",
+                    activeTab === index
+                      ? "text-primary border-primary bg-primary/5"
+                      : "text-muted-foreground border-transparent hover:text-foreground hover:bg-muted/50"
+                  )}
+                >
+                  <span className="whitespace-nowrap">{plan.label}</span>
+                  {activeTab === index && (
+                    <span className="absolute bottom-0 left-0 right-0 h-0.5 bg-primary" />
+                  )}
+                </button>
+              ))}
+            </div>
           </div>
-        )}
 
-        {/* Active Floor Plan Display */}
-        <div className="relative bg-card border border-border rounded-2xl overflow-hidden shadow-lg">
           {/* Main Image Container */}
           <div 
-            className="relative aspect-[4/3] md:aspect-[16/10] bg-muted/50 cursor-zoom-in group"
+            className="relative bg-muted/50 cursor-zoom-in group"
+            style={{ height: "400px" }}
             onClick={() => openLightbox(activeTab)}
           >
             {!imageLoaded[activeTab] && (
@@ -147,7 +151,7 @@ export function FloorPlanTabs({ floorPlans, configurations, units }: FloorPlanTa
               src={plans[activeTab].image}
               alt={`Floor Plan - ${plans[activeTab].label}`}
               className={cn(
-                "w-full h-full object-contain p-4 md:p-8 transition-opacity duration-300",
+                "w-full h-full object-contain p-4 transition-opacity duration-300",
                 imageLoaded[activeTab] ? "opacity-100" : "opacity-0"
               )}
               onLoad={() => setImageLoaded(prev => ({ ...prev, [activeTab]: true }))}
@@ -157,85 +161,78 @@ export function FloorPlanTabs({ floorPlans, configurations, units }: FloorPlanTa
             <div className="absolute inset-0 bg-black/0 group-hover:bg-black/10 transition-colors duration-300" />
             
             {/* Zoom indicator */}
-            <div className="absolute top-4 right-4 flex items-center gap-2 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+            <div className="absolute top-3 right-3 flex items-center gap-2 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
               <button
                 onClick={(e) => {
                   e.stopPropagation()
                   openLightbox(activeTab)
                 }}
-                className="p-2.5 bg-black/60 hover:bg-black/80 backdrop-blur-sm rounded-xl text-white transition-colors"
+                className="p-2 bg-black/60 hover:bg-black/80 backdrop-blur-sm rounded-lg text-white transition-colors"
                 title="View fullscreen"
               >
-                <Maximize2 className="h-5 w-5" />
+                <Maximize2 className="h-4 w-4" />
               </button>
             </div>
             
             {/* Click hint */}
-            <div className="absolute bottom-4 left-1/2 -translate-x-1/2 px-4 py-2 bg-black/60 backdrop-blur-sm rounded-full text-white text-xs font-medium opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+            <div className="absolute bottom-3 left-1/2 -translate-x-1/2 px-3 py-1.5 bg-black/60 backdrop-blur-sm rounded-full text-white text-xs font-medium opacity-0 group-hover:opacity-100 transition-opacity duration-300">
               Click to enlarge
             </div>
+
+            {/* Navigation arrows on image */}
+            {plans.length > 1 && (
+              <>
+                <button
+                  onClick={(e) => {
+                    e.stopPropagation()
+                    setActiveTab(prev => (prev - 1 + plans.length) % plans.length)
+                  }}
+                  className="absolute left-3 top-1/2 -translate-y-1/2 p-2 bg-black/40 hover:bg-black/60 backdrop-blur-sm rounded-full text-white transition-colors opacity-0 group-hover:opacity-100"
+                >
+                  <ChevronLeft className="h-5 w-5" />
+                </button>
+                <button
+                  onClick={(e) => {
+                    e.stopPropagation()
+                    setActiveTab(prev => (prev + 1) % plans.length)
+                  }}
+                  className="absolute right-3 top-1/2 -translate-y-1/2 p-2 bg-black/40 hover:bg-black/60 backdrop-blur-sm rounded-full text-white transition-colors opacity-0 group-hover:opacity-100"
+                >
+                  <ChevronRight className="h-5 w-5" />
+                </button>
+              </>
+            )}
           </div>
 
-          {/* Footer with label and navigation */}
-          <div className="px-4 py-3 border-t border-border bg-muted/30 flex items-center justify-between">
+          {/* Footer with label and count */}
+          <div className="px-4 py-2.5 border-t border-border bg-muted/30 flex items-center justify-between">
             <div>
               <p className="text-sm font-semibold text-foreground">{plans[activeTab].label}</p>
               <p className="text-xs text-muted-foreground">
-                {activeTab + 1} of {plans.length}
+                {activeTab + 1} of {plans.length} floor plan{plans.length !== 1 ? "s" : ""}
               </p>
             </div>
             
-            {/* Quick navigation arrows */}
-            {plans.length > 1 && (
-              <div className="flex items-center gap-2">
-                <button
-                  onClick={() => setActiveTab(prev => (prev - 1 + plans.length) % plans.length)}
-                  className="p-2 rounded-lg bg-card border border-border hover:border-primary/50 transition-colors"
-                >
-                  <ChevronLeft className="h-4 w-4" />
-                </button>
-                <button
-                  onClick={() => setActiveTab(prev => (prev + 1) % plans.length)}
-                  className="p-2 rounded-lg bg-card border border-border hover:border-primary/50 transition-colors"
-                >
-                  <ChevronRight className="h-4 w-4" />
-                </button>
+            {/* Thumbnail dots for quick navigation */}
+            {plans.length > 1 && plans.length <= 8 && (
+              <div className="flex items-center gap-1.5">
+                {plans.map((_, index) => (
+                  <button
+                    key={index}
+                    onClick={() => setActiveTab(index)}
+                    className={cn(
+                      "w-2 h-2 rounded-full transition-all duration-200",
+                      activeTab === index
+                        ? "bg-primary w-4"
+                        : "bg-muted-foreground/30 hover:bg-muted-foreground/50"
+                    )}
+                    title={plans[index].label}
+                  />
+                ))}
               </div>
             )}
           </div>
         </div>
-
-        {/* Thumbnail Navigation */}
-        {plans.length > 1 && (
-          <div className="flex justify-center gap-3 mt-6 overflow-x-auto pb-2 px-4">
-            {plans.map((plan, index) => (
-              <button
-                key={index}
-                onClick={() => setActiveTab(index)}
-                className={cn(
-                  "group flex-shrink-0 w-24 rounded-xl overflow-hidden border-2 transition-all duration-200",
-                  activeTab === index
-                    ? "border-primary shadow-md shadow-primary/20 scale-105"
-                    : "border-border hover:border-primary/50 opacity-70 hover:opacity-100"
-                )}
-              >
-                <div className="relative aspect-[4/3] bg-muted">
-                  <img
-                    src={plan.image}
-                    alt={plan.label}
-                    className="w-full h-full object-cover"
-                  />
-                  {activeTab === index && (
-                    <div className="absolute inset-0 bg-primary/10" />
-                  )}
-                </div>
-                <div className="px-2 py-1.5 bg-card text-center">
-                  <p className="text-[10px] font-medium text-foreground truncate">{plan.label}</p>
-                </div>
-              </button>
-            ))}
-          </div>
-        )}
       </div>
 
       {/* Enhanced Lightbox */}

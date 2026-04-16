@@ -1,7 +1,7 @@
 "use client"
 
 import { useState, useEffect, useCallback } from "react"
-import { Map, ZoomIn, X, Maximize2, Download } from "lucide-react"
+import { Map, ZoomIn, X, Maximize2 } from "lucide-react"
 import { cn } from "@/lib/utils"
 
 interface MasterPlanSectionProps {
@@ -55,10 +55,12 @@ export function MasterPlanSection({ masterPlan, propertyName }: MasterPlanSectio
           </p>
         </div>
 
-        {/* Master Plan Image */}
-        <div className="relative bg-card border border-border rounded-2xl overflow-hidden shadow-lg">
+        {/* Master Plan Image Container with max height */}
+        <div className="relative bg-card border border-border rounded-2xl overflow-hidden shadow-lg" style={{ maxHeight: "550px" }}>
+          {/* Image Container */}
           <div 
-            className="relative aspect-[16/10] md:aspect-[16/9] bg-muted/50 cursor-zoom-in group"
+            className="relative bg-muted/50 cursor-zoom-in group"
+            style={{ height: "450px" }}
             onClick={() => setShowLightbox(true)}
           >
             {!imageLoaded && (
@@ -70,7 +72,7 @@ export function MasterPlanSection({ masterPlan, propertyName }: MasterPlanSectio
               src={masterPlan}
               alt={`Master Plan - ${propertyName || "Project"}`}
               className={cn(
-                "w-full h-full object-contain p-4 md:p-6 transition-opacity duration-300",
+                "w-full h-full object-contain p-4 transition-opacity duration-300",
                 imageLoaded ? "opacity-100" : "opacity-0"
               )}
               onLoad={() => setImageLoaded(true)}
@@ -80,42 +82,32 @@ export function MasterPlanSection({ masterPlan, propertyName }: MasterPlanSectio
             <div className="absolute inset-0 bg-black/0 group-hover:bg-black/10 transition-colors duration-300" />
             
             {/* Action buttons */}
-            <div className="absolute top-4 right-4 flex items-center gap-2 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+            <div className="absolute top-3 right-3 flex items-center gap-2 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
               <button
                 onClick={(e) => {
                   e.stopPropagation()
                   setShowLightbox(true)
                 }}
-                className="p-2.5 bg-black/60 hover:bg-black/80 backdrop-blur-sm rounded-xl text-white transition-colors"
+                className="p-2 bg-black/60 hover:bg-black/80 backdrop-blur-sm rounded-lg text-white transition-colors"
                 title="View fullscreen"
               >
-                <Maximize2 className="h-5 w-5" />
+                <Maximize2 className="h-4 w-4" />
               </button>
-              <a
-                href={masterPlan}
-                target="_blank"
-                rel="noopener noreferrer"
-                onClick={(e) => e.stopPropagation()}
-                className="p-2.5 bg-black/60 hover:bg-black/80 backdrop-blur-sm rounded-xl text-white transition-colors"
-                title="Open in new tab"
-              >
-                <Download className="h-5 w-5" />
-              </a>
             </div>
             
             {/* Click hint */}
-            <div className="absolute bottom-4 left-1/2 -translate-x-1/2 px-4 py-2 bg-black/60 backdrop-blur-sm rounded-full text-white text-xs font-medium opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+            <div className="absolute bottom-3 left-1/2 -translate-x-1/2 px-3 py-1.5 bg-black/60 backdrop-blur-sm rounded-full text-white text-xs font-medium opacity-0 group-hover:opacity-100 transition-opacity duration-300">
               Click to enlarge
             </div>
 
             {/* Corner label */}
-            <div className="absolute top-4 left-4 px-3 py-1.5 bg-blue-500/90 rounded-lg text-white text-xs font-semibold">
+            <div className="absolute top-3 left-3 px-3 py-1.5 bg-blue-500/90 rounded-lg text-white text-xs font-semibold">
               Master Layout
             </div>
           </div>
 
           {/* Footer */}
-          <div className="px-4 py-3 border-t border-border bg-muted/30 flex items-center justify-between">
+          <div className="px-4 py-2.5 border-t border-border bg-muted/30 flex items-center justify-between">
             <div>
               <p className="text-sm font-semibold text-foreground">Project Master Plan</p>
               <p className="text-xs text-muted-foreground">
@@ -124,9 +116,9 @@ export function MasterPlanSection({ masterPlan, propertyName }: MasterPlanSectio
             </div>
             <button
               onClick={() => setShowLightbox(true)}
-              className="flex items-center gap-2 px-4 py-2 bg-blue-500/10 hover:bg-blue-500/20 border border-blue-500/20 rounded-xl text-blue-600 dark:text-blue-400 text-sm font-medium transition-colors"
+              className="flex items-center gap-2 px-3 py-1.5 bg-blue-500/10 hover:bg-blue-500/20 border border-blue-500/20 rounded-lg text-blue-600 dark:text-blue-400 text-xs font-medium transition-colors"
             >
-              <ZoomIn className="h-4 w-4" />
+              <ZoomIn className="h-3.5 w-3.5" />
               View Full Size
             </button>
           </div>
@@ -175,8 +167,8 @@ export function MasterPlanSection({ masterPlan, propertyName }: MasterPlanSectio
                 rel="noopener noreferrer"
                 className="flex items-center gap-2 px-4 py-2 bg-white/10 hover:bg-white/20 rounded-lg text-white text-sm font-medium transition-colors"
               >
-                <Download className="h-4 w-4" />
-                Download
+                <Maximize2 className="h-4 w-4" />
+                Open Full Size
               </a>
             </div>
           </div>
