@@ -40,40 +40,36 @@ const slides = [
 ]
 
 // Static first slide rendered immediately without JS - critical for LCP
-// Using native img for fastest possible LCP - no Next.js Image processing delay
 function FirstSlideStatic() {
   return (
     <div className="absolute inset-0 z-10">
       <div className="absolute inset-0">
-        {/* Desktop Image - native img for zero JS overhead */}
-        <picture>
-          <source 
-            media="(min-width: 768px)" 
-            srcSet="/home-banner-1.jpg"
-            type="image/jpeg"
-          />
-          <source 
-            media="(max-width: 767px)" 
-            srcSet="/banners/home-mob-banner-1.jpg"
-            type="image/jpeg"
-          />
-          {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img 
-            src="/banners/home-mob-banner-1.jpg"
-            alt="Country Roof Real Estate"
-            fetchPriority="high"
-            decoding="sync"
-            loading="eager"
-            style={{
-              position: 'absolute',
-              height: '100%',
-              width: '100%',
-              inset: 0,
-              objectFit: 'cover',
-            }}
-            className="md:object-contain"
-          />
-        </picture>
+        {/* Desktop Image */}
+        <Image 
+          src="/home-banner-1.jpg"
+          alt="Banner"
+          fill
+          priority
+          loading="eager"
+          sizes="(max-width: 767px) 1px, 100vw"
+          quality={85}
+          fetchPriority="high"
+          decoding="sync"
+          className="object-contain hidden md:block"
+        />
+        {/* Mobile Image - LCP element */}
+        <Image 
+          src="/banners/home-mob-banner-1.jpg"
+          alt="Banner"
+          fill
+          priority
+          loading="eager"
+          sizes="(min-width: 768px) 1px, 100vw"
+          quality={80}
+          fetchPriority="high"
+          decoding="sync"
+          className="object-cover md:hidden"
+        />
       </div>
     </div>
   )

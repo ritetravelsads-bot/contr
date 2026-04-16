@@ -21,7 +21,7 @@ const nextConfig = {
     minimumCacheTTL: 31536000,
   },
   experimental: {
-    optimizePackageImports: ["@radix-ui", "lucide-react", "date-fns", "recharts"],
+    optimizePackageImports: ["@radix-ui", "lucide-react"],
     ppr: false,
   },
   transpilePackages: [],
@@ -29,9 +29,6 @@ const nextConfig = {
     removeConsole: process.env.NODE_ENV === "production" ? { exclude: ["error", "warn"] } : false,
   },
   reactStrictMode: true,
-  // Disable legacy browser polyfills for modern browsers only
-  // This reduces bundle size by ~14KB
-  swcMinify: true,
   
   // Disable caching for API routes and pages to ensure fresh data
   async headers() {

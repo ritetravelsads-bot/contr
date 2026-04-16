@@ -92,22 +92,21 @@ export default function RootLayout({
         <link rel="dns-prefetch" href="//ik.imagekit.io" />
         <link rel="preconnect" href="https://ik.imagekit.io" crossOrigin="anonymous" />
 
-        {/* Preload critical LCP images - native images for fastest loading */}
+        {/* Preload critical LCP images - using Next.js image optimization URLs */}
         <link
           rel="preload"
           as="image"
-          href="/banners/home-mob-banner-1.jpg"
+          href="/_next/image?url=%2Fbanners%2Fhome-mob-banner-1.jpg&w=750&q=80"
           media="(max-width: 767px)"
           fetchPriority="high"
-          type="image/jpeg"
+          imageSrcSet="/_next/image?url=%2Fbanners%2Fhome-mob-banner-1.jpg&w=640&q=80 640w, /_next/image?url=%2Fbanners%2Fhome-mob-banner-1.jpg&w=750&q=80 750w"
         />
         <link
           rel="preload"
           as="image"
-          href="/home-banner-1.jpg"
+          href="/_next/image?url=%2Fhome-banner-1.jpg&w=1920&q=85"
           media="(min-width: 768px)"
           fetchPriority="high"
-          type="image/jpeg"
         />
         <script
           type="application/ld+json"
