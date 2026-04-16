@@ -1,33 +1,12 @@
 "use client"
 
-import { useState, useEffect, useRef, startTransition, lazy, Suspense } from "react"
+import { useState, useEffect, useRef, startTransition } from "react"
 import { Search, Building2, Home, MapPin, Sparkles, ArrowRight, Mic, MicOff } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { useRouter } from "next/navigation"
 import Link from "next/link"
 import { cn, BUDGET_RANGES } from "@/lib/utils"
-
-// Lazy load voice search hook to reduce initial bundle size
-const useVoiceSearchLazy = () => {
-  const [voiceModule, setVoiceModule] = useState<any>(null)
-  
-  useEffect(() => {
-    // Only load voice search after LCP, when browser is idle
-    const loadVoiceSearch = () => {
-      import("@/hooks/use-voice-search").then((mod) => {
-        setVoiceModule(() => mod.useVoiceSearch)
-      })
-    }
-    
-    if ('requestIdleCallback' in window) {
-      window.requestIdleCallback(loadVoiceSearch, { timeout: 4000 })
-    } else {
-      setTimeout(loadVoiceSearch, 2000)
-    }
-  }, [])
-  
-  return voiceModule
-}
+import { useVoiceSearch } from "@/hooks/use-voice-search"
 
 const PLACEHOLDER_SUGGESTIONS = [
   "3 BHK in Gurgaon",
@@ -91,21 +70,13 @@ export default function AdvancedSearch() {
   const inputRef = useRef<HTMLInputElement>(null)
   const router = useRouter()
 
-  // Use lazy-loaded voice search
-  const useVoiceSearchHook = useVoiceSearchLazy()
-  const voiceSearch = useVoiceSearchHook?.({
+  const { isListening, isSupported: voiceSupported, startListening, stopListening, error: voiceError } = useVoiceSearch({
     lang: "en-US",
-    onResult: (text: string) => {
+    onResult: (text) => {
       setSearchTerm(text)
       setShowSuggestions(true)
     },
   })
-  
-  const isListening = voiceSearch?.isListening ?? false
-  const voiceSupported = voiceSearch?.isSupported ?? false
-  const startListening = voiceSearch?.startListening ?? (() => {})
-  const stopListening = voiceSearch?.stopListening ?? (() => {})
-  const voiceError = voiceSearch?.error ?? null
 
   // Typewriter effect for placeholder - deferred to not block LCP
   const [animationReady, setAnimationReady] = useState(false)
