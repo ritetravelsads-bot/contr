@@ -92,12 +92,12 @@ export default function RootLayout({
         <link rel="dns-prefetch" href="//ik.imagekit.io" />
         <link rel="preconnect" href="https://ik.imagekit.io" crossOrigin="anonymous" />
 
-        {/* Preload critical LCP images - using Next.js optimized WebP URLs */}
-        {/* WebP format saves ~29KB vs JPEG, preload eliminates resource load delay */}
+        {/* Preload critical LCP images - must exactly match srcset in banner-slider.tsx */}
+        {/* Using native picture with /_next/image URLs eliminates both resource load delay and render delay */}
         <link
           rel="preload"
           as="image"
-          href="/_next/image?url=%2Fbanners%2Fhome-mob-banner-1.jpg&w=750&q=75"
+          href="/_next/image?url=%2Fbanners%2Fhome-mob-banner-1.jpg&w=640&q=75"
           media="(max-width: 767px)"
           fetchPriority="high"
           type="image/webp"
@@ -107,7 +107,7 @@ export default function RootLayout({
         <link
           rel="preload"
           as="image"
-          href="/_next/image?url=%2Fhome-banner-1.jpg&w=1920&q=80"
+          href="/_next/image?url=%2Fhome-banner-1.jpg&w=1200&q=80"
           media="(min-width: 768px)"
           fetchPriority="high"
           type="image/webp"
