@@ -2,6 +2,7 @@
 
 import { useState, useEffect, useCallback } from "react"
 import { Map, ZoomIn, X, Maximize2 } from "lucide-react"
+import Image from "next/image"
 import { cn } from "@/lib/utils"
 
 interface MasterPlanSectionProps {
@@ -11,7 +12,6 @@ interface MasterPlanSectionProps {
 
 export function MasterPlanSection({ masterPlan, propertyName }: MasterPlanSectionProps) {
   const [showLightbox, setShowLightbox] = useState(false)
-  const [imageLoaded, setImageLoaded] = useState(false)
 
   // Keyboard navigation for lightbox
   const handleKeyDown = useCallback((e: KeyboardEvent) => {
@@ -38,6 +38,14 @@ export function MasterPlanSection({ masterPlan, propertyName }: MasterPlanSectio
     }
   }, [showLightbox])
 
+  const openLightbox = () => {
+    setShowLightbox(true)
+  }
+
+  const closeLightbox = () => {
+    setShowLightbox(false)
+  }
+
   if (!masterPlan) return null
 
   return (
@@ -61,43 +69,32 @@ export function MasterPlanSection({ masterPlan, propertyName }: MasterPlanSectio
           <div 
             className="relative bg-muted/50 cursor-zoom-in group"
             style={{ height: "450px" }}
-            onClick={() => setShowLightbox(true)}
+            onClick={openLightbox}
           >
-            {!imageLoaded && (
-              <div className="absolute inset-0 flex items-center justify-center">
-                <div className="w-8 h-8 border-2 border-blue-500 border-t-transparent rounded-full animate-spin" />
-              </div>
-            )}
-            <img
+            <Image
               src={masterPlan}
               alt={`Master Plan - ${propertyName || "Project"}`}
-              className={cn(
-                "w-full h-full object-contain p-4 transition-opacity duration-300",
-                imageLoaded ? "opacity-100" : "opacity-0"
-              )}
-              onLoad={() => setImageLoaded(true)}
+              fill
+              className="object-contain p-4"
+              sizes="(max-width: 768px) 100vw, 1200px"
+              priority
             />
             
             {/* Overlay with actions */}
-            <div className="absolute inset-0 bg-black/0 group-hover:bg-black/10 transition-colors duration-300" />
+            <div className="absolute inset-0 bg-black/0 group-hover:bg-black/10 transition-colors duration-300 pointer-events-none" />
             
-            {/* Action buttons */}
-            <div className="absolute top-3 right-3 flex items-center gap-2 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+            {/* Action buttons - always visible on mobile */}
+            <div className="absolute top-3 right-3 flex items-center gap-2 md:opacity-0 md:group-hover:opacity-100 transition-opacity duration-300">
               <button
                 onClick={(e) => {
                   e.stopPropagation()
-                  setShowLightbox(true)
+                  openLightbox()
                 }}
-                className="p-2 bg-black/60 hover:bg-black/80 backdrop-blur-sm rounded-lg text-white transition-colors"
+                className="p-2.5 bg-black/70 hover:bg-black/90 backdrop-blur-sm rounded-lg text-white transition-colors"
                 title="View fullscreen"
               >
-                <Maximize2 className="h-4 w-4" />
+                <Maximize2 className="h-5 w-5" />
               </button>
-            </div>
-            
-            {/* Click hint */}
-            <div className="absolute bottom-3 left-1/2 -translate-x-1/2 px-3 py-1.5 bg-black/60 backdrop-blur-sm rounded-full text-white text-xs font-medium opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-              Click to enlarge
             </div>
 
             {/* Corner label */}
@@ -115,7 +112,7 @@ export function MasterPlanSection({ masterPlan, propertyName }: MasterPlanSectio
               </p>
             </div>
             <button
-              onClick={() => setShowLightbox(true)}
+              onClick={openLightbox}
               className="flex items-center gap-2 px-3 py-1.5 bg-blue-500/10 hover:bg-blue-500/20 border border-blue-500/20 rounded-lg text-blue-600 dark:text-blue-400 text-xs font-medium transition-colors"
             >
               <ZoomIn className="h-3.5 w-3.5" />
@@ -128,36 +125,39 @@ export function MasterPlanSection({ masterPlan, propertyName }: MasterPlanSectio
       {/* Lightbox */}
       {showLightbox && (
         <div 
-          className="fixed inset-0 z-50 bg-black/95 flex items-center justify-center"
-          onClick={() => setShowLightbox(false)}
+          className="fixed inset-0 z-[100] bg-black flex items-center justify-center"
+          onClick={closeLightbox}
         >
-          {/* Close button */}
+          {/* Close button - always visible */}
           <button
-            onClick={() => setShowLightbox(false)}
-            className="absolute top-4 right-4 p-3 bg-white/10 hover:bg-white/20 rounded-full text-white transition-colors z-10"
+            onClick={closeLightbox}
+            className="absolute top-4 right-4 z-[110] p-3 bg-white/20 hover:bg-white/30 rounded-full text-white transition-colors"
+            aria-label="Close lightbox"
           >
             <X className="h-6 w-6" />
           </button>
 
           {/* Main Image */}
           <div 
-            className="relative max-w-[90vw] max-h-[85vh] w-full h-full flex items-center justify-center"
+            className="relative w-full h-full max-w-[90vw] max-h-[80vh] mx-auto my-auto"
             onClick={(e) => e.stopPropagation()}
           >
-            <img
+            <Image
               src={masterPlan}
               alt={`Master Plan - ${propertyName || "Project"}`}
-              className="max-w-full max-h-full object-contain select-none"
-              draggable={false}
+              fill
+              className="object-contain"
+              sizes="90vw"
+              priority
             />
           </div>
 
-          {/* Bottom info bar */}
-          <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/80 to-transparent py-6 px-4">
+          {/* Bottom info bar - always visible */}
+          <div className="absolute bottom-0 left-0 right-0 z-[110] bg-gradient-to-t from-black/90 via-black/60 to-transparent py-6 px-4">
             <div className="max-w-6xl mx-auto flex items-center justify-between">
               <div>
-                <p className="text-white font-semibold">Master Plan</p>
-                <p className="text-white/60 text-sm">
+                <p className="text-white font-semibold text-lg">Master Plan</p>
+                <p className="text-white/70 text-sm">
                   {propertyName || "Project"} - Complete Layout
                 </p>
               </div>
@@ -165,7 +165,8 @@ export function MasterPlanSection({ masterPlan, propertyName }: MasterPlanSectio
                 href={masterPlan}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="flex items-center gap-2 px-4 py-2 bg-white/10 hover:bg-white/20 rounded-lg text-white text-sm font-medium transition-colors"
+                className="flex items-center gap-2 px-4 py-2 bg-white/20 hover:bg-white/30 rounded-lg text-white text-sm font-medium transition-colors"
+                onClick={(e) => e.stopPropagation()}
               >
                 <Maximize2 className="h-4 w-4" />
                 Open Full Size
@@ -174,7 +175,7 @@ export function MasterPlanSection({ masterPlan, propertyName }: MasterPlanSectio
           </div>
 
           {/* Keyboard hint */}
-          <div className="absolute top-4 left-4 text-white/40 text-xs hidden md:block">
+          <div className="absolute top-4 left-4 z-[110] text-white/60 text-xs hidden md:block">
             Press ESC to close
           </div>
         </div>

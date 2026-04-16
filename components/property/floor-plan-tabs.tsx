@@ -2,6 +2,7 @@
 
 import { useState, useEffect, useCallback } from "react"
 import { Layers, X, ChevronLeft, ChevronRight, Maximize2 } from "lucide-react"
+import Image from "next/image"
 import { cn } from "@/lib/utils"
 
 interface FloorPlanTabsProps {
@@ -20,7 +21,6 @@ export function FloorPlanTabs({ floorPlans, configurations, units }: FloorPlanTa
   const [activeTab, setActiveTab] = useState(0)
   const [showLightbox, setShowLightbox] = useState(false)
   const [lightboxIndex, setLightboxIndex] = useState(0)
-  const [imageLoaded, setImageLoaded] = useState<Record<number, boolean>>({})
 
   // Combine floor plans from all sources (units, configurations, and standalone)
   const plans: Array<{ label: string; image: string }> = []
@@ -46,7 +46,7 @@ export function FloorPlanTabs({ floorPlans, configurations, units }: FloorPlanTa
   })
 
   // Add standalone floor plans
-  floorPlans?.forEach((plan, index) => {
+  floorPlans?.forEach((plan) => {
     // Avoid duplicates
     if (!plans.some(p => p.image === plan)) {
       plans.push({
@@ -91,8 +91,19 @@ export function FloorPlanTabs({ floorPlans, configurations, units }: FloorPlanTa
     setShowLightbox(true)
   }
 
-  const nextImage = () => setLightboxIndex(prev => (prev + 1) % plans.length)
-  const prevImage = () => setLightboxIndex(prev => (prev - 1 + plans.length) % plans.length)
+  const closeLightbox = () => {
+    setShowLightbox(false)
+  }
+
+  const nextImage = (e?: React.MouseEvent) => {
+    e?.stopPropagation()
+    setLightboxIndex(prev => (prev + 1) % plans.length)
+  }
+  
+  const prevImage = (e?: React.MouseEvent) => {
+    e?.stopPropagation()
+    setLightboxIndex(prev => (prev - 1 + plans.length) % plans.length)
+  }
 
   if (plans.length === 0) return null
 
@@ -128,9 +139,6 @@ export function FloorPlanTabs({ floorPlans, configurations, units }: FloorPlanTa
                   )}
                 >
                   <span className="whitespace-nowrap">{plan.label}</span>
-                  {activeTab === index && (
-                    <span className="absolute bottom-0 left-0 right-0 h-0.5 bg-primary" />
-                  )}
                 </button>
               ))}
             </div>
@@ -142,41 +150,31 @@ export function FloorPlanTabs({ floorPlans, configurations, units }: FloorPlanTa
             style={{ height: "400px" }}
             onClick={() => openLightbox(activeTab)}
           >
-            {!imageLoaded[activeTab] && (
-              <div className="absolute inset-0 flex items-center justify-center">
-                <div className="w-8 h-8 border-2 border-primary border-t-transparent rounded-full animate-spin" />
-              </div>
-            )}
-            <img
+            <Image
               src={plans[activeTab].image}
               alt={`Floor Plan - ${plans[activeTab].label}`}
-              className={cn(
-                "w-full h-full object-contain p-4 transition-opacity duration-300",
-                imageLoaded[activeTab] ? "opacity-100" : "opacity-0"
-              )}
-              onLoad={() => setImageLoaded(prev => ({ ...prev, [activeTab]: true }))}
+              fill
+              className="object-contain p-4"
+              sizes="(max-width: 768px) 100vw, 1200px"
+              priority={activeTab === 0}
+              loading={activeTab === 0 ? "eager" : "lazy"}
             />
             
             {/* Overlay with actions */}
-            <div className="absolute inset-0 bg-black/0 group-hover:bg-black/10 transition-colors duration-300" />
+            <div className="absolute inset-0 bg-black/0 group-hover:bg-black/10 transition-colors duration-300 pointer-events-none" />
             
-            {/* Zoom indicator */}
-            <div className="absolute top-3 right-3 flex items-center gap-2 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+            {/* Zoom indicator - always visible on mobile, hover on desktop */}
+            <div className="absolute top-3 right-3 flex items-center gap-2 md:opacity-0 md:group-hover:opacity-100 transition-opacity duration-300">
               <button
                 onClick={(e) => {
                   e.stopPropagation()
                   openLightbox(activeTab)
                 }}
-                className="p-2 bg-black/60 hover:bg-black/80 backdrop-blur-sm rounded-lg text-white transition-colors"
+                className="p-2.5 bg-black/70 hover:bg-black/90 backdrop-blur-sm rounded-lg text-white transition-colors"
                 title="View fullscreen"
               >
-                <Maximize2 className="h-4 w-4" />
+                <Maximize2 className="h-5 w-5" />
               </button>
-            </div>
-            
-            {/* Click hint */}
-            <div className="absolute bottom-3 left-1/2 -translate-x-1/2 px-3 py-1.5 bg-black/60 backdrop-blur-sm rounded-full text-white text-xs font-medium opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-              Click to enlarge
             </div>
 
             {/* Navigation arrows on image */}
@@ -187,7 +185,7 @@ export function FloorPlanTabs({ floorPlans, configurations, units }: FloorPlanTa
                     e.stopPropagation()
                     setActiveTab(prev => (prev - 1 + plans.length) % plans.length)
                   }}
-                  className="absolute left-3 top-1/2 -translate-y-1/2 p-2 bg-black/40 hover:bg-black/60 backdrop-blur-sm rounded-full text-white transition-colors opacity-0 group-hover:opacity-100"
+                  className="absolute left-3 top-1/2 -translate-y-1/2 p-2.5 bg-black/70 hover:bg-black/90 backdrop-blur-sm rounded-full text-white transition-colors"
                 >
                   <ChevronLeft className="h-5 w-5" />
                 </button>
@@ -196,7 +194,7 @@ export function FloorPlanTabs({ floorPlans, configurations, units }: FloorPlanTa
                     e.stopPropagation()
                     setActiveTab(prev => (prev + 1) % plans.length)
                   }}
-                  className="absolute right-3 top-1/2 -translate-y-1/2 p-2 bg-black/40 hover:bg-black/60 backdrop-blur-sm rounded-full text-white transition-colors opacity-0 group-hover:opacity-100"
+                  className="absolute right-3 top-1/2 -translate-y-1/2 p-2.5 bg-black/70 hover:bg-black/90 backdrop-blur-sm rounded-full text-white transition-colors"
                 >
                   <ChevronRight className="h-5 w-5" />
                 </button>
@@ -238,38 +236,35 @@ export function FloorPlanTabs({ floorPlans, configurations, units }: FloorPlanTa
       {/* Enhanced Lightbox */}
       {showLightbox && (
         <div 
-          className="fixed inset-0 z-50 bg-black/95 flex items-center justify-center"
-          onClick={() => setShowLightbox(false)}
+          className="fixed inset-0 z-[100] bg-black flex items-center justify-center"
+          onClick={closeLightbox}
         >
-          {/* Close button */}
+          {/* Close button - always visible */}
           <button
-            onClick={() => setShowLightbox(false)}
-            className="absolute top-4 right-4 p-3 bg-white/10 hover:bg-white/20 rounded-full text-white transition-colors z-10"
+            onClick={closeLightbox}
+            className="absolute top-4 right-4 z-[110] p-3 bg-white/20 hover:bg-white/30 rounded-full text-white transition-colors"
+            aria-label="Close lightbox"
           >
             <X className="h-6 w-6" />
           </button>
 
-          {/* Navigation - Previous */}
+          {/* Navigation - Previous - always visible */}
           {plans.length > 1 && (
             <button
-              onClick={(e) => {
-                e.stopPropagation()
-                prevImage()
-              }}
-              className="absolute left-4 top-1/2 -translate-y-1/2 p-3 bg-white/10 hover:bg-white/20 rounded-full text-white transition-colors z-10"
+              onClick={prevImage}
+              className="absolute left-4 top-1/2 -translate-y-1/2 z-[110] p-3 bg-white/20 hover:bg-white/30 rounded-full text-white transition-colors"
+              aria-label="Previous image"
             >
               <ChevronLeft className="h-6 w-6" />
             </button>
           )}
 
-          {/* Navigation - Next */}
+          {/* Navigation - Next - always visible */}
           {plans.length > 1 && (
             <button
-              onClick={(e) => {
-                e.stopPropagation()
-                nextImage()
-              }}
-              className="absolute right-4 top-1/2 -translate-y-1/2 p-3 bg-white/10 hover:bg-white/20 rounded-full text-white transition-colors z-10"
+              onClick={nextImage}
+              className="absolute right-4 top-1/2 -translate-y-1/2 z-[110] p-3 bg-white/20 hover:bg-white/30 rounded-full text-white transition-colors"
+              aria-label="Next image"
             >
               <ChevronRight className="h-6 w-6" />
             </button>
@@ -277,29 +272,31 @@ export function FloorPlanTabs({ floorPlans, configurations, units }: FloorPlanTa
 
           {/* Main Image */}
           <div 
-            className="relative max-w-[90vw] max-h-[85vh] w-full h-full flex items-center justify-center"
+            className="relative w-full h-full max-w-[90vw] max-h-[80vh] mx-auto my-auto"
             onClick={(e) => e.stopPropagation()}
           >
-            <img
+            <Image
               src={plans[lightboxIndex].image}
               alt={`Floor Plan - ${plans[lightboxIndex].label}`}
-              className="max-w-full max-h-full object-contain select-none"
-              draggable={false}
+              fill
+              className="object-contain"
+              sizes="90vw"
+              priority
             />
           </div>
 
-          {/* Bottom info bar */}
-          <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/80 to-transparent py-6 px-4">
+          {/* Bottom info bar - always visible */}
+          <div className="absolute bottom-0 left-0 right-0 z-[110] bg-gradient-to-t from-black/90 via-black/60 to-transparent py-6 px-4">
             <div className="max-w-6xl mx-auto flex items-center justify-between">
               <div>
-                <p className="text-white font-semibold">{plans[lightboxIndex].label}</p>
-                <p className="text-white/60 text-sm">
+                <p className="text-white font-semibold text-lg">{plans[lightboxIndex].label}</p>
+                <p className="text-white/70 text-sm">
                   {lightboxIndex + 1} of {plans.length} floor plans
                 </p>
               </div>
               
               {/* Thumbnail strip */}
-              {plans.length > 1 && (
+              {plans.length > 1 && plans.length <= 10 && (
                 <div className="hidden md:flex items-center gap-2">
                   {plans.map((plan, index) => (
                     <button
@@ -309,16 +306,18 @@ export function FloorPlanTabs({ floorPlans, configurations, units }: FloorPlanTa
                         setLightboxIndex(index)
                       }}
                       className={cn(
-                        "w-16 h-12 rounded-lg overflow-hidden border-2 transition-all",
+                        "relative w-16 h-12 rounded-lg overflow-hidden border-2 transition-all",
                         lightboxIndex === index
                           ? "border-white scale-110"
                           : "border-white/30 opacity-60 hover:opacity-100"
                       )}
                     >
-                      <img
+                      <Image
                         src={plan.image}
                         alt={plan.label}
-                        className="w-full h-full object-cover"
+                        fill
+                        className="object-cover"
+                        sizes="64px"
                       />
                     </button>
                   ))}
@@ -328,7 +327,7 @@ export function FloorPlanTabs({ floorPlans, configurations, units }: FloorPlanTa
           </div>
 
           {/* Keyboard hint */}
-          <div className="absolute top-4 left-4 text-white/40 text-xs hidden md:block">
+          <div className="absolute top-4 left-4 z-[110] text-white/60 text-xs hidden md:block">
             Use arrow keys to navigate, ESC to close
           </div>
         </div>
