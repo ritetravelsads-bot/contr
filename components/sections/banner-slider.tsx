@@ -1,6 +1,6 @@
 "use client"
 
-import { useState, useEffect, useCallback, memo } from "react"
+import { useState, useEffect, useCallback, memo, startTransition } from "react"
 import Image from "next/image"
 import { cn } from "@/lib/utils"
 
@@ -147,12 +147,28 @@ function BannerSlider() {
   const [isHydrated, setIsHydrated] = useState(false)
 
   const nextSlide = useCallback(() => {
-    setCurrentSlide((prev) => (prev + 1) % slides.length)
+    startTransition(() => {
+      setCurrentSlide((prev) => (prev + 1) % slides.length)
+    })
   }, [])
 
-  // Mark as hydrated after mount
+  // Defer hydration using requestIdleCallback to not block LCP
   useEffect(() => {
-    setIsHydrated(true)
+    const markHydrated = () => {
+      startTransition(() => {
+        setIsHydrated(true)
+      })
+    }
+    
+    // Use requestIdleCallback to defer hydration until browser is idle
+    if ('requestIdleCallback' in window) {
+      const id = window.requestIdleCallback(markHydrated, { timeout: 2000 })
+      return () => window.cancelIdleCallback(id)
+    } else {
+      // Fallback: use setTimeout with longer delay
+      const timeout = setTimeout(markHydrated, 100)
+      return () => clearTimeout(timeout)
+    }
   }, [])
 
   useEffect(() => {

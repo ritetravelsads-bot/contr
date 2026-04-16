@@ -37,7 +37,12 @@ export default function BottomNav() {
       }
     }
 
-    checkAuth()
+    // Defer auth check to not block LCP
+    if ('requestIdleCallback' in window) {
+      window.requestIdleCallback(checkAuth, { timeout: 3000 })
+    } else {
+      setTimeout(checkAuth, 500)
+    }
   }, [])
 
   const isActive = (path: string) => pathname === path || pathname.startsWith(path + "/")

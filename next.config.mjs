@@ -19,6 +19,8 @@ const nextConfig = {
     qualities: [75, 80, 85],
     // Minimize image memory for faster decoding
     minimumCacheTTL: 31536000,
+    // Prioritize loading LCP images
+    unoptimized: false,
   },
   experimental: {
     // Tree-shake heavy packages to reduce unused JS
